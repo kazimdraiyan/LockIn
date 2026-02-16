@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- TODO: Clean AI generated code -->
+<!-- TODO: Merge login and sign-up view into auth view -->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="app.lockin.lockin.client.controller.LoginController">
+
+    <!-- MAIN TWO COLUMN LAYOUT -->
+    <HBox AnchorPane.topAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0">
+
+        <!-- ================= LEFT SIDE (BRANDING) ================= -->
+        <VBox prefWidth="420"
+              alignment="CENTER"
+              spacing="25"
+              style="-fx-background-color: linear-gradient(to bottom right,#0F4C75,#1B9AAA);">
+
+            <padding>
+                <Insets top="40" bottom="40" left="40" right="40"/>
+            </padding>
+
+            <!-- LOGO PLACEHOLDER -->
+            <StackPane prefHeight="140" prefWidth="140"
+                       style="
+                          -fx-background-color: rgba(255,255,255,0.15);
+                          -fx-background-radius: 20;
+                          -fx-border-radius: 20;
+                          -fx-border-color: rgba(255,255,255,0.25);
+                          -fx-border-width: 2;
+                       ">
+                <Label text="LOGO"
+                       style="-fx-text-fill:white; -fx-opacity:0.7;"/>
+            </StackPane>
+
+            <!-- APP NAME -->
+            <Label text="LockIn" textFill="WHITE">
+                <font>
+                    <Font size="36"/>
+                </font>
+            </Label>
+
+            <!-- TAGLINE -->
+            <Label text="Focus. Secure. Achieve."
+                   wrapText="true"
+                   style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size:16;"
+                   alignment="CENTER"/>
+        </VBox>
+
+
+        <!-- ================= RIGHT SIDE (LOGIN UI) ================= -->
+        <StackPane style="-fx-background-color:#f6f8fa;"
+                   HBox.hgrow="ALWAYS">
+
+            <!-- LOGIN CARD -->
+            <VBox prefWidth="360"
+                  spacing="16"
+                  alignment="TOP_LEFT"
+                  style="
+                    -fx-background-color:white;
+                    -fx-background-radius:14;
+                    -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.18), 25,0.2,0,6);
+                  ">
+
+                <padding>
+                    <Insets top="40" right="40" bottom="40" left="40"/>
+                </padding>
+
+                <Label text="Sign In">
+                    <font>
+                        <Font size="30"/>
+                    </font>
+                </Label>
+
+                <Label text="Welcome back! Please login to continue."
+                       style="-fx-text-fill:#777777;"/>
+
+                <!-- Username -->
+                <VBox spacing="6">
+                    <Label text="Username"
+                           style="-fx-text-fill:#555555;"/>
+                    <TextField fx:id="nameField"
+                               promptText="Enter your ID"
+                               prefHeight="42"
+                               style="
+                                 -fx-background-color:#f4f6f8;
+                                 -fx-background-radius:8;
+                                 -fx-padding:10;
+                               "/>
+                </VBox>
+
+                <!-- Password -->
+                <VBox spacing="6">
+                    <Label text="Password"
+                           style="-fx-text-fill:#555555;"/>
+                    <PasswordField fx:id="passwordField"
+                                   promptText="Enter password"
+                                   prefHeight="42"
+                                   style="
+                                     -fx-background-color:#f4f6f8;
+                                     -fx-background-radius:8;
+                                     -fx-padding:10;
+                                   "/>
+                </VBox>
+
+                <CheckBox fx:id="keepSignedInCheckBox"
+                          text="Keep me signed in"
+                          style="-fx-text-fill:#666666;"/>
+
+                <Button fx:id="signInButton"
+                        text="Sign In"
+                        prefHeight="45"
+                        maxWidth="Infinity"
+                        style="
+                            -fx-background-color: linear-gradient(to right,#1B9AAA,#00C9A7);
+                            -fx-background-radius:10;
+                            -fx-text-fill:white;
+                            -fx-font-weight:bold;
+                            -fx-cursor:hand;
+                        "/>
+
+                <HBox spacing="6" alignment="CENTER">
+                    <Label text="Don't have an account?"
+                           style="-fx-text-fill:#777777;"/>
+                    <Hyperlink text="Sign Up"
+                               style="-fx-text-fill:#1B9AAA; -fx-font-weight:bold;"/>
+                </HBox>
+
+            </VBox>
+        </StackPane>
+
+    </HBox>
+</AnchorPane>

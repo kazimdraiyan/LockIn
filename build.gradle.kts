@@ -27,7 +27,7 @@ tasks.withType<JavaCompile> {
 
 application {
     mainModule.set("app.lockin.lockin")
-    mainClass.set("app.lockin.lockin.HelloApplication")
+    mainClass.set("app.lockin.lockin.LockInApplication")
 }
 
 javafx {

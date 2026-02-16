@@ -8,4 +8,6 @@ module app.lockin.lockin {
 
     opens app.lockin.lockin to javafx.fxml;
     exports app.lockin.lockin;
+    exports app.lockin.lockin.client.controller;
+    opens app.lockin.lockin.client.controller to javafx.fxml;
 }
