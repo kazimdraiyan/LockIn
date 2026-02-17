@@ -1,23 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.BorderPane?>
-
 <?import javafx.scene.control.Button?>
-<BorderPane xmlns:fx="http://javafx.com/fxml"
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
             fx:id="rootPane"
             fx:controller="app.lockin.lockin.client.controller.MainController">
     <center>
-        <VBox alignment="CENTER" spacing="20.0">
-            <padding>
-                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-            </padding>
+        <AnchorPane prefHeight="600.0" prefWidth="900.0">
+            <HBox AnchorPane.topAnchor="0"
+                  AnchorPane.bottomAnchor="0"
+                  AnchorPane.leftAnchor="0"
+                  AnchorPane.rightAnchor="0">
 
-            <Label fx:id="welcomeText" text="Welcome to LockIn"/>
-            <Button text="Login" onAction="#onLoginButtonClick"/>
-            <Button text="Sign Up" onAction="#onSignUpButtonClick"/>
-        </VBox>
+                <!-- ================= LEFT SIDE (BRANDING) ================= -->
+                <VBox prefWidth="420"
+                      alignment="CENTER"
+                      spacing="25"
+                      style="-fx-background-color: linear-gradient(to bottom right,#0F4C75,#1B9AAA);">
+                    <padding>
+                        <Insets top="40" bottom="40" left="40" right="40"/>
+                    </padding>
+
+                    <!-- LOGO PLACEHOLDER -->
+                    <StackPane prefHeight="140" prefWidth="140"
+                               style="
+                                  -fx-background-color: rgba(255,255,255,0.15);
+                                  -fx-background-radius: 20;
+                                  -fx-border-radius: 20;
+                                  -fx-border-color: rgba(255,255,255,0.25);
+                                  -fx-border-width: 2;
+                               ">
+                        <Label text="LOGO"
+                               style="-fx-text-fill:white; -fx-opacity:0.7;"/>
+                    </StackPane>
+
+                    <!-- APP NAME -->
+                    <Label text="LockIn" textFill="WHITE">
+                        <font>
+                            <Font size="36"/>
+                        </font>
+                    </Label>
+
+                    <!-- TAGLINE -->
+                    <Label text="Focus. Secure. Achieve."
+                           wrapText="true"
+                           style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size:16;"
+                           alignment="CENTER"/>
+                </VBox>
+
+                <!-- ================= RIGHT SIDE (HOME CARD) ================= -->
+                <StackPane style="-fx-background-color:#f6f8fa;"
+                           HBox.hgrow="ALWAYS">
+
+                    <VBox prefWidth="360"
+                          spacing="16"
+                          alignment="TOP_LEFT"
+                          style="
+                            -fx-background-color:white;
+                            -fx-background-radius:14;
+                            -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.18), 25,0.2,0,6);
+                          ">
+                        <padding>
+                            <Insets top="40" right="40" bottom="40" left="40"/>
+                        </padding>
+
+                        <!-- HEADING -->
+                        <Label text="Welcome Back">
+                            <font>
+                                <Font size="30"/>
+                            </font>
+                        </Label>
+
+                        <Label text="Sign in to your account or create a new one to get started."
+                               wrapText="true"
+                               style="-fx-text-fill:#777777;"/>
+
+                        <!-- DIVIDER -->
+                        <StackPane prefHeight="1"
+                                   maxWidth="Infinity"
+                                   style="-fx-background-color:#eeeeee;"/>
+
+                        <!-- LOGIN BUTTON -->
+                        <VBox spacing="6">
+                            <Label text="Already have an account?"
+                                   style="-fx-text-fill:#555555;"/>
+                            <Button fx:id="loginButton"
+                                    text="Sign In"
+                                    onAction="#onLoginButtonClick"
+                                    prefHeight="45"
+                                    maxWidth="Infinity"
+                                    style="
+                                        -fx-background-color: linear-gradient(to right,#1B9AAA,#00C9A7);
+                                        -fx-background-radius:10;
+                                        -fx-text-fill:white;
+                                        -fx-font-weight:bold;
+                                        -fx-cursor:hand;
+                                    "/>
+                        </VBox>
+
+                        <!-- SIGN UP BUTTON -->
+                        <VBox spacing="6">
+                            <Label text="New to LockIn?"
+                                   style="-fx-text-fill:#555555;"/>
+                            <Button fx:id="signUpButton"
+                                    text="Create Account"
+                                    onAction="#onSignUpButtonClick"
+                                    prefHeight="45"
+                                    maxWidth="Infinity"
+                                    style="
+                                        -fx-background-color: white;
+                                        -fx-background-radius:10;
+                                        -fx-text-fill:#1B9AAA;
+                                        -fx-font-weight:bold;
+                                        -fx-cursor:hand;
+                                        -fx-border-color:#1B9AAA;
+                                        -fx-border-radius:10;
+                                        -fx-border-width:2;
+                                    "/>
+                        </VBox>
+
+                    </VBox>
+                </StackPane>
+
+            </HBox>
+        </AnchorPane>
     </center>
 </BorderPane>

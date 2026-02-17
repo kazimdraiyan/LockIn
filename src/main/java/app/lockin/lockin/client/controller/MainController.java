@@ -19,10 +19,47 @@ public class MainController {
     @FXML
     private BorderPane rootPane;
 
+    private Parent homePage;
+    @FXML
+    public void initialize() {
+        homePage = (Parent) rootPane.getCenter();
+    }
+
+    public void navigateHome() {
+        history.clear();
+        rootPane.setCenter(homePage);
+    }
+
+    private final Stack<Parent> history =  new Stack<>();
+
+    public void navigateTo(String fxml) throws IOException {
+        Parent current = (Parent) rootPane.getCenter();
+        if (current!=null) history.push(current);
+        loadCenter(fxml);
+    }
+    public void navigateBack(){
+        if(!history.isEmpty()){
+            rootPane.setCenter(history.pop());
+        }
+    }
+
+    private void loadCenter(String fxml) throws IOException {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/app/lockin/lockin/" + fxml)
+        );
+        Parent page = loader.load();
+
+        Object controller = loader.getController();
+        if (controller instanceof MainControllerAware aware){
+            aware.setMainController(this);
+        }
+        rootPane.setCenter(page);
+
+    }
     @FXML
     protected void onLoginButtonClick() {
         try {
-            loadPage("login-view.fxml");
+            navigateTo("login-view.fxml");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -32,7 +69,7 @@ public class MainController {
     @FXML
     protected void onSignUpButtonClick() {
         try {
-            loadPage("sign-up-view.fxml");
+            navigateTo("sign-up-view.fxml");
         }
         catch (IOException e) {
             e.printStackTrace();
