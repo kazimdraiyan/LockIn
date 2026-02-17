@@ -59,7 +59,6 @@
 
             <VBox prefWidth="360"
                   spacing="16"
-                  alignment="TOP_LEFT"
                   style="
                     -fx-background-color:white;
                     -fx-background-radius:14;
@@ -79,11 +78,20 @@
                 <Label text="Create your account to get started"
                        style="-fx-text-fill:#777777;"/>
 
+                <!-- Name -->
+                <VBox spacing="6">
+                    <Label text="Name" style="-fx-text-fill:#555555;"/>
+                    <TextField fx:id="nameField"
+                               promptText="Enter your name"
+                               prefHeight="42"
+                               style="-fx-background-color:#f4f6f8; -fx-background-radius:8; -fx-padding:10;"/>
+                </VBox>
+
                 <!-- Username -->
                 <VBox spacing="6">
-                    <Label text="Username" style="-fx-text-fill:#555555;"/>
-                    <TextField fx:id="nameField"
-                               promptText="Enter your username"
+                    <Label text="Email" style="-fx-text-fill:#555555;"/>
+                    <TextField fx:id="emailField"
+                               promptText="Enter your email"
                                prefHeight="42"
                                style="-fx-background-color:#f4f6f8; -fx-background-radius:8; -fx-padding:10;"/>
                 </VBox>
@@ -109,6 +117,7 @@
                 <!-- Sign Up Button -->
                 <Button fx:id="signUpButton"
                         text="Sign Up"
+                        onAction="#signUp"
                         prefHeight="45"
                         maxWidth="Infinity"
                         style="
