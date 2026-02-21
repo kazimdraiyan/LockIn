@@ -44,15 +44,12 @@ public class SignUpController {
         // TODO: Should I do the threading here?
         new Thread(() -> {
             try {
-                SignUpRequest request =
-                        new SignUpRequest(nameField.getText(), emailField.getText(),
-                                passwordField.getText());
+                SignUpRequest request = new SignUpRequest(nameField.getText(), passwordField.getText());
 
                 // TODO: Should I rename LockInApplication?
                 LockInApplication.clientManager.send(request);
 
-                Response response =
-                        LockInApplication.clientManager.receive();
+                Response response = LockInApplication.clientManager.receive();
                 System.out.println(response.toString());
 
                 // TODO: Learn more about updating UI safely

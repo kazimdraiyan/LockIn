@@ -23,8 +23,7 @@ public class MainController {
     protected void onLoginButtonClick() {
         try {
             loadPage("login-view.fxml");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -33,8 +32,7 @@ public class MainController {
     protected void onSignUpButtonClick() {
         try {
             loadPage("sign-up-view.fxml");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
