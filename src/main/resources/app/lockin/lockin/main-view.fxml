@@ -14,23 +14,23 @@
             fx:id="rootPane"
             fx:controller="app.lockin.lockin.client.controller.MainController">
     <center>
-        <AnchorPane prefHeight="600.0" prefWidth="900.0">
+        <AnchorPane prefHeight="720" prefWidth="1280">
             <HBox AnchorPane.topAnchor="0"
                   AnchorPane.bottomAnchor="0"
                   AnchorPane.leftAnchor="0"
                   AnchorPane.rightAnchor="0">
 
                 <!-- ================= LEFT SIDE (BRANDING) ================= -->
-                <VBox prefWidth="420"
+                <VBox prefWidth="480"
                       alignment="CENTER"
-                      spacing="25"
+                      spacing="20"
                       style="-fx-background-color: linear-gradient(to bottom right,#0F4C75,#1B9AAA);">
                     <padding>
-                        <Insets top="40" bottom="40" left="40" right="40"/>
+                        <Insets top="40" bottom="40" left="50" right="50"/>
                     </padding>
 
                     <!-- LOGO PLACEHOLDER -->
-                    <StackPane prefHeight="140" prefWidth="140"
+                    <StackPane prefHeight="120" prefWidth="120"
                                style="
                                   -fx-background-color: rgba(255,255,255,0.15);
                                   -fx-background-radius: 20;
@@ -45,24 +45,25 @@
                     <!-- APP NAME -->
                     <Label text="LockIn" textFill="WHITE">
                         <font>
-                            <Font size="36"/>
+                            <Font size="34"/>
                         </font>
                     </Label>
 
                     <!-- TAGLINE -->
                     <Label text="Focus. Secure. Achieve."
                            wrapText="true"
-                           style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size:16;"
+                           style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size:15;"
                            alignment="CENTER"/>
                 </VBox>
 
                 <!-- ================= RIGHT SIDE (HOME CARD) ================= -->
-                <StackPane style="-fx-background-color:#f6f8fa;"
+                <StackPane style="-fx-background-color:#f6f8fa;" alignment="CENTER"
                            HBox.hgrow="ALWAYS">
 
-                    <VBox prefWidth="360"
+                    <VBox prefWidth="700"
+                          maxWidth="700"
+                          maxHeight="-Infinity"
                           spacing="16"
-                          alignment="TOP_LEFT"
                           style="
                             -fx-background-color:white;
                             -fx-background-radius:14;
@@ -75,7 +76,7 @@
                         <!-- HEADING -->
                         <Label text="Welcome Back">
                             <font>
-                                <Font size="30"/>
+                                <Font size="26"/>
                             </font>
                         </Label>
 
@@ -95,7 +96,7 @@
                             <Button fx:id="loginButton"
                                     text="Sign In"
                                     onAction="#onLoginButtonClick"
-                                    prefHeight="45"
+                                    prefHeight="42"
                                     maxWidth="Infinity"
                                     style="
                                         -fx-background-color: linear-gradient(to right,#1B9AAA,#00C9A7);
@@ -113,7 +114,7 @@
                             <Button fx:id="signUpButton"
                                     text="Create Account"
                                     onAction="#onSignUpButtonClick"
-                                    prefHeight="45"
+                                    prefHeight="42"
                                     maxWidth="Infinity"
                                     style="
                                         -fx-background-color: white;
