@@ -60,7 +60,7 @@
         </VBox>
 
         <!-- RIGHT SIGNUP CARD -->
-        <StackPane style="-fx-background-color:#f6f8fa;" alignment="CENTER" HBox.hgrow="ALWAYS">
+        <StackPane style="-fx-background-color:#f6f8fa;" HBox.hgrow="ALWAYS">
 
             <VBox prefWidth="700" maxHeight="-Infinity" maxWidth="700" spacing="14" style="
                 -fx-background-color:white;
@@ -105,7 +105,8 @@
                     -fx-text-fill:white;
                     -fx-font-weight:bold;
                     -fx-cursor:hand;
-                " text="Sign Up" />
+                " text="Sign Up" onAction="#signUp"
+                />
 
                 <!-- Footer -->
                 <HBox alignment="CENTER" spacing="6">
