@@ -40,4 +40,19 @@ public class AuthService {
                         usersDatabase
                 );
     }
+
+    // TODO: Return token instead
+    public boolean login(String username, String password) throws IOException {
+        ObjectNode usersDatabase = (ObjectNode) mapper.readTree(new File(databasePath + "users.json"));
+        // In the client side, IOException should be interpreted as an unexpected server error
+
+        for (Iterator<String> it = usersDatabase.fieldNames(); it.hasNext(); ) {
+            String savedUsername = it.next();
+            if (savedUsername.equals(username)) {
+                String savedPassword = usersDatabase.get(username).get("password").asText();
+                return savedPassword.equals(password); // true: login successful, false: incorrect password
+            }
+        }
+        return false; // User not found
+    }
 }

@@ -32,7 +32,13 @@ public class ClientManager {
     }
 
     public Response receive() {
-        // TODO: Implement
+        try {
+            return (Response) in.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            // TODO: Close socket and other things
+            e.printStackTrace();
+            System.out.println("Client manager stopped due to error");
+        }
         return null;
     }
 

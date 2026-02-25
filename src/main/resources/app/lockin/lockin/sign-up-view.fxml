@@ -83,7 +83,7 @@
                 <!-- Username -->
                 <VBox spacing="5">
                     <Label style="-fx-text-fill:#555555;" text="Username" />
-                    <TextField fx:id="nameField" prefHeight="40" promptText="Enter your username" style="-fx-background-color:#f4f6f8; -fx-background-radius:8; -fx-padding:10;" />
+                    <TextField fx:id="usernameField" prefHeight="40" promptText="Enter your username" style="-fx-background-color:#f4f6f8; -fx-background-radius:8; -fx-padding:10;" />
                 </VBox>
 
                 <!-- Password -->

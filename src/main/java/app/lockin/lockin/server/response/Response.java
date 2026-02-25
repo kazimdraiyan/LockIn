@@ -16,4 +16,7 @@ public class Response implements Serializable {
     }
 
     // TODO: Add getters
+    public String getMessage() {
+        return message;
+    }
 }

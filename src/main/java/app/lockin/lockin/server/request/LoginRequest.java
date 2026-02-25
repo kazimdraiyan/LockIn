@@ -14,5 +14,11 @@ public class LoginRequest implements Request{
         return RequestType.LOGIN;
     }
 
-    // TODO: Add getters
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }

@@ -4,6 +4,7 @@ import app.lockin.lockin.server.request.LoginRequest;
 import app.lockin.lockin.server.request.LogoutRequest;
 import app.lockin.lockin.server.request.SignUpRequest;
 import app.lockin.lockin.server.response.Response;
+import app.lockin.lockin.server.response.ResponseStatus;
 import app.lockin.lockin.server.service.AuthService;
 
 import java.io.IOException;
@@ -17,7 +18,19 @@ public class AuthHandler {
 
     // Example usage:
     public Response handleLogin(LoginRequest request) {
-        return null;
+        System.out.println("Sign up request from " + request.getUsername());
+        try {
+            boolean success = authService.login(request.getUsername(), request.getPassword());
+            if (success) {
+                return new Response(ResponseStatus.SUCCESS, "Login successful", "TOKEN"); // TODO: Add valid token
+            }
+            else {
+                return new Response(ResponseStatus.ERROR, "Invalid credentials", null);
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while trying to handle a login request");
+            return new Response(ResponseStatus.ERROR, "An unknown error occurred", null);
+        }
     }
 
     public Response handleLogout(LogoutRequest request) {

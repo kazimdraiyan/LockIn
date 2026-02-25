@@ -8,7 +8,7 @@ import javafx.scene.control.*;
 
 public class SignUpController implements MainControllerAware {
     @FXML
-    public TextField nameField;
+    public TextField usernameField;
     @FXML
     public PasswordField passwordField;
     @FXML
@@ -39,7 +39,7 @@ public class SignUpController implements MainControllerAware {
 
     @FXML
     public void signUp() {
-        String name = nameField.getText();
+        String name = usernameField.getText();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
 
@@ -57,7 +57,7 @@ public class SignUpController implements MainControllerAware {
         // TODO: Should I do the threading here?
         new Thread(() -> {
             try {
-                SignUpRequest request = new SignUpRequest(nameField.getText(), passwordField.getText());
+                SignUpRequest request = new SignUpRequest(usernameField.getText(), passwordField.getText());
 
                 // TODO: Should I rename LockInApplication?
                 LockInApplication.clientManager.send(request);
