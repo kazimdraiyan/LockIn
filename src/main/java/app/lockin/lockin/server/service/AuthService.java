@@ -6,25 +6,37 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.UUID;
 
 // Does auth related backend tasks
 public class AuthService {
+    private static final long DEFAULT_SESSION_DURATION_MILLIS = 365L * 24 * 60 * 60 * 1000; // 1 year in milliseconds
+
     // TODO: Should I put the database inside resources folder?
-    private static final String databasePath = "src/main/resources/app/lockin/lockin/database/";
+    private static final String DATABASE_PATH = "src/main/resources/app/lockin/lockin/database/";
 
     ObjectMapper mapper = new ObjectMapper();
 
-    public void createUser(String username, String password) throws IOException {
+    private ObjectNode loadDatabase(String filename) throws IOException {
+        return (ObjectNode) mapper.readTree(new File(DATABASE_PATH + filename));
+    }
+
+    private void saveDatabase(String filename, ObjectNode database) throws IOException {
+        mapper.writerWithDefaultPrettyPrinter()
+                .writeValue(
+                        new File(DATABASE_PATH + filename),
+                        database
+                );
+    }
+
+    public String createUser(String username, String password) throws IOException {
         // TODO: Create file when database folder, or users.json file does not exist
         // TODO: Fix when file is empty instead of {}
-        ObjectNode usersDatabase = (ObjectNode) mapper.readTree(new File(databasePath + "users.json"));
+        ObjectNode usersDatabase = loadDatabase("users.json");
 
         // Check if username already exists
-        for (Iterator<String> it = usersDatabase.fieldNames(); it.hasNext(); ) {
-            String savedUsername = it.next();
-            if (savedUsername.equals(username)) {
-                throw new IOException("Username is already in use"); // TODO: Use custom exceptions
-            }
+        if (usersDatabase.has(username)) {
+            throw new IOException("Username is already in use"); // TODO: Use custom exceptions
         }
 
         ObjectNode user = mapper.createObjectNode();
@@ -34,25 +46,50 @@ public class AuthService {
 
         System.out.println("User successfully created");
 
-        mapper.writerWithDefaultPrettyPrinter()
-                .writeValue(
-                        new File(databasePath + "users.json"),
-                        usersDatabase
-                );
+        saveDatabase("users.json", usersDatabase);
+
+        return addSession(username);
     }
 
-    // TODO: Return token instead
-    public boolean login(String username, String password) throws IOException {
-        ObjectNode usersDatabase = (ObjectNode) mapper.readTree(new File(databasePath + "users.json"));
+    // Token is returned
+    private String addSession(String username) throws IOException {
+        ObjectNode sessionsDatabase = loadDatabase("sessions.json");
+
+        UUID uuid = UUID.randomUUID();
+        String token = uuid.toString();
+        long expiresAt = System.currentTimeMillis() + DEFAULT_SESSION_DURATION_MILLIS;
+
+        ObjectNode sessionInfo = mapper.createObjectNode();
+        sessionInfo.put("username", username);
+        sessionInfo.put("expiresAt", expiresAt); // Milliseconds since epoch
+        sessionsDatabase.set(token, sessionInfo);
+
+        saveDatabase("sessions.json", sessionsDatabase);
+
+        return token;
+    }
+
+    public String login(String username, String password) throws IOException {
+        ObjectNode usersDatabase = (ObjectNode) mapper.readTree(new File(DATABASE_PATH + "users.json"));
         // In the client side, IOException should be interpreted as an unexpected server error
 
-        for (Iterator<String> it = usersDatabase.fieldNames(); it.hasNext(); ) {
-            String savedUsername = it.next();
-            if (savedUsername.equals(username)) {
-                String savedPassword = usersDatabase.get(username).get("password").asText();
-                return savedPassword.equals(password); // true: login successful, false: incorrect password
-            }
+        if (!usersDatabase.has(username)) {
+            return null; // User not found
         }
-        return false; // User not found
+
+        String savedPassword = usersDatabase.get(username).get("password").asText();
+        if (!savedPassword.equals(password)) {
+            return null; // Password do not match
+        }
+        return addSession(username);
+    }
+
+    public String usernameFromToken(String token) throws IOException {
+        ObjectNode sessionsDatabase = loadDatabase("sessions.json");
+
+        if (!sessionsDatabase.has(token)) {
+            return null;
+        }
+        return sessionsDatabase.get(token).get("username").asText();
     }
 }

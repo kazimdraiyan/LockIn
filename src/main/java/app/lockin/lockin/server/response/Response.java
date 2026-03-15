@@ -19,4 +19,8 @@ public class Response implements Serializable {
     public String getMessage() {
         return message;
     }
+
+    public Object getData() {
+        return data;
+    }
 }

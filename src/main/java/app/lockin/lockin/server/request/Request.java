@@ -6,6 +6,8 @@ import java.io.Serializable;
 
 // Serializable means convertible to a stream of bytes. Request need to be serializable, because we send stream of bytes via the sockets.
 // Sent by client
-public interface Request extends Serializable {
-    RequestType getType();
+public abstract class Request implements Serializable {
+    public String authenticatedUsername = null;
+
+    public abstract RequestType getType();
 }

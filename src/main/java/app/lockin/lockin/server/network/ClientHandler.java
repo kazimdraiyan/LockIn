@@ -1,10 +1,7 @@
 package app.lockin.lockin.server.network;
 
 import app.lockin.lockin.server.handler.AuthHandler;
-import app.lockin.lockin.server.request.LoginRequest;
-import app.lockin.lockin.server.request.LogoutRequest;
-import app.lockin.lockin.server.request.Request;
-import app.lockin.lockin.server.request.SignUpRequest;
+import app.lockin.lockin.server.request.*;
 import app.lockin.lockin.server.response.Response;
 
 import java.io.*;
@@ -23,6 +20,8 @@ public class ClientHandler implements Runnable {
 
     private boolean isRunning = true;
 
+    private String authenticatedUsername = null;
+
     // Dependency injection is used here by injecting AuthHandler into ClientHandler. TODO: Learn more about this
     public ClientHandler(Socket socket, AuthHandler authHandler) {
         this.socket = socket;
@@ -36,24 +35,41 @@ public class ClientHandler implements Runnable {
 
             // The output stream should be accessed first // TODO: Why?
             out = new ObjectOutputStream(socket.getOutputStream());
-            in  = new ObjectInputStream(socket.getInputStream());
+            in = new ObjectInputStream(socket.getInputStream());
 
             while (isRunning) {
                 Request request = (Request) in.readObject(); // Deserialize // TODO: Is this a blocking method?
                 handleRequest(request);
             }
-        } catch  (IOException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             // TODO: Close socket and other things
             e.printStackTrace();
             System.out.println("Client thread stopped due to error");
         }
     }
 
+    private void authenticateUsingToken(LoginUsingTokenRequest request) {
+        Response response = authHandler.handleLoginUsingToken(request);
+        if (response.getData() != null) {
+            authenticatedUsername = (String) response.getData();
+            System.out.println("Authentication successful: " + authenticatedUsername);
+        }
+        else {
+            System.out.println("No session found corresponding to the given token");
+        }
+    }
+
     private void handleRequest(Request request) {
+        request.authenticatedUsername = authenticatedUsername; // Attaches the current authenticated username to every request
+
         Response response = null;
         switch (request.getType()) {
             case LOGIN:
                 response = authHandler.handleLogin((LoginRequest) request);
+                authenticateUsingToken(new LoginUsingTokenRequest((String) response.getData())); // response.getData() contains the token
+                break;
+            case LOGIN_USING_TOKEN:
+                authenticateUsingToken((LoginUsingTokenRequest) request);
                 break;
             case LOGOUT:
                 response = authHandler.handleLogout((LogoutRequest) request);
@@ -61,6 +77,7 @@ public class ClientHandler implements Runnable {
                 break;
             case SIGNUP:
                 response = authHandler.handleSignUp((SignUpRequest) request);
+                authenticateUsingToken(new LoginUsingTokenRequest((String) response.getData())); // response.getData() contains the token
                 break;
         }
         if (response != null) {

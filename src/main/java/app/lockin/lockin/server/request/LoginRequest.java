@@ -1,6 +1,6 @@
 package app.lockin.lockin.server.request;
 
-public class LoginRequest implements Request{
+public class LoginRequest extends Request {
     private String username;
     private String password;
 

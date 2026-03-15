@@ -1,6 +1,7 @@
 package app.lockin.lockin.server.handler;
 
 import app.lockin.lockin.server.request.LoginRequest;
+import app.lockin.lockin.server.request.LoginUsingTokenRequest;
 import app.lockin.lockin.server.request.LogoutRequest;
 import app.lockin.lockin.server.request.SignUpRequest;
 import app.lockin.lockin.server.response.Response;
@@ -18,17 +19,31 @@ public class AuthHandler {
 
     // Example usage:
     public Response handleLogin(LoginRequest request) {
-        System.out.println("Sign up request from " + request.getUsername());
+        System.out.println("Login request from " + request.getUsername());
         try {
-            boolean success = authService.login(request.getUsername(), request.getPassword());
-            if (success) {
-                return new Response(ResponseStatus.SUCCESS, "Login successful", "TOKEN"); // TODO: Add valid token
-            }
-            else {
+            String token = authService.login(request.getUsername(), request.getPassword());
+            if (token != null) {
+                return new Response(ResponseStatus.SUCCESS, "Login successful", token);
+            } else {
                 return new Response(ResponseStatus.ERROR, "Invalid credentials", null);
             }
         } catch (IOException e) {
             System.out.println("An error occurred while trying to handle a login request");
+            return new Response(ResponseStatus.ERROR, "An unknown error occurred", null);
+        }
+    }
+
+    public Response handleLoginUsingToken(LoginUsingTokenRequest request) {
+        try {
+            System.out.println("Login using token request: " + request.getToken());
+            String username = authService.usernameFromToken(request.getToken());
+            if (username != null) {
+                return new Response(ResponseStatus.SUCCESS, "Login using token successful", username);
+            } else {
+                return new Response(ResponseStatus.ERROR, "Invalid token", null);
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred while trying to handle a login using token request");
             return new Response(ResponseStatus.ERROR, "An unknown error occurred", null);
         }
     }
@@ -40,10 +55,16 @@ public class AuthHandler {
     public Response handleSignUp(SignUpRequest request) {
         System.out.println("Sign up request from " + request.getUsername());
         try {
-            authService.createUser(request.getUsername(), request.getPassword());
+            String token = authService.createUser(request.getUsername(), request.getPassword()); // If no exceptions occur, token is expected to be non-null.
+            if (token != null) {
+                return new Response(ResponseStatus.SUCCESS, "Sign up successful", token);
+            } else {
+                System.out.println("If no exceptions are thrown during sign up, token should be non-null; but null is returned.");
+                return new Response(ResponseStatus.ERROR, "An unknown error occurred. Please try again later.", null);
+            }
         } catch (IOException e) {
             System.out.println("An error occurred while trying to create the user");
+            return new Response(ResponseStatus.ERROR, "An unknown error occurred. Please try again later.", null);
         }
-        return null;
     }
 }

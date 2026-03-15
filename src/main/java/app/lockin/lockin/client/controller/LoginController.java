@@ -49,6 +49,9 @@ public class LoginController implements MainControllerAware {
 
                 Response response = LockInApplication.clientManager.receive();
                 System.out.println(response.getMessage());
+                System.out.println(response.getData());
+
+                LockInApplication.saveToken((String) response.getData());
                 // TODO: Store authentication token
             } catch (Exception e) {
                 e.printStackTrace();

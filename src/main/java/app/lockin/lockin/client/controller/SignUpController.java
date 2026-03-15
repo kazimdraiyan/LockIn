@@ -63,7 +63,10 @@ public class SignUpController implements MainControllerAware {
                 LockInApplication.clientManager.send(request);
 
                 Response response = LockInApplication.clientManager.receive();
-                System.out.println(response.toString());
+                System.out.println(response.getMessage());
+                System.out.println(response.getData());
+
+                LockInApplication.saveToken((String) response.getData());
 
                 // TODO: Learn more about updating UI safely
             } catch (Exception e) {
