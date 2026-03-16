@@ -5,12 +5,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 import java.util.Stack;
 
-// TODO: Add back button navigation
+import app.lockin.lockin.util.ThemeManager;
+
 
 public class MainController {
     @FXML
@@ -20,9 +22,14 @@ public class MainController {
     private BorderPane rootPane;
 
     private Parent homePage;
+
+    @FXML
+    private ToggleButton darkModeToggle;
+
     @FXML
     public void initialize() {
         homePage = (Parent) rootPane.getCenter();
+        darkModeToggle.setSelected(ThemeManager.isDarkMode());
     }
 
     public void navigateHome() {
@@ -74,6 +81,12 @@ public class MainController {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    protected void handleDarkModeToggle() {
+        ThemeManager.toggle();
+        darkModeToggle.setText(ThemeManager.isDarkMode() ? "Disable Darkmode" : "Enable Darkmode");
     }
 
     // Page switching

@@ -1,6 +1,7 @@
 package app.lockin.lockin;
 
 import app.lockin.lockin.client.ClientManager;
+import app.lockin.lockin.util.ThemeManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -9,6 +10,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+
 
 public class LockInApplication extends Application {
     public static ClientManager clientManager = new ClientManager();
@@ -31,6 +34,9 @@ public class LockInApplication extends Application {
 
         FXMLLoader fxmlLoader = new FXMLLoader(LockInApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+
+        ThemeManager.register(scene);
+
         stage.setMaximized(true);
         stage.setTitle("LockIn");
         stage.setScene(scene);

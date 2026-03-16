@@ -1,0 +1,84 @@
+.right-panel {
+    -fx-background-color: #1e1e1e;
+}
+
+.left-panel {
+    -fx-background-color: linear-gradient(to bottom right, #0a2a40, #0f5a60);
+}
+
+.card {
+    -fx-background-color: #2b2b2b;
+    -fx-background-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 25, 0.2, 0, 6);
+}
+
+.card-subtitle {
+    -fx-text-fill: #aaaaaa;
+}
+
+.card-label {
+    -fx-text-fill: #cccccc;
+}
+
+.divider {
+    -fx-background-color: #444444;
+}
+
+.primary-button {
+    -fx-background-color: linear-gradient(to right, #0f6e7a, #00a085);
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.primary-button:hover {
+    -fx-background-color: linear-gradient(to right, #0d5f6a, #008f75);
+    -fx-text-fill: white;
+}
+.primary-button:pressed {
+    -fx-text-fill: white;
+}
+.primary-button:focused {
+    -fx-text-fill: white;
+}
+
+.secondary-button {
+    -fx-background-color: #2b2b2b;
+    -fx-background-radius: 10;
+    -fx-text-fill: #00C9A7;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-border-color: #1B9AAA;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+}
+.secondary-button:hover {
+    -fx-background-color: #333333;
+    -fx-text-fill: #00C9A7;
+}
+.secondary-button:pressed {
+    -fx-text-fill: #00C9A7;
+}
+.secondary-button:focused {
+    -fx-text-fill: #00C9A7;
+}
+
+.dark-toggle {
+    -fx-background-color: linear-gradient(to right, #0f6e7a, #00a085);
+    -fx-background-radius: 10;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.label {
+    -fx-text-fill: #e0e0e0;
+}
+
+.primary-button .text {
+    -fx-fill: white;
+}
+
+.secondary-button .text {
+    -fx-fill: #00C9A7;
+}

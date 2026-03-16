@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
@@ -10,122 +11,59 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1"
-            fx:id="rootPane"
-            fx:controller="app.lockin.lockin.client.controller.MainController">
+<BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="app.lockin.lockin.client.controller.MainController">
     <center>
         <AnchorPane prefHeight="720" prefWidth="1280">
-            <HBox AnchorPane.topAnchor="0"
-                  AnchorPane.bottomAnchor="0"
-                  AnchorPane.leftAnchor="0"
-                  AnchorPane.rightAnchor="0">
+            <HBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
 
                 <!-- ================= LEFT SIDE (BRANDING) ================= -->
-                <VBox prefWidth="480"
-                      alignment="CENTER"
-                      spacing="20"
-                      style="-fx-background-color: linear-gradient(to bottom right,#0F4C75,#1B9AAA);">
+                <VBox alignment="CENTER" prefWidth="480" spacing="20" styleClass="left-panel">
                     <padding>
-                        <Insets top="40" bottom="40" left="50" right="50"/>
+                        <Insets bottom="40" left="50" right="50" top="40" />
                     </padding>
-
-                    <!-- LOGO PLACEHOLDER -->
-                    <StackPane prefHeight="120" prefWidth="120"
-                               style="
-                                  -fx-background-color: rgba(255,255,255,0.15);
-                                  -fx-background-radius: 20;
-                                  -fx-border-radius: 20;
-                                  -fx-border-color: rgba(255,255,255,0.25);
-                                  -fx-border-width: 2;
-                               ">
-                        <Label text="LOGO"
-                               style="-fx-text-fill:white; -fx-opacity:0.7;"/>
-                    </StackPane>
+               <ToggleButton fx:id="darkModeToggle" mnemonicParsing="false" onAction="#handleDarkModeToggle" prefHeight="107.0" prefWidth="465.0" styleClass="dark-toggle" text="Enable Darkmode" />
 
                     <!-- APP NAME -->
                     <Label text="LockIn" textFill="WHITE">
                         <font>
-                            <Font size="34"/>
+                            <Font size="34" />
                         </font>
                     </Label>
 
                     <!-- TAGLINE -->
-                    <Label text="Focus. Secure. Achieve."
-                           wrapText="true"
-                           style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size:15;"
-                           alignment="CENTER"/>
+                    <Label alignment="CENTER" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size:15;" text="Focus. Secure. Achieve." wrapText="true" />
                 </VBox>
 
                 <!-- ================= RIGHT SIDE (HOME CARD) ================= -->
-                <StackPane style="-fx-background-color:#f6f8fa;" alignment="CENTER"
-                           HBox.hgrow="ALWAYS">
+                <StackPane alignment="CENTER" styleClass="right-panel" HBox.hgrow="ALWAYS">
 
-                    <VBox prefWidth="700"
-                          maxWidth="700"
-                          maxHeight="-Infinity"
-                          spacing="16"
-                          style="
-                            -fx-background-color:white;
-                            -fx-background-radius:14;
-                            -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.18), 25,0.2,0,6);
-                          ">
+                    <VBox maxHeight="-Infinity" maxWidth="700" prefWidth="700" spacing="16" styleClass="card">
                         <padding>
-                            <Insets top="40" right="40" bottom="40" left="40"/>
+                            <Insets bottom="40" left="40" right="40" top="40" />
                         </padding>
 
                         <!-- HEADING -->
                         <Label text="Welcome Back">
                             <font>
-                                <Font size="26"/>
+                                <Font size="26" />
                             </font>
                         </Label>
 
-                        <Label text="Sign in to your account or create a new one to get started."
-                               wrapText="true"
-                               style="-fx-text-fill:#777777;"/>
+                        <Label styleClass="card-subtitle" text="Sign in to your account or create a new one to get started." wrapText="true" />
 
                         <!-- DIVIDER -->
-                        <StackPane prefHeight="1"
-                                   maxWidth="Infinity"
-                                   style="-fx-background-color:#eeeeee;"/>
+                        <StackPane maxWidth="Infinity" prefHeight="1" styleClass="divider" />
 
                         <!-- LOGIN BUTTON -->
                         <VBox spacing="6">
-                            <Label text="Already have an account?"
-                                   style="-fx-text-fill:#555555;"/>
-                            <Button fx:id="loginButton"
-                                    text="Sign In"
-                                    onAction="#onLoginButtonClick"
-                                    prefHeight="42"
-                                    maxWidth="Infinity"
-                                    style="
-                                        -fx-background-color: linear-gradient(to right,#1B9AAA,#00C9A7);
-                                        -fx-background-radius:10;
-                                        -fx-text-fill:white;
-                                        -fx-font-weight:bold;
-                                        -fx-cursor:hand;
-                                    "/>
+                            <Label styleClass="card-label" text="Already have an account?" />
+                            <Button fx:id="loginButton" maxWidth="Infinity" onAction="#onLoginButtonClick" prefHeight="42" styleClass="primary-button" text="Sign In" />
                         </VBox>
 
                         <!-- SIGN UP BUTTON -->
                         <VBox spacing="6">
-                            <Label text="New to LockIn?"
-                                   style="-fx-text-fill:#555555;"/>
-                            <Button fx:id="signUpButton"
-                                    text="Create Account"
-                                    onAction="#onSignUpButtonClick"
-                                    prefHeight="42"
-                                    maxWidth="Infinity"
-                                    style="
-                                        -fx-background-color: white;
-                                        -fx-background-radius:10;
-                                        -fx-text-fill:#1B9AAA;
-                                        -fx-font-weight:bold;
-                                        -fx-cursor:hand;
-                                        -fx-border-color:#1B9AAA;
-                                        -fx-border-radius:10;
-                                        -fx-border-width:2;
-                                    "/>
+                            <Label styleClass="card-label" text="New to LockIn?" />
+                            <Button fx:id="signUpButton" maxWidth="Infinity" onAction="#onSignUpButtonClick" prefHeight="42" styleClass="primary-button" text="Create Account" />
                         </VBox>
 
                     </VBox>

@@ -22,36 +22,13 @@
     <HBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
 
         <!-- ================= LEFT SIDE (BRANDING) ================= -->
-        <VBox alignment="CENTER" prefWidth="480" spacing="20" style="-fx-background-color: linear-gradient(to bottom right,#0F4C75,#1B9AAA);">
+        <VBox alignment="CENTER" prefWidth="480" spacing="20" styleClass="left-panel">
 
             <padding>
                 <Insets bottom="40" left="50" right="50" top="40" />
             </padding>
 
-            <Button text="⌂  Home"
-                    onAction="#onHomeButtonClick"
-                    style="
-                        -fx-background-color: rgba(255,255,255,0.15);
-                        -fx-background-radius: 8;
-                        -fx-border-color: rgba(255,255,255,0.35);
-                        -fx-border-radius: 8;
-                        -fx-border-width: 1.5;
-                        -fx-text-fill: white;
-                        -fx-font-size: 13;
-                        -fx-cursor: hand;
-                        -fx-padding: 7 16 7 16;
-                    "/>
-
-            <!-- LOGO PLACEHOLDER -->
-            <StackPane prefHeight="120" prefWidth="120" style="
-                -fx-background-color: rgba(255,255,255,0.15);
-                -fx-background-radius: 20;
-                -fx-border-radius: 20;
-                -fx-border-color: rgba(255,255,255,0.25);
-                -fx-border-width: 2;
-            ">
-                <Label style="-fx-text-fill:white; -fx-opacity:0.7;" text="LOGO" />
-            </StackPane>
+            <Button onAction="#onHomeButtonClick" styleClass="primary-button" text="⌂  Home" />
 
             <!-- APP NAME -->
             <Label text="LockIn" textFill="WHITE">
@@ -61,19 +38,15 @@
             </Label>
 
             <!-- TAGLINE -->
-            <Label alignment="CENTER" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size:15;" text="Focus. Secure. Achieve." wrapText="true" />
+            <Label alignment="CENTER" styleClass="card-subtitle" text="Focus. Secure. Achieve." wrapText="true" />
         </VBox>
 
 
         <!-- ================= RIGHT SIDE (LOGIN UI) ================= -->
-        <StackPane style="-fx-background-color:#f6f8fa;" HBox.hgrow="ALWAYS">
+        <StackPane styleClass="right-panel" HBox.hgrow="ALWAYS">
 
             <!-- LOGIN CARD -->
-            <VBox prefWidth="700" maxHeight="-Infinity" maxWidth="700" spacing="14" style="
-                -fx-background-color:white;
-                -fx-background-radius:14;
-                -fx-effect:dropshadow(gaussian, rgba(0,0,0,0.18), 25,0.2,0,6);
-            ">
+            <VBox maxHeight="-Infinity" maxWidth="700" prefWidth="700" spacing="14" styleClass="card">
 
                 <padding>
                     <Insets bottom="40" left="40" right="40" top="40" />
@@ -85,41 +58,27 @@
                     </font>
                 </Label>
 
-                <Label style="-fx-text-fill:#777777;" text="Welcome back! Please login to continue." />
+                <Label styleClass="card-subtitle" text="Welcome back! Please login to continue." />
 
                 <!-- Username -->
                 <VBox spacing="5">
-                    <Label style="-fx-text-fill:#555555;" text="Username" />
-                    <TextField fx:id="usernameField" prefHeight="40" promptText="Enter your ID" style="
-                        -fx-background-color:#f4f6f8;
-                        -fx-background-radius:8;
-                        -fx-padding:10;
-                    " />
+                    <Label styleClass="card-subtitle" text="Username" />
+                    <TextField fx:id="usernameField" prefHeight="40" promptText="Enter your ID" styleClass="card-label" />
                 </VBox>
 
                 <!-- Password -->
                 <VBox spacing="5">
-                    <Label style="-fx-text-fill:#555555;" text="Password" />
-                    <PasswordField fx:id="passwordField" prefHeight="40" promptText="Enter password" style="
-                        -fx-background-color:#f4f6f8;
-                        -fx-background-radius:8;
-                        -fx-padding:10;
-                    " />
+                    <Label styleClass="card-subtitle" text="Password" />
+                    <PasswordField fx:id="passwordField" prefHeight="40" promptText="Enter password" styleClass="card-label" />
                 </VBox>
 
-                <CheckBox fx:id="keepSignedInCheckBox" style="-fx-text-fill:#666666;" text="Keep me signed in" />
+                <CheckBox fx:id="keepSignedInCheckBox" styleClass="card-subtitle" text="Keep me signed in" />
 
-                <Button fx:id="signInButton" maxWidth="Infinity" prefHeight="42" style="
-                    -fx-background-color: linear-gradient(to right,#1B9AAA,#00C9A7);
-                    -fx-background-radius:10;
-                    -fx-text-fill:white;
-                    -fx-font-weight:bold;
-                    -fx-cursor:hand;
-                " text="Sign In" onAction="#signIn" />
+                <Button fx:id="signInButton" maxWidth="Infinity" onAction="#signIn" prefHeight="42" styleClass="primary-button" text="Sign In" />
 
                 <HBox alignment="CENTER" spacing="6">
-                    <Label style="-fx-text-fill:#777777;" text="Don't have an account?" />
-                    <Hyperlink onAction="#onSignUpLinkClick" style="-fx-text-fill:#1B9AAA; -fx-font-weight:bold;" text="Sign Up" />
+                    <Label styleClass="card-subtitle" text="Don't have an account?" />
+                    <Hyperlink onAction="#onSignUpLinkClick" styleClass="card" text="Sign Up" />
                 </HBox>
 
             </VBox>

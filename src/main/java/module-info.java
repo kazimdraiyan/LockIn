@@ -1,6 +1,7 @@
 module app.lockin.lockin {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.prefs;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
