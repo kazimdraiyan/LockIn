@@ -1,5 +1,17 @@
 {
   "raiyan" : {
     "password" : "1234"
+  },
+  "Shonye" : {
+    "password" : "Ahon"
+  },
+  "JPEGMAFIA" : {
+    "password" : "Offline"
+  },
+  "Trial" : {
+    "password" : "trial"
+  },
+  "Goon" : {
+    "password" : "Edge"
   }
 }

@@ -23,4 +23,7 @@ public class Response implements Serializable {
     public Object getData() {
         return data;
     }
+    public  ResponseStatus getStatus() {
+        return status;
+    }
 }

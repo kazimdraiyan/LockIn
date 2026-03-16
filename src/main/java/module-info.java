@@ -6,6 +6,7 @@ module app.lockin.lockin {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
     requires com.fasterxml.jackson.databind;
+    requires javafx.graphics;
 
     opens app.lockin.lockin to javafx.fxml;
     exports app.lockin.lockin;

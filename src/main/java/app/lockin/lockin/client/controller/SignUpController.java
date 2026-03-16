@@ -3,6 +3,8 @@ package app.lockin.lockin.client.controller;
 import app.lockin.lockin.LockInApplication;
 import app.lockin.lockin.server.request.SignUpRequest;
 import app.lockin.lockin.server.response.Response;
+import app.lockin.lockin.server.response.ResponseStatus;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -66,7 +68,16 @@ public class SignUpController implements MainControllerAware {
                 System.out.println(response.getMessage());
                 System.out.println(response.getData());
 
-                LockInApplication.saveToken((String) response.getData());
+                if (response.getStatus() == ResponseStatus.SUCCESS) {
+                    LockInApplication.saveToken((String) response.getData());
+                    Platform.runLater(() -> {
+                        try { mainController.navigateTo("home-view.fxml"); }
+                        catch (Exception e) { e.printStackTrace(); }
+                    });
+                } else {
+                    // TODO: Show error on GUI using Platform.runLater as well
+                    System.out.println("Login failed: " + response.getMessage());
+                }
 
                 // TODO: Learn more about updating UI safely
             } catch (Exception e) {
