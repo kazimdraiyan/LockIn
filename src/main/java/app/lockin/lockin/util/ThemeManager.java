@@ -20,6 +20,10 @@ public class ThemeManager {
     private static final List<Scene> registeredScenes = new ArrayList<>();
     private static boolean darkMode = prefs.getBoolean("darkMode", false);
 
+    static{
+        System.out.println("Loaded darkMode from prefs: " + darkMode);
+    }
+
     /** Register a scene so it participates in theme switching */
     public static void register(Scene scene) {
         registeredScenes.add(scene);
@@ -30,6 +34,12 @@ public class ThemeManager {
     /** Toggle between dark and light mode across all registered scenes */
     public static void toggle() {
         darkMode = !darkMode;
+        prefs.putBoolean("darkMode", darkMode);
+        try{
+            prefs.flush();
+        }   catch (Exception e){
+            e.printStackTrace();
+        }
         for (Scene scene : registeredScenes) {
             if (darkMode) applyDark(scene);
             else applyLight(scene);
