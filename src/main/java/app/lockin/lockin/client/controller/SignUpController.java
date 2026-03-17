@@ -69,6 +69,7 @@ public class SignUpController implements MainControllerAware {
                 System.out.println(response.getData());
 
                 if (response.getStatus() == ResponseStatus.SUCCESS) {
+                    LockInApplication.clientManager.isLoggedIn = true;
                     LockInApplication.saveToken((String) response.getData());
                     Platform.runLater(() -> {
                         try { mainController.navigateTo("home-view.fxml"); }
@@ -76,7 +77,7 @@ public class SignUpController implements MainControllerAware {
                     });
                 } else {
                     // TODO: Show error on GUI using Platform.runLater as well
-                    System.out.println("Login failed: " + response.getMessage());
+                    System.out.println("Sign up failed: " + response.getMessage());
                 }
 
                 // TODO: Learn more about updating UI safely

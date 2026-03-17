@@ -48,7 +48,7 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    private void authenticateUsingToken(LoginUsingTokenRequest request) {
+    private Response authenticateUsingToken(LoginUsingTokenRequest request) {
         Response response = authHandler.handleLoginUsingToken(request);
         if (response.getData() != null) {
             authenticatedUsername = (String) response.getData();
@@ -57,6 +57,7 @@ public class ClientHandler implements Runnable {
         else {
             System.out.println("No session found corresponding to the given token");
         }
+        return response;
     }
 
     private void handleRequest(Request request) {
@@ -69,7 +70,7 @@ public class ClientHandler implements Runnable {
                 authenticateUsingToken(new LoginUsingTokenRequest((String) response.getData())); // response.getData() contains the token
                 break;
             case LOGIN_USING_TOKEN:
-                authenticateUsingToken((LoginUsingTokenRequest) request);
+                response = authenticateUsingToken((LoginUsingTokenRequest) request);
                 break;
             case LOGOUT:
                 response = authHandler.handleLogout((LogoutRequest) request);

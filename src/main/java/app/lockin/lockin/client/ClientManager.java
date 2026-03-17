@@ -4,6 +4,7 @@ import app.lockin.lockin.LockInApplication;
 import app.lockin.lockin.server.request.LoginUsingTokenRequest;
 import app.lockin.lockin.server.request.Request;
 import app.lockin.lockin.server.response.Response;
+import app.lockin.lockin.server.response.ResponseStatus;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,8 +19,11 @@ public class ClientManager {
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
+    public boolean isLoggedIn = false;
+
+    // Returns whether successful logging in using saved token
     public void connect(String host, int port) throws IOException {
-        Socket socket = new Socket(host, port);
+        socket = new Socket(host, port);
 
         out = new ObjectOutputStream(socket.getOutputStream());
         out.flush(); // TODO: What and why?
@@ -37,6 +41,8 @@ public class ClientManager {
 
     public void authenticateWithToken(String token) throws IOException {
         send(new LoginUsingTokenRequest(token));
+        Response response = receive();
+        isLoggedIn = response.getStatus() == ResponseStatus.SUCCESS;
     }
 
     public void send(Request request) throws IOException {

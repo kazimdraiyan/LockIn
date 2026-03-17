@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-
-
 public class LockInApplication extends Application {
     public static ClientManager clientManager = new ClientManager();
 
@@ -23,14 +21,7 @@ public class LockInApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        // TODO: Should I use the separate thread here?
-        new Thread(() -> {
-            try {
-                clientManager.connect("localhost", 1234);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+        clientManager.connect("localhost", 1234);
 
         FXMLLoader fxmlLoader = new FXMLLoader(LockInApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
