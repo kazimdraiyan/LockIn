@@ -1,10 +1,12 @@
 package app.lockin.lockin.server.service;
 
+import app.lockin.lockin.server.model.Chat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -91,5 +93,19 @@ public class AuthService {
             return null;
         }
         return sessionsDatabase.get(token).get("username").asText();
+    }
+
+    public ArrayList<Chat> loadChats(String username) throws IOException {
+        // For now loads all users
+        // TODO: Implement adding friend and load only friend chats
+        // TODO: Implement group chats
+
+        ArrayList<Chat> chats = new ArrayList<>();
+        ObjectNode usersDatabase = loadDatabase("users.json");
+        Iterator<String> usernameIterator = usersDatabase.fieldNames();
+        while (usernameIterator.hasNext()) {
+            chats.add(new Chat(usernameIterator.next()));
+        }
+        return chats;
     }
 }

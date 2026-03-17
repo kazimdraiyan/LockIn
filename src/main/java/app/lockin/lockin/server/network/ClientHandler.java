@@ -7,6 +7,8 @@ import app.lockin.lockin.server.response.Response;
 import java.io.*;
 import java.net.Socket;
 
+import static app.lockin.lockin.server.request.FetchType.CHATS;
+
 // One ClientHandler instance is created per logged-in user
 // Responsibilities: read client requests, route requests to corresponding handler class, send response to client
 // Runnable is implemented when work need to be done in a separate thread
@@ -80,10 +82,25 @@ public class ClientHandler implements Runnable {
                 response = authHandler.handleSignUp((SignUpRequest) request);
                 authenticateUsingToken(new LoginUsingTokenRequest((String) response.getData())); // response.getData() contains the token
                 break;
+            case FETCH:
+                response = handleFetchRequest((FetchRequest) request);
+                break;
         }
         if (response != null) {
             send(response);
         }
+    }
+
+    private Response handleFetchRequest(FetchRequest request) {
+        Response response = null;
+        switch (request.getFetchType()) {
+            case CHATS:
+                response = authHandler.handleFetchChats(request);
+                break;
+            case MESSAGES:
+                break;
+        }
+        return response;
     }
 
     private void send(Response response) {

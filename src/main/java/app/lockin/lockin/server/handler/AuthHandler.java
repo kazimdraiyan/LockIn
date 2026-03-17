@@ -1,14 +1,13 @@
 package app.lockin.lockin.server.handler;
 
-import app.lockin.lockin.server.request.LoginRequest;
-import app.lockin.lockin.server.request.LoginUsingTokenRequest;
-import app.lockin.lockin.server.request.LogoutRequest;
-import app.lockin.lockin.server.request.SignUpRequest;
+import app.lockin.lockin.server.model.Chat;
+import app.lockin.lockin.server.request.*;
 import app.lockin.lockin.server.response.Response;
 import app.lockin.lockin.server.response.ResponseStatus;
 import app.lockin.lockin.server.service.AuthService;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 // Handles auth related requests
 public class AuthHandler {
@@ -64,6 +63,17 @@ public class AuthHandler {
             }
         } catch (IOException e) {
             System.out.println("An error occurred while trying to create the user");
+            return new Response(ResponseStatus.ERROR, "An unknown error occurred. Please try again later.", null);
+        }
+    }
+
+    public Response handleFetchChats(FetchRequest request) {
+        System.out.println("Fetch chat list request from " + request.authenticatedUsername);
+        try {
+            ArrayList<Chat> chats = authService.loadChats(request.authenticatedUsername);
+            return new Response(ResponseStatus.SUCCESS, "Chat list successfully fetched", chats);
+        } catch (IOException e) {
+            System.out.println("An error occurred while trying to load chat list");
             return new Response(ResponseStatus.ERROR, "An unknown error occurred. Please try again later.", null);
         }
     }

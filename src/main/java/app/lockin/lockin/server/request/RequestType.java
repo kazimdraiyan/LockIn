@@ -5,5 +5,6 @@ public enum RequestType {
     LOGIN_USING_TOKEN,
     LOGOUT,
     SIGNUP,
+    FETCH,
     // TODO: Add others, like MESSAGE
 }

@@ -1,9 +1,16 @@
 package app.lockin.lockin.client.controller;
 
+import app.lockin.lockin.LockInApplication;
+import app.lockin.lockin.server.model.Chat;
+import app.lockin.lockin.server.request.FetchRequest;
+import app.lockin.lockin.server.request.FetchType;
+import app.lockin.lockin.server.response.Response;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class HomeController implements MainControllerAware {
     /*@FXML
@@ -39,4 +46,14 @@ public class HomeController implements MainControllerAware {
         System.out.println("Upload file clicked");
     }
 
+    @FXML
+    public void initialize() throws IOException{
+        // TODO: Move this to MessengerController
+        LockInApplication.clientManager.send(new FetchRequest(FetchType.CHATS));
+        Response response = LockInApplication.clientManager.receive();
+        ArrayList<Chat> chats = (ArrayList<Chat>) response.getData();
+        for (Chat chat : chats) {
+            System.out.println(chat.getName());
+        }
+    }
 }
