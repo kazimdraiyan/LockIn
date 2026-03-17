@@ -33,7 +33,7 @@
             </Label>
 
             <!-- TAGLINE -->
-            <Label alignment="CENTER" styleClass="card-subtitle" text="Secure your workflow. Start today." wrapText="true" />
+            <Label alignment="CENTER" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size:15;" text="Secure your workflow. Start today." wrapText="true" />
         </VBox>
 
         <!-- RIGHT SIGNUP CARD -->
@@ -56,20 +56,21 @@
                 <!-- Username -->
                 <VBox spacing="5">
                     <Label styleClass="card-subtitle" text="Username" />
-                    <TextField fx:id="usernameField" prefHeight="40" promptText="Enter your username" styleClass="card-label" />
+                    <TextField fx:id="usernameField" prefHeight="40" promptText="Enter your username" styleClass="input-field" />
                 </VBox>
 
                 <!-- Password -->
                 <VBox spacing="5">
                     <Label styleClass="card-subtitle" text="Password" />
-                    <PasswordField fx:id="passwordField" prefHeight="40" promptText="Enter password" styleClass="card-label" />
+                    <PasswordField fx:id="passwordField" prefHeight="40" promptText="Enter password" styleClass="input-field" />
                 </VBox>
 
                 <!-- Confirm Password -->
                 <VBox spacing="5">
                     <Label styleClass="card-subtitle" text="Confirm Password" />
-                    <PasswordField fx:id="confirmPasswordField" prefHeight="40" promptText="Confirm password" styleClass="card-label" />
+                    <PasswordField fx:id="confirmPasswordField" prefHeight="40" promptText="Confirm password" styleClass="input-field" />
                 </VBox>
+            <Label fx:id="errorLabel" prefHeight="17.0" prefWidth="697.0" styleClass="error-label" text="Label" visible="false" wrapText="true" />
 
                 <!-- Sign Up Button -->
                 <Button fx:id="signUpButton" maxWidth="Infinity" onAction="#signUp" prefHeight="42" styleClass="primary-button" text="Sign Up" />

@@ -38,7 +38,7 @@
             </Label>
 
             <!-- TAGLINE -->
-            <Label alignment="CENTER" styleClass="card-subtitle" text="Focus. Secure. Achieve." wrapText="true" />
+            <Label alignment="CENTER" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size:15;" text="Focus. Secure. Achieve." wrapText="true" />
         </VBox>
 
 
@@ -62,17 +62,18 @@
 
                 <!-- Username -->
                 <VBox spacing="5">
-                    <Label styleClass="card-subtitle" text="Username" />
-                    <TextField fx:id="usernameField" prefHeight="40" promptText="Enter your ID" styleClass="card-label" />
+                    <Label styleClass="card-label" text="Username" />
+                    <TextField fx:id="usernameField" prefHeight="40" promptText="Enter your ID" styleClass="input-field" />
                 </VBox>
 
                 <!-- Password -->
                 <VBox spacing="5">
-                    <Label styleClass="card-subtitle" text="Password" />
-                    <PasswordField fx:id="passwordField" prefHeight="40" promptText="Enter password" styleClass="card-label" />
+                    <Label styleClass="card-label" text="Password" />
+                    <PasswordField fx:id="passwordField" prefHeight="40" promptText="Enter password" styleClass="input-field" />
                 </VBox>
 
                 <CheckBox fx:id="keepSignedInCheckBox" styleClass="card-subtitle" text="Keep me signed in" />
+            <Label fx:id="errorLabel" prefHeight="17.0" prefWidth="629.0" styleClass="error-label" text="Label" visible="false" wrapText="true" />
 
                 <Button fx:id="signInButton" maxWidth="Infinity" onAction="#signIn" prefHeight="42" styleClass="primary-button" text="Sign In" />
 
