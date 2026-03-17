@@ -104,3 +104,54 @@
     -fx-border-color: #1B9AAA;
     -fx-background-color: white;
 }
+
+.root {
+    -color-bg:           #ffffff;
+    -color-text-primary: #1a1a1a;
+    -color-text-secondary: #6b7280;
+    -color-time:         #9ca3af;
+    -color-divider:      #e5e7eb;
+    -color-hover:        #f3f4f6;
+    -color-selected:     #eff6ff;
+}
+
+/* Chat */
+.chat-header {
+    -fx-border-color: #e5e7eb;
+}
+
+.chat-header-title {
+    -fx-text-fill: #1a1a1a;
+}
+
+.chat-list-view .list-cell:hover {
+    -fx-background-color: #f3f4f6;
+}
+
+.chat-list-view .list-cell:selected {
+    -fx-background-color: #eff6ff;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #eff6ff;
+}
+.chat-list-view {
+    -fx-background-color: transparent;
+}
+
+.chat-list-view .list-cell {
+    -fx-background-color: transparent;
+}
+
+.chat-name  { -fx-text-fill: #ffffff; }
+.chat-msg   { -fx-text-fill: rgba(255,255,255,0.65); }
+.chat-time  { -fx-text-fill: rgba(255,255,255,0.5); }
+
+.chat-list-view .list-cell:hover {
+    -fx-background-color: rgba(255,255,255,0.1);
+}
+
+.chat-list-view .list-cell:selected,
+.list-cell:filled:selected {
+    -fx-background-color: rgba(255,255,255,0.18);
+}

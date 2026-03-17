@@ -104,3 +104,46 @@
     -fx-border-color: #1B9AAA;
     -fx-background-color: rgba(255, 255, 255, 0.12);
 }
+
+
+.root.dark {
+    -color-bg:           #111827;
+    -color-text-primary: #f9fafb;
+    -color-text-secondary: #9ca3af;
+    -color-time:         #6b7280;
+    -color-divider:      #1f2937;
+    -color-hover:        #1f2937;
+    -color-selected:     #1e3a5f;
+}
+/* Chat */
+.chat-header {
+    -fx-border-color: #1f2937;
+}
+
+.chat-header-title {
+    -fx-text-fill: #f9fafb;
+}
+
+.chat-list-view .list-cell:hover {
+    -fx-background-color: #1f2937;
+}
+
+.chat-list-view .list-cell:selected {
+    -fx-background-color: #1e3a5f;
+}
+
+.list-cell:filled:selected {
+    -fx-background-color: #1e3a5f;
+}
+
+.chat-name  { -fx-text-fill: #f9fafb; }
+.chat-msg   { -fx-text-fill: #9ca3af; }
+.chat-time  { -fx-text-fill: #6b7280; }
+
+.chat-list-view {
+    -fx-background-color: transparent;
+}
+
+.chat-list-view .list-cell {
+    -fx-background-color: transparent;
+}

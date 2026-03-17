@@ -22,16 +22,17 @@ public class MainController {
     @FXML
     public void initialize() throws IOException {
         if (LockInApplication.clientManager.isLoggedIn) {
-            navigateTo("home-view.fxml");
+            navigateTo("chat-view.fxml");
         }
         else {
             navigateTo("welcome-view.fxml");
         }
     }
 
-    public void navigateHome() {
+    public void navigateHome() throws IOException {
         history.clear();
         rootPane.setCenter(homePage);
+        navigateTo("welcome-view.fxml");
     }
 
     private final Stack<Parent> history =  new Stack<>();

@@ -6,7 +6,6 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
 import javafx.geometry.Pos;
-import app.lockin.lockin.client.model.Chat;
 
 public class ChatCell extends ListCell<Chat> {
     // Avatar
@@ -33,18 +32,16 @@ public class ChatCell extends ListCell<Chat> {
         avatarPane.getChildren().addAll(avatarCircle, avatarLetter);
 
         // Name + message
-        nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
         nameLabel.getStyleClass().add("chat-name");
-
-        msgLabel.setStyle("-fx-font-size: 12px;");
         msgLabel.getStyleClass().add("chat-msg");
+        msgLabel.setMaxWidth(160);
+        msgLabel.setEllipsisString("...");
 
         textContainer.getChildren().addAll(nameLabel, msgLabel);
         HBox.setHgrow(textContainer, Priority.ALWAYS);
         textContainer.setAlignment(Pos.CENTER_LEFT);
 
         // Time label
-        timeLabel.setStyle("-fx-font-size: 11px;");
         timeLabel.getStyleClass().add("chat-time");
 
         // Badge
@@ -74,7 +71,10 @@ public class ChatCell extends ListCell<Chat> {
         if (empty || item == null) {
             setGraphic(null);
             setText(null);
-        } else {
+            setStyle("-fx-background-color: transparent;");
+            return;
+        }
+            setStyle("-fx-background-color: transparent;");
             // Avatar
             avatarCircle.setFill(item.getAvatarColor());
             avatarLetter.setText(String.valueOf(item.getUserName().charAt(0)).toUpperCase());
@@ -95,6 +95,6 @@ public class ChatCell extends ListCell<Chat> {
             }
 
             setGraphic(root);
-        }
+
     }
 }

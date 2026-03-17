@@ -41,7 +41,6 @@
                 <!-- Filter Tabs -->
                 <HBox spacing="8" style="-fx-padding: 8 12 4 12;">
                     <Button prefHeight="30" style="-fx-background-color: #e7f3ff; -fx-background-radius: 15; -fx-text-fill: #0866ff; -fx-font-size: 13; -fx-font-weight: bold; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 0 14 0 14;" text="Inbox" />
-                    <Button prefHeight="30" style="-fx-background-color: #f0f2f5; -fx-background-radius: 15; -fx-text-fill: #050505; -fx-font-size: 13; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 0 14 0 14;" text="Communities" />
                 </HBox>
 
                 <!-- Conversation List (Scrollable) -->
@@ -56,7 +55,6 @@
                                 <StackPane prefHeight="54" prefWidth="54" style="-fx-background-color: #00C9A7; -fx-background-radius: 27;">
                                     <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 20;" text="A" />
                                 </StackPane>
-                                <StackPane prefHeight="14" prefWidth="14" style="-fx-background-color: #44c767; -fx-background-radius: 7; -fx-border-color: white; -fx-border-radius: 7; -fx-border-width: 2;" StackPane.alignment="BOTTOM_RIGHT" />
                             </StackPane>
                             <VBox spacing="3" HBox.hgrow="ALWAYS">
                                 <Label style="-fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: #050505;" text="Abid" />
@@ -77,7 +75,6 @@
                                 <StackPane prefHeight="54" prefWidth="54" style="-fx-background-color: #f7b731; -fx-background-radius: 27;">
                                     <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 20;" text="S" />
                                 </StackPane>
-                                <StackPane prefHeight="14" prefWidth="14" style="-fx-background-color: #44c767; -fx-background-radius: 7; -fx-border-color: white; -fx-border-radius: 7; -fx-border-width: 2;" StackPane.alignment="BOTTOM_RIGHT" />
                             </StackPane>
                             <VBox spacing="3" HBox.hgrow="ALWAYS">
                                 <Label style="-fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: #050505;" text="Atanu" />
@@ -106,7 +103,6 @@
                                 <StackPane prefHeight="54" prefWidth="54" style="-fx-background-color: #8e44ad; -fx-background-radius: 27;">
                                     <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 20;" text="F" />
                                 </StackPane>
-                                <StackPane prefHeight="14" prefWidth="14" style="-fx-background-color: #44c767; -fx-background-radius: 7; -fx-border-color: white; -fx-border-radius: 7; -fx-border-width: 2;" StackPane.alignment="BOTTOM_RIGHT" />
                             </StackPane>
                             <VBox spacing="3" HBox.hgrow="ALWAYS">
                                 <Label style="-fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: #050505;" text="Farreed" />
@@ -127,7 +123,6 @@
                                 <StackPane prefHeight="54" prefWidth="54" style="-fx-background-color: #2980b9; -fx-background-radius: 27;">
                                     <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 17;" text="As" />
                                 </StackPane>
-                                <StackPane prefHeight="14" prefWidth="14" style="-fx-background-color: #44c767; -fx-background-radius: 7; -fx-border-color: white; -fx-border-radius: 7; -fx-border-width: 2;" StackPane.alignment="BOTTOM_RIGHT" />
                             </StackPane>
                             <VBox spacing="3" HBox.hgrow="ALWAYS">
                                 <Label style="-fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: #050505;" text="Ikra" />
@@ -143,9 +138,9 @@
                             <StackPane prefHeight="54" prefWidth="54">
                                 <StackPane prefHeight="38" prefWidth="38" style="-fx-background-color: #00C9A7; -fx-background-radius: 19;" StackPane.alignment="TOP_LEFT">
                                     <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;" text="A" />
-                                </StackPane>
-                                <StackPane prefHeight="38" prefWidth="38" style="-fx-background-color: #f7b731; -fx-background-radius: 19; -fx-border-color: white; -fx-border-radius: 19; -fx-border-width: 2;" StackPane.alignment="BOTTOM_RIGHT">
-                                    <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;" text="S" />
+                                   <StackPane prefHeight="38" prefWidth="38" style="-fx-background-color: #f7b731; -fx-background-radius: 19; -fx-border-color: white; -fx-border-radius: 19; -fx-border-width: 2;" StackPane.alignment="BOTTOM_RIGHT">
+                                       <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14;" text="S" />
+                                   </StackPane>
                                 </StackPane>
                             </StackPane>
                             <VBox spacing="3" HBox.hgrow="ALWAYS">
@@ -162,8 +157,6 @@
                 <HBox alignment="CENTER" spacing="0" style="-fx-background-color: white; -fx-border-color: #e4e6eb transparent transparent transparent; -fx-border-width: 1 0 0 0;">
                     <padding><Insets bottom="8" top="8" /></padding>
                     <Button prefHeight="44" prefWidth="72" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 20; -fx-border-color: transparent; -fx-text-fill: #0866ff;" text="💬" />
-                    <Button prefHeight="44" prefWidth="72" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 20; -fx-border-color: transparent; -fx-text-fill: #65676b;" text="👥" />
-                    <Button prefHeight="44" prefWidth="72" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 20; -fx-border-color: transparent; -fx-text-fill: #65676b;" text="📺" />
                     <Button prefHeight="44" prefWidth="72" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 20; -fx-border-color: transparent; -fx-text-fill: #65676b;" text="⚙️" />
                     <!-- Profile avatar at bottom -->
                     <StackPane prefHeight="36" prefWidth="36" style="-fx-cursor: hand;">
@@ -188,7 +181,6 @@
                         <StackPane prefHeight="42" prefWidth="42" style="-fx-background-color: #00C9A7; -fx-background-radius: 21;">
                             <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16;" text="A" />
                         </StackPane>
-                        <StackPane prefHeight="13" prefWidth="13" style="-fx-background-color: #44c767; -fx-background-radius: 7; -fx-border-color: white; -fx-border-radius: 7; -fx-border-width: 2;" StackPane.alignment="BOTTOM_RIGHT" />
                     </StackPane>
                     <VBox spacing="2">
                         <Label style="-fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: #050505;" text="Abid" />
