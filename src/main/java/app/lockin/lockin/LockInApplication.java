@@ -1,6 +1,8 @@
 package app.lockin.lockin;
 
 import app.lockin.lockin.client.ClientManager;
+import app.lockin.lockin.server.response.Response;
+import app.lockin.lockin.server.response.ResponseStatus;
 import app.lockin.lockin.util.ThemeManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -24,13 +26,11 @@ public class LockInApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // TODO: Should I use the separate thread here?
-        new Thread(() -> {
             try {
                 clientManager.connect("localhost", 1234);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }).start();
 
         FXMLLoader fxmlLoader = new FXMLLoader(LockInApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());

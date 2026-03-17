@@ -32,16 +32,33 @@ public class LoginController implements MainControllerAware {
         catch (Exception e) { e.printStackTrace(); }
     }
 
+    @FXML private Label errorLabel;
+
+    private void showError(String message) {
+        Platform.runLater(() -> {
+            errorLabel.setText(message);
+            errorLabel.setVisible(true);
+        });
+    }
+
+    private void clearError() {
+        Platform.runLater(() -> {
+            errorLabel.setText("");
+            errorLabel.setVisible(false);
+        });
+    }
+
     @FXML
     protected void signIn() {
         String name = usernameField.getText();
         String password = passwordField.getText();
 
-        // TODO: Show error message on the GUI
         if (name.isEmpty() || password.isEmpty()) {
-            System.out.println("Please fill all the fields");
+            showError("Please fill all the fields");
             return;
         }
+
+        clearError();
 
         new Thread(() -> {
             try {
@@ -60,8 +77,7 @@ public class LoginController implements MainControllerAware {
                         catch (Exception e) { e.printStackTrace(); }
                     });
                 } else {
-                    // TODO: Show error on GUI using Platform.runLater as well
-                    System.out.println("Login failed: " + response.getMessage());
+                    showError("Login failed: " + response.getMessage());
                 }
 
                 // TODO: Store authentication token

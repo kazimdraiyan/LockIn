@@ -39,21 +39,41 @@ public class SignUpController implements MainControllerAware {
         }
     }
 
+    @FXML private Label errorLabel;
+
+    private void showError(String message) {
+        Platform.runLater(() -> {
+            errorLabel.setText(message);
+            errorLabel.setVisible(true);
+        });
+    }
+
+    private void clearError() {
+        Platform.runLater(() -> {
+            errorLabel.setText("");
+            errorLabel.setVisible(false);
+        });
+    }
+
     @FXML
     public void signUp() {
         String name = usernameField.getText();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
 
-        // TODO: Show error message on the GUI
         if (name.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-            System.out.println("Please fill all the fields");
+            showError("Please fill all the fields");
             return;
         }
+
+        clearError();
+
         if (!password.equals(confirmPassword)) {
-            System.out.println("Passwords do not match");
+            showError("Passwords do not match");
             return;
         }
+
+        clearError();
 
         // Networking calls should be done in a separate thread so that JavaFX UI is not interrupted
         // TODO: Should I do the threading here?
@@ -75,8 +95,7 @@ public class SignUpController implements MainControllerAware {
                         catch (Exception e) { e.printStackTrace(); }
                     });
                 } else {
-                    // TODO: Show error on GUI using Platform.runLater as well
-                    System.out.println("Login failed: " + response.getMessage());
+                    showError("Login failed: " + response.getMessage());
                 }
 
                 // TODO: Learn more about updating UI safely

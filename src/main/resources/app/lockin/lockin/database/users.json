@@ -13,5 +13,11 @@
   },
   "Goon" : {
     "password" : "Edge"
+  },
+  "Arnob" : {
+    "password" : "Magul"
+  },
+  "asdf" : {
+    "password" : "asdf"
   }
 }

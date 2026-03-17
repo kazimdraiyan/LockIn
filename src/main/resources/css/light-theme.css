@@ -82,3 +82,25 @@
 .primary-button:hover {
     -fx-opacity: 0.9;
 }
+
+.error-label {
+    -fx-text-fill: #e74c3c;
+    -fx-font-size: 13;
+}
+
+.input-field {
+    -fx-background-color: rgba(0, 0, 0, 0.08);
+    -fx-background-radius: 8;
+    -fx-text-fill: #222222;
+    -fx-prompt-text-fill: rgba(0, 0, 0, 0.4);
+    -fx-font-size: 14;
+    -fx-padding: 8 12 8 12;
+    -fx-border-color: rgba(0, 0, 0, 0.15);
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.input-field:focused {
+    -fx-border-color: #1B9AAA;
+    -fx-background-color: white;
+}
