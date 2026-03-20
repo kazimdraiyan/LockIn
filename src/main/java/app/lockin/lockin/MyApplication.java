@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.net.URL;
 
 public class MyApplication extends Application {
     public static final ClientManager clientManager = new ClientManager();
@@ -19,7 +20,7 @@ public class MyApplication extends Application {
     public void start(Stage stage) throws IOException {
         clientManager.connect("localhost", 1234);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(MyApplication.class.getResource("main-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getFXML("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
         ThemeManager.register(scene);
@@ -28,6 +29,11 @@ public class MyApplication extends Application {
         stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
+    }
+
+    // TODO: Move these methods to util?
+    public static URL getFXML(String fileName) {
+        return MyApplication.class.getResource("/app/lockin/lockin/fxml/" + fileName);
     }
 
     private static Path getTokenPath() {

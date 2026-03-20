@@ -24,6 +24,6 @@ public class MessengerController implements MainControllerAware {
 
     @FXML
     protected void onHomeButtonClick() throws IOException {
-        mainController.navigateHome();
+        mainController.navigateReplacement("home-view.fxml");
     }
 }

@@ -27,7 +27,7 @@ public class WelcomeController implements MainControllerAware {
     @FXML
     protected void onLoginButtonClick() {
         try {
-            mainController.navigateTo("login-view.fxml");
+            mainController.navigatePush("login-view.fxml");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -37,7 +37,7 @@ public class WelcomeController implements MainControllerAware {
     @FXML
     protected void onSignUpButtonClick() {
         try {
-            mainController.navigateTo("sign-up-view.fxml");
+            mainController.navigatePush("sign-up-view.fxml");
         }
         catch (IOException e) {
             e.printStackTrace();

@@ -42,6 +42,6 @@ public class HomeController implements MainControllerAware {
     }
 
     public void onMessengerButtonClick(ActionEvent actionEvent) throws IOException {
-        mainController.navigateTo("messenger-view.fxml");
+        mainController.navigatePush("messenger-view.fxml");
     }
 }

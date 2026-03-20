@@ -29,13 +29,13 @@ public class SignUpController implements MainControllerAware {
 
     @FXML
     protected void onHomeButtonClick() throws IOException {
-        mainController.navigateHome();
+        mainController.navigateReplacement("welcome-view.fxml");
     }
 
     @FXML
     protected void onSignInLinkClick() {
         try {
-            mainController.navigateTo("login-view.fxml");
+            mainController.navigateReplacement("login-view.fxml");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,7 +92,7 @@ public class SignUpController implements MainControllerAware {
                     MyApplication.clientManager.isLoggedIn = true;
                     MyApplication.saveToken((String) response.getData());
                     Platform.runLater(() -> {
-                        try { mainController.navigateTo("home-view.fxml"); }
+                        try { mainController.navigateReplacement("home-view.fxml"); }
                         catch (Exception e) { e.printStackTrace(); }
                     });
                 } else {
