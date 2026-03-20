@@ -1,19 +1,11 @@
 package app.lockin.lockin.client.controller;
 
 import javafx.event.ActionEvent;
-import app.lockin.lockin.LockInApplication;
-import app.lockin.lockin.server.model.Chat;
-import app.lockin.lockin.server.request.FetchRequest;
-import app.lockin.lockin.server.request.FetchType;
-import app.lockin.lockin.server.response.Response;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class HomeController implements MainControllerAware {
     /*@FXML

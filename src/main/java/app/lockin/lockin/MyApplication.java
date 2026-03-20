@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class LockInApplication extends Application {
+public class MyApplication extends Application {
     public static ClientManager clientManager = new ClientManager();
 
     private static Path getTokenPath() {
@@ -23,7 +23,7 @@ public class LockInApplication extends Application {
     public void start(Stage stage) throws IOException {
         clientManager.connect("localhost", 1234);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(LockInApplication.class.getResource("main-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MyApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
         ThemeManager.register(scene);

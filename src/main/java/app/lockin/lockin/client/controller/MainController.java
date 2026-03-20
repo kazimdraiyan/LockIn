@@ -1,8 +1,6 @@
 package app.lockin.lockin.client.controller;
 
-import app.lockin.lockin.LockInApplication;
-import app.lockin.lockin.server.response.Response;
-import app.lockin.lockin.server.response.ResponseStatus;
+import app.lockin.lockin.MyApplication;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,7 +18,7 @@ public class MainController {
 
     @FXML
     public void initialize() throws IOException {
-        if (LockInApplication.clientManager.isLoggedIn) {
+        if (MyApplication.clientManager.isLoggedIn) {
             navigateTo("home-view.fxml");
         }
         else {

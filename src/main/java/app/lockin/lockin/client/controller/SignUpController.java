@@ -1,6 +1,6 @@
 package app.lockin.lockin.client.controller;
 
-import app.lockin.lockin.LockInApplication;
+import app.lockin.lockin.MyApplication;
 import app.lockin.lockin.server.request.SignUpRequest;
 import app.lockin.lockin.server.response.Response;
 import app.lockin.lockin.server.response.ResponseStatus;
@@ -82,15 +82,15 @@ public class SignUpController implements MainControllerAware {
                 SignUpRequest request = new SignUpRequest(usernameField.getText(), passwordField.getText());
 
                 // TODO: Should I rename LockInApplication?
-                LockInApplication.clientManager.send(request);
+                MyApplication.clientManager.send(request);
 
-                Response response = LockInApplication.clientManager.receive();
+                Response response = MyApplication.clientManager.receive();
                 System.out.println(response.getMessage());
                 System.out.println(response.getData());
 
                 if (response.getStatus() == ResponseStatus.SUCCESS) {
-                    LockInApplication.clientManager.isLoggedIn = true;
-                    LockInApplication.saveToken((String) response.getData());
+                    MyApplication.clientManager.isLoggedIn = true;
+                    MyApplication.saveToken((String) response.getData());
                     Platform.runLater(() -> {
                         try { mainController.navigateTo("home-view.fxml"); }
                         catch (Exception e) { e.printStackTrace(); }

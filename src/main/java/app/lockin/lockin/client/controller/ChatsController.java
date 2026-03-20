@@ -1,5 +1,5 @@
 package app.lockin.lockin.client.controller;
-import app.lockin.lockin.LockInApplication;
+import app.lockin.lockin.MyApplication;
 import app.lockin.lockin.client.model.Chat;
 import app.lockin.lockin.client.element.ChatCell;
 import app.lockin.lockin.server.request.FetchRequest;
@@ -30,8 +30,8 @@ public class ChatsController {
     @FXML
     public void initialize() throws IOException {
         // Placeholder data
-        LockInApplication.clientManager.send(new FetchRequest(FetchType.CHATS));
-        Response response = LockInApplication.clientManager.receive();
+        MyApplication.clientManager.send(new FetchRequest(FetchType.CHATS));
+        Response response = MyApplication.clientManager.receive();
         ArrayList<app.lockin.lockin.server.model.Chat> chats = (ArrayList<app.lockin.lockin.server.model.Chat>) response.getData();
         for (app.lockin.lockin.server.model.Chat chat : chats) {
             System.out.println(chat.getName());

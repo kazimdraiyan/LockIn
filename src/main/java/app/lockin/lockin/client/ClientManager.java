@@ -1,6 +1,6 @@
 package app.lockin.lockin.client;
 
-import app.lockin.lockin.LockInApplication;
+import app.lockin.lockin.MyApplication;
 import app.lockin.lockin.server.request.LoginUsingTokenRequest;
 import app.lockin.lockin.server.request.Request;
 import app.lockin.lockin.server.response.Response;
@@ -32,7 +32,7 @@ public class ClientManager {
         System.out.println("Connected to server");
 
         // Tries to authenticate this ClientManager's respective ClientHandler with the saved token
-        String savedToken = LockInApplication.loadToken();
+        String savedToken = MyApplication.loadToken();
         System.out.println("Trying to authenticate using saved token: " + savedToken);
         if (savedToken != null &&  !savedToken.isEmpty()) {
             authenticateWithToken(savedToken);
