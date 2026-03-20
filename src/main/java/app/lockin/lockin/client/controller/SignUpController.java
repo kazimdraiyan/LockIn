@@ -8,6 +8,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.io.IOException;
+
 public class SignUpController implements MainControllerAware {
     @FXML
     public TextField usernameField;
@@ -26,7 +28,7 @@ public class SignUpController implements MainControllerAware {
     }
 
     @FXML
-    protected void onHomeButtonClick() {
+    protected void onHomeButtonClick() throws IOException {
         mainController.navigateHome();
     }
 

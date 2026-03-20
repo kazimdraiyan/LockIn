@@ -51,7 +51,7 @@
 
                 <Button prefHeight="40" prefWidth="40" style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-cursor: hand; -fx-font-size: 15; -fx-border-color: transparent;" text="🔔" />
 
-                <Button prefHeight="40" prefWidth="40" style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-cursor: hand; -fx-font-size: 15; -fx-border-color: transparent;" text="💬" />
+                <Button prefHeight="40" prefWidth="40" onAction="#onMessengerButtonClick" style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-cursor: hand; -fx-font-size: 15; -fx-border-color: transparent;" text="💬" />
 
                 <!-- CIRCULAR PROFILE PICTURE - click to go to profile -->
                 <StackPane fx:id="profilePicContainer" onMouseClicked="#onProfilePicClick" prefHeight="40" prefWidth="40" style="-fx-cursor: hand;">

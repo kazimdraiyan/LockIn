@@ -18,7 +18,6 @@ public class MainController {
 
     private Parent homePage;
 
-
     @FXML
     public void initialize() throws IOException {
         if (LockInApplication.clientManager.isLoggedIn) {
@@ -29,9 +28,10 @@ public class MainController {
         }
     }
 
-    public void navigateHome() {
+    public void navigateHome() throws IOException {
         history.clear();
         rootPane.setCenter(homePage);
+        navigateTo("home-view.fxml");
     }
 
     private final Stack<Parent> history =  new Stack<>();

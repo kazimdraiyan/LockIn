@@ -1,0 +1,62 @@
+.unread-badge {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-padding: 2 6 2 6;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.list-cell {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* Only style filled cells */
+.list-cell:filled {
+    -fx-border-color: #f0f0f0;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Remove default blue selection */
+.list-cell:filled:selected {
+    -fx-background-color: transparent;
+}
+
+/* Empty cells — completely invisible */
+.list-cell:empty {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+/* Chat List */
+.chat-list-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.chat-list-view .list-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.chat-header {
+    -fx-padding: 16 20 12 20;
+    -fx-border-width: 0 0 1 0;
+}
+
+.chat-header-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.unread-badge {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-padding: 2 6 2 6;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
