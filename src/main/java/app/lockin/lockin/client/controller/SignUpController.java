@@ -92,7 +92,7 @@ public class SignUpController implements MainControllerAware {
                     LockInApplication.clientManager.isLoggedIn = true;
                     LockInApplication.saveToken((String) response.getData());
                     Platform.runLater(() -> {
-                        try { mainController.navigateTo("chat-view.fxml"); }
+                        try { mainController.navigateTo("home-view.fxml"); }
                         catch (Exception e) { e.printStackTrace(); }
                     });
                 } else {

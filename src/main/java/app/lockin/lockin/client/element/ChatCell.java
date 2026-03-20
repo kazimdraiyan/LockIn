@@ -1,10 +1,10 @@
-package app.lockin.lockin.client.model;
+package app.lockin.lockin.client.element;
 
+import app.lockin.lockin.client.model.Chat;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
-import javafx.scene.paint.Color;
 import javafx.geometry.Pos;
 
 public class ChatCell extends ListCell<Chat> {

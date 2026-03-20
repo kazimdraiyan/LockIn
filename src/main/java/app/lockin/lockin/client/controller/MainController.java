@@ -18,11 +18,10 @@ public class MainController {
 
     private Parent homePage;
 
-
     @FXML
     public void initialize() throws IOException {
         if (LockInApplication.clientManager.isLoggedIn) {
-            navigateTo("chat-view.fxml");
+            navigateTo("home-view.fxml");
         }
         else {
             navigateTo("welcome-view.fxml");
@@ -32,7 +31,7 @@ public class MainController {
     public void navigateHome() throws IOException {
         history.clear();
         rootPane.setCenter(homePage);
-        navigateTo("welcome-view.fxml");
+        navigateTo("home-view.fxml");
     }
 
     private final Stack<Parent> history =  new Stack<>();

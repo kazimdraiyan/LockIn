@@ -1,6 +1,6 @@
 package app.lockin.lockin.client.controller;
 import app.lockin.lockin.client.model.Chat;
-import app.lockin.lockin.client.model.ChatCell;
+import app.lockin.lockin.client.element.ChatCell;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.collections.FXCollections;
@@ -13,10 +13,7 @@ import javafx.scene.control.TextField;
 import java.io.IOException;
 import java.util.Comparator;
 
-public class ChatController implements MainControllerAware {
-
-    private MainController mainController;
-
+public class ChatsController {
     @FXML
     private ListView<Chat> chatListView;
 
@@ -25,18 +22,10 @@ public class ChatController implements MainControllerAware {
 
     private ObservableList<Chat> masterData = FXCollections.observableArrayList();
 
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-
-    @FXML
-    protected void onHomeButtonClick() throws IOException {
-        mainController.navigateHome();
-    }
-
     @FXML
     public void initialize() {
-        // Populate Data
+        // Placeholder data
+        // TODO: Add real data from server
         masterData.addAll(
                 new Chat("Abid",        "Mama Ghumacchilam",    3,  "2m",        Color.web("#12C4A3"), 2),
                 new Chat("Atanu",       "You: Gay",             0,  "15m",       Color.web("#F5B041"), 15),
@@ -46,9 +35,11 @@ public class ChatController implements MainControllerAware {
                 new Chat("LockIn Team", "Kazi: Scat khabo mama",0,  "Mon",       Color.web("#F5B041"), 2880)
         );
 
-        FilteredList<Chat> filteredData = new FilteredList<>(masterData, p -> true);
+        FilteredList<Chat> filteredData = new FilteredList<>(masterData, p -> true); // Mapped ObservableList to FilteredList
 
+        // Handle search
         searchField.textProperty().addListener((obs, oldVal, newVal) -> {
+            System.out.println("Searching for: " + newVal);
             filteredData.setPredicate(chat -> {
                 if (newVal == null || newVal.isBlank()) return true;
                 String lower = newVal.toLowerCase();
@@ -57,9 +48,9 @@ public class ChatController implements MainControllerAware {
             });
         });
 
+        // Sort by last sent message
         SortedList<Chat> sortedData = new SortedList<>(masterData,
                 Comparator.comparingLong(Chat::getTimeValue));
-
 
         // Link List to Data
         chatListView.setItems(sortedData);
@@ -74,7 +65,9 @@ public class ChatController implements MainControllerAware {
                     }
                 });
     }
+
     private void loadConversation(Chat chat) {
-        //TODO: IMPLEMENT LOAD CONVERSATIOn
+        // TODO: Implement conversation loading
+        System.out.println(chat.getUserName() + " is clicked");
     }
 }

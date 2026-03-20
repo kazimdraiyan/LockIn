@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="600.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controller.ChatController">
+<?import javafx.geometry.Insets?>
+<AnchorPane maxHeight="Infinity" VBox.vgrow="ALWAYS" prefWidth="360.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controller.ChatsController">
 
     <VBox styleClass="left-panel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-padding: 14 16 6 16;">
@@ -16,18 +17,17 @@
       
               <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 16 16 8 16;" styleClass="chat-header-title" text="Chats" />
       
-              <!-- Header -->
-      
-              <Button alignment="CENTER_RIGHT" onAction="#onHomeButtonClick" prefHeight="36.0" prefWidth="69.0" styleClass="primary-button" text="⌂  Home" textAlignment="CENTER" />
          </children>
       </HBox>
 
         <!-- Search -->
-        <TextField fx:id="searchField" promptText="Search Messenger" style="-fx-margin: 0 12 8 12;" styleClass="input-field search-field" />
+        <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-padding: 0 14 0 14;">
+            <padding><Insets bottom="8" left="12" right="12" top="8" /></padding>
+            <Label style="-fx-font-size: 13; -fx-text-fill: #777;" text="🔍" />
+            <TextField prefHeight="34" fx:id="searchField" promptText="Search Messenger" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 14;" HBox.hgrow="ALWAYS" />
+        </HBox>
 
         <!-- Chat List -->
         <ListView fx:id="chatListView" style="-fx-background-color: transparent; -fx-border-color: transparent;" styleClass="chat-list-view" VBox.vgrow="ALWAYS" />
-
     </VBox>
-
 </AnchorPane>

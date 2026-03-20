@@ -1,9 +1,12 @@
 package app.lockin.lockin.client.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+
+import java.io.IOException;
 
 public class HomeController implements MainControllerAware {
     /*@FXML
@@ -39,4 +42,7 @@ public class HomeController implements MainControllerAware {
         System.out.println("Upload file clicked");
     }
 
+    public void onMessengerButtonClick(ActionEvent actionEvent) throws IOException {
+        mainController.navigateTo("messenger-view.fxml");
+    }
 }
