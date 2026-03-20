@@ -1,16 +1,19 @@
 module app.lockin.lockin {
-    requires javafx.controls;
+    requires java.prefs; // Store user settings
+    requires com.fasterxml.jackson.databind; // Work with JSON
+
+    requires javafx.controls; // UI components
+    requires org.controlsfx.controls; // Extra UI controls
+    requires com.dlsc.formsfx; // Form utilities
     requires javafx.fxml;
-    requires java.prefs;
-
-    requires org.controlsfx.controls;
-    requires com.dlsc.formsfx;
-    requires org.kordamp.bootstrapfx.core;
-    requires com.fasterxml.jackson.databind;
     requires javafx.graphics;
+    requires org.kordamp.bootstrapfx.core;
 
+    // Runtime reflection // TODO: Learn more
     opens app.lockin.lockin to javafx.fxml;
-    exports app.lockin.lockin;
-    exports app.lockin.lockin.client.controller;
     opens app.lockin.lockin.client.controller to javafx.fxml;
+
+    // TODO: Only export necessary packages
+    exports app.lockin.lockin;
+    exports app.lockin.lockin.client;
 }

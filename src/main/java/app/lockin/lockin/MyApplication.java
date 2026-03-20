@@ -2,22 +2,18 @@ package app.lockin.lockin;
 
 import app.lockin.lockin.client.ClientManager;
 import app.lockin.lockin.util.ThemeManager;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.Scene;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class MyApplication extends Application {
-    public static ClientManager clientManager = new ClientManager();
-
-    private static Path getTokenPath() {
-        String home = System.getProperty("user.home"); // Platform independent. For example, in Windows: C:\Users\User\
-        return Path.of(home, ".lockin", "token.txt");
-    }
+    public static final ClientManager clientManager = new ClientManager();
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -28,10 +24,15 @@ public class MyApplication extends Application {
 
         ThemeManager.register(scene);
 
-        stage.setMaximized(true);
         stage.setTitle("LockIn");
+        stage.setMaximized(true);
         stage.setScene(scene);
         stage.show();
+    }
+
+    private static Path getTokenPath() {
+        String home = System.getProperty("user.home"); // Platform independent. For example, in Windows: C:\Users\User\
+        return Path.of(home, ".lockin", "token.txt");
     }
 
     public static void saveToken(String token) {

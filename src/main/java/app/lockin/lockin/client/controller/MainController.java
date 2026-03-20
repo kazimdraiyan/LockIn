@@ -9,7 +9,7 @@ import javafx.scene.layout.BorderPane;
 import java.io.IOException;
 import java.util.Stack;
 
-
+// The wrapper of every page. Every page is rendered on top of this view.
 public class MainController {
     @FXML
     private BorderPane rootPane;
