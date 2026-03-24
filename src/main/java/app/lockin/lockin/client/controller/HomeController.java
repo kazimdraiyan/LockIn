@@ -1,7 +1,10 @@
 package app.lockin.lockin.client.controller;
 
 import app.lockin.lockin.MyApplication;
-import javafx.event.ActionEvent;
+import app.lockin.lockin.server.request.LogoutRequest;
+import app.lockin.lockin.server.response.Response;
+import app.lockin.lockin.server.response.ResponseStatus;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -50,7 +53,30 @@ public class HomeController implements MainControllerAware {
     }
 
     public void logout(MouseEvent mouseEvent) {
-        System.out.println("Logout button clicked");
+        new Thread(() -> {
+            try {
+                LogoutRequest request = new LogoutRequest();
+                MyApplication.clientManager.send(request);
+
+                Response response = MyApplication.clientManager.receive();
+                System.out.println(response.getMessage());
+
+                if (response.getStatus() == ResponseStatus.SUCCESS) {
+                    MyApplication.clientManager.isLoggedIn = false;
+                    MyApplication.deleteToken();
+                    // TODO: Learn more about Platform.runLater
+                    Platform.runLater(() -> {
+                        try {
+                            mainController.navigateReplacingRoot("welcome-view.fxml");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
         // TODO: Implement logout
     }
 }

@@ -1,6 +1,7 @@
 package app.lockin.lockin.server.service;
 
 import app.lockin.lockin.server.model.Chat;
+import app.lockin.lockin.server.model.Session;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -31,7 +32,7 @@ public class AuthService {
                 );
     }
 
-    public String createUser(String username, String password) throws IOException {
+    public Session createUser(String username, String password) throws IOException {
         // TODO: Create file when database folder, or users.json file does not exist
         // TODO: Fix when file is empty instead of {}
         ObjectNode usersDatabase = loadDatabase("users.json");
@@ -54,7 +55,7 @@ public class AuthService {
     }
 
     // Token is returned
-    private String addSession(String username) throws IOException {
+    private Session addSession(String username) throws IOException {
         ObjectNode sessionsDatabase = loadDatabase("sessions.json");
 
         UUID uuid = UUID.randomUUID();
@@ -68,10 +69,18 @@ public class AuthService {
 
         saveDatabase("sessions.json", sessionsDatabase);
 
-        return token;
+        return new Session(token, username);
     }
 
-    public String login(String username, String password) throws IOException {
+    // Logout
+    public void removeSession(Session session) throws IOException {
+        if (session == null) throw new IOException("Session is null");
+        ObjectNode sessionsDatabase = loadDatabase("sessions.json");
+        sessionsDatabase.remove(session.getToken());
+        saveDatabase("sessions.json", sessionsDatabase);
+    }
+
+    public Session login(String username, String password) throws IOException {
         ObjectNode usersDatabase = (ObjectNode) mapper.readTree(new File(DATABASE_PATH + "users.json"));
         // In the client side, IOException should be interpreted as an unexpected server error
 

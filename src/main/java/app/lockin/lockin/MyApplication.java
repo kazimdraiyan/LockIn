@@ -59,6 +59,15 @@ public class MyApplication extends Application {
         }
     }
 
+    public static void deleteToken() {
+        try {
+            Files.deleteIfExists(getTokenPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error deleting token");
+        }
+    }
+
     public static String loadToken() {
         Path tokenPath = getTokenPath();
         try {

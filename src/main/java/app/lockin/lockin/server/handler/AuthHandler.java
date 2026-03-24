@@ -1,6 +1,7 @@
 package app.lockin.lockin.server.handler;
 
 import app.lockin.lockin.server.model.Chat;
+import app.lockin.lockin.server.model.Session;
 import app.lockin.lockin.server.request.*;
 import app.lockin.lockin.server.response.Response;
 import app.lockin.lockin.server.response.ResponseStatus;
@@ -13,16 +14,13 @@ import java.util.ArrayList;
 public class AuthHandler {
     AuthService authService = new AuthService();
 
-    public AuthHandler() {
-    }
-
     // Example usage:
     public Response handleLogin(LoginRequest request) {
         System.out.println("Login request from " + request.getUsername());
         try {
-            String token = authService.login(request.getUsername(), request.getPassword());
-            if (token != null) {
-                return new Response(ResponseStatus.SUCCESS, "Login successful", token);
+            Session session = authService.login(request.getUsername(), request.getPassword());
+            if (session != null) {
+                return new Response(ResponseStatus.SUCCESS, "Login successful", session);
             } else {
                 return new Response(ResponseStatus.ERROR, "Invalid credentials", null);
             }
@@ -37,7 +35,7 @@ public class AuthHandler {
             System.out.println("Login using token request: " + request.getToken());
             String username = authService.usernameFromToken(request.getToken());
             if (username != null) {
-                return new Response(ResponseStatus.SUCCESS, "Login using token successful", username);
+                return new Response(ResponseStatus.SUCCESS, "Login using token successful", new Session(request.getToken(), username));
             } else {
                 return new Response(ResponseStatus.ERROR, "Invalid token", null);
             }
@@ -48,15 +46,21 @@ public class AuthHandler {
     }
 
     public Response handleLogout(LogoutRequest request) {
-        return null;
+        try {
+            authService.removeSession(request.authenticatedSession);
+            return new Response(ResponseStatus.SUCCESS, "Logout successful", null);
+        } catch (IOException e) {
+            System.out.println("An error occurred while trying to handle a logout request");
+            return new Response(ResponseStatus.ERROR, "An unknown error occurred", null);
+        }
     }
 
     public Response handleSignUp(SignUpRequest request) {
         System.out.println("Sign up request from " + request.getUsername());
         try {
-            String token = authService.createUser(request.getUsername(), request.getPassword()); // If no exceptions occur, token is expected to be non-null.
-            if (token != null) {
-                return new Response(ResponseStatus.SUCCESS, "Sign up successful", token);
+            Session session = authService.createUser(request.getUsername(), request.getPassword()); // If no exceptions occur, token is expected to be non-null.
+            if (session != null) {
+                return new Response(ResponseStatus.SUCCESS, "Sign up successful", session);
             } else {
                 System.out.println("If no exceptions are thrown during sign up, token should be non-null; but null is returned.");
                 return new Response(ResponseStatus.ERROR, "An unknown error occurred. Please try again later.", null);
@@ -68,9 +72,9 @@ public class AuthHandler {
     }
 
     public Response handleFetchChats(FetchRequest request) {
-        System.out.println("Fetch chat list request from " + request.authenticatedUsername);
+        System.out.println("Fetch chat list request from " + request.authenticatedSession);
         try {
-            ArrayList<Chat> chats = authService.loadChats(request.authenticatedUsername);
+            ArrayList<Chat> chats = authService.loadChats(request.authenticatedSession.getUsername());
             return new Response(ResponseStatus.SUCCESS, "Chat list successfully fetched", chats);
         } catch (IOException e) {
             System.out.println("An error occurred while trying to load chat list");

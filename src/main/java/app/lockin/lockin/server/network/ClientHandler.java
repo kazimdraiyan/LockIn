@@ -1,13 +1,13 @@
 package app.lockin.lockin.server.network;
 
 import app.lockin.lockin.server.handler.AuthHandler;
+import app.lockin.lockin.server.model.Session;
 import app.lockin.lockin.server.request.*;
 import app.lockin.lockin.server.response.Response;
+import app.lockin.lockin.server.response.ResponseStatus;
 
 import java.io.*;
 import java.net.Socket;
-
-import static app.lockin.lockin.server.request.FetchType.CHATS;
 
 // One ClientHandler instance is created per logged-in user
 // Responsibilities: read client requests, route requests to corresponding handler class, send response to client
@@ -22,7 +22,7 @@ public class ClientHandler implements Runnable {
 
     private boolean isRunning = true;
 
-    private String authenticatedUsername = null;
+    private Session authenticatedSession = null;
 
     // Dependency injection is used here by injecting AuthHandler into ClientHandler. TODO: Learn more about this
     public ClientHandler(Socket socket, AuthHandler authHandler) {
@@ -53,8 +53,8 @@ public class ClientHandler implements Runnable {
     private Response authenticateUsingToken(LoginUsingTokenRequest request) {
         Response response = authHandler.handleLoginUsingToken(request);
         if (response.getData() != null) {
-            authenticatedUsername = (String) response.getData();
-            System.out.println("Authentication successful: " + authenticatedUsername);
+            authenticatedSession = (Session) response.getData();
+            System.out.println("Authentication successful: " + authenticatedSession.getUsername());
         }
         else {
             System.out.println("No session found corresponding to the given token");
@@ -63,24 +63,29 @@ public class ClientHandler implements Runnable {
     }
 
     private void handleRequest(Request request) {
-        request.authenticatedUsername = authenticatedUsername; // Attaches the current authenticated username to every request
+        request.authenticatedSession = authenticatedSession; // Attaches the current authenticated username to every request
 
         Response response = null;
+        Session newSession;
         switch (request.getType()) {
             case LOGIN:
                 response = authHandler.handleLogin((LoginRequest) request);
-                authenticateUsingToken(new LoginUsingTokenRequest((String) response.getData())); // response.getData() contains the token
+                newSession = (Session) response.getData();
+                authenticateUsingToken(new LoginUsingTokenRequest(newSession == null ? null : newSession.getToken()));
                 break;
             case LOGIN_USING_TOKEN:
                 response = authenticateUsingToken((LoginUsingTokenRequest) request);
                 break;
             case LOGOUT:
                 response = authHandler.handleLogout((LogoutRequest) request);
-                isRunning = false;
+                if (response.getStatus() == ResponseStatus.SUCCESS) {
+                    authenticatedSession = null;
+                }
                 break;
             case SIGNUP:
                 response = authHandler.handleSignUp((SignUpRequest) request);
-                authenticateUsingToken(new LoginUsingTokenRequest((String) response.getData())); // response.getData() contains the token
+                newSession = (Session) response.getData();
+                authenticateUsingToken(new LoginUsingTokenRequest(newSession == null ? null : newSession.getToken()));
                 break;
             case FETCH:
                 response = handleFetchRequest((FetchRequest) request);

@@ -1,6 +1,7 @@
 package app.lockin.lockin.client.controller;
 
 import app.lockin.lockin.MyApplication;
+import app.lockin.lockin.server.model.Session;
 import app.lockin.lockin.server.request.SignUpRequest;
 import app.lockin.lockin.server.response.Response;
 import app.lockin.lockin.server.response.ResponseStatus;
@@ -91,7 +92,7 @@ public class SignUpController implements MainControllerAware {
 
                 if (response.getStatus() == ResponseStatus.SUCCESS) {
                     MyApplication.clientManager.isLoggedIn = true;
-                    MyApplication.saveToken((String) response.getData());
+                    MyApplication.saveToken(((Session) response.getData()).getToken());
                     Platform.runLater(() -> {
                         try { mainController.navigateReplacingRoot("home-view.fxml"); }
                         catch (Exception e) { e.printStackTrace(); }
