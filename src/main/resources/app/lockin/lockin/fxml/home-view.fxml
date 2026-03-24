@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-
-<BorderPane prefHeight="720" prefWidth="1280" style="-fx-background-color: #f0f2f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controller.HomeController">
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<BorderPane prefHeight="720" prefWidth="1280" style="-fx-background-color: #f0f2f5;" xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controller.HomeController">
     <!-- ===================== MAIN BODY ===================== -->
     <center>
         <HBox spacing="0" style="-fx-background-color: #f0f2f5;">
@@ -20,27 +14,52 @@
             <!-- ===== LEFT SIDEBAR ===== -->
             <VBox prefWidth="260" spacing="2" style="-fx-background-color: transparent;">
                 <padding>
-                    <Insets bottom="12" left="12" right="8" top="12" />
+                    <Insets bottom="12" left="12" right="8" top="12"/>
                 </padding>
 
-                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
-                    <Label style="-fx-font-size: 14;" text="Home" />
+                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12"
+                      style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
+                    <ImageView
+                            preserveRatio="true">
+                        <Image url="@../icon/home.png"/>
+                    </ImageView>
+                    <Label style="-fx-font-size: 14; -fx-font-weight: bold" text="Home"/>
                 </HBox>
 
-                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
-                    <Label style="-fx-font-size: 14;" text="Chats" onMouseClicked="#onChatsButtonClick" />
+                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" onMouseClicked="#onChatsButtonClick"
+                      style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
+                    <ImageView
+                            preserveRatio="true">
+                        <Image url="@../icon/chat.png"/>
+                    </ImageView>
+                    <Label style="-fx-font-size: 14; -fx-font-weight: bold" text="Chats" />
                 </HBox>
 
-                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
-                    <Label style="-fx-font-size: 14;" text="Profile" />
+                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12"
+                      style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
+                    <ImageView
+                            preserveRatio="true">
+                        <Image url="@../icon/account.png"/>
+                    </ImageView>
+                    <Label style="-fx-font-size: 14; -fx-font-weight: bold" text="Profile"/>
                 </HBox>
 
-                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
-                    <Label style="-fx-font-size: 14;" text="Saved" />
+                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12"
+                      style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
+                    <ImageView
+                            preserveRatio="true">
+                        <Image url="@../icon/bookmark.png"/>
+                    </ImageView>
+                    <Label style="-fx-font-size: 14; -fx-font-weight: bold" text="Saved"/>
                 </HBox>
 
-                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
-                    <Label style="-fx-font-size: 14;" text="Logout" onMouseClicked="#logout" />
+                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12"
+                      style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
+                    <ImageView
+                            preserveRatio="true">
+                        <Image url="@../icon/logout.png"/>
+                    </ImageView>
+                    <Label style="-fx-font-size: 14; -fx-font-weight: bold" text="Logout" onMouseClicked="#logout"/>
                 </HBox>
 
             </VBox>
@@ -48,92 +67,130 @@
             <!-- ===== CENTER FEED ===== -->
             <VBox spacing="12" HBox.hgrow="ALWAYS">
                 <padding>
-                    <Insets bottom="12" left="8" right="8" top="12" />
+                    <Insets bottom="12" left="8" right="8" top="12"/>
                 </padding>
 
                 <!-- Create Post Box -->
-                <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 1);">
+                <VBox spacing="10"
+                      style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 1);">
                     <padding>
-                        <Insets bottom="12" left="16" right="16" top="12" />
+                        <Insets bottom="12" left="16" right="16" top="12"/>
                     </padding>
 
                     <HBox alignment="CENTER_LEFT" spacing="10">
-                        <StackPane prefHeight="40" prefWidth="40" style="-fx-background-color: #1B9AAA; -fx-background-radius: 20;">
-                            <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="U" />
+                        <StackPane prefHeight="40" prefWidth="40"
+                                   style="-fx-background-color: #1B9AAA; -fx-background-radius: 20;">
+                            <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="U"/>
                         </StackPane>
-                        <TextField prefHeight="40" promptText="Share a file or post something..." style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-padding: 0 16 0 16; -fx-border-color: transparent;" HBox.hgrow="ALWAYS" />
+                        <TextField prefHeight="40" promptText="Share a file or post something..."
+                                   style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-padding: 0 16 0 16; -fx-border-color: transparent;"
+                                   HBox.hgrow="ALWAYS"/>
                     </HBox>
 
-                    <Separator />
+                    <Separator/>
 
                     <HBox alignment="CENTER" spacing="0">
-                        <Button maxWidth="Infinity" prefHeight="36" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;" text="📷  Photo/Video" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="uploadFileButton" maxWidth="Infinity" onAction="#onUploadFileClick" prefHeight="36" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;" text="📎  Upload File" HBox.hgrow="ALWAYS" />
-                        <Button maxWidth="Infinity" prefHeight="36" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;" text="😊  Feeling" HBox.hgrow="ALWAYS" />
+                        <Button maxWidth="Infinity" prefHeight="36"
+                                style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;"
+                                text="📷  Photo/Video" HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="uploadFileButton" maxWidth="Infinity" onAction="#onUploadFileClick"
+                                prefHeight="36"
+                                style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;"
+                                text="📎  Upload File" HBox.hgrow="ALWAYS"/>
+                        <Button maxWidth="Infinity" prefHeight="36"
+                                style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;"
+                                text="😊  Feeling" HBox.hgrow="ALWAYS"/>
                     </HBox>
                 </VBox>
 
                 <!-- SCROLLABLE FILE FEED -->
-                <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;" VBox.vgrow="ALWAYS">
+                <ScrollPane fitToWidth="true"
+                            style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;"
+                            VBox.vgrow="ALWAYS">
                     <VBox fx:id="feedContainer" spacing="12">
-                        <padding><Insets bottom="12" /></padding>
+                        <padding>
+                            <Insets bottom="12"/>
+                        </padding>
 
                         <!-- FILE POST CARD 1 -->
-                        <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 1);">
+                        <VBox spacing="10"
+                              style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 1);">
                             <padding>
-                                <Insets bottom="14" left="16" right="16" top="14" />
+                                <Insets bottom="14" left="16" right="16" top="14"/>
                             </padding>
                             <HBox alignment="CENTER_LEFT" spacing="10">
-                                <StackPane prefHeight="42" prefWidth="42" style="-fx-background-color: #1B9AAA; -fx-background-radius: 21;">
-                                    <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15;" text="U" />
+                                <StackPane prefHeight="42" prefWidth="42"
+                                           style="-fx-background-color: #1B9AAA; -fx-background-radius: 21;">
+                                    <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15;"
+                                           text="U"/>
                                 </StackPane>
                                 <VBox spacing="2">
-                                    <Label style="-fx-font-weight: bold; -fx-font-size: 14;" text="Username" />
-                                    <Label style="-fx-text-fill: #777; -fx-font-size: 12;" text="Just now" />
+                                    <Label style="-fx-font-weight: bold; -fx-font-size: 14;" text="Username"/>
+                                    <Label style="-fx-text-fill: #777; -fx-font-size: 12;" text="Just now"/>
                                 </VBox>
-                                <Region HBox.hgrow="ALWAYS" />
-                                <Button style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-color: transparent;" text="•••" />
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-color: transparent;"
+                                        text="•••"/>
                             </HBox>
 
                             <!-- File preview -->
-                            <HBox alignment="CENTER_LEFT" spacing="14" style="-fx-background-color: #f0f2f5; -fx-background-radius: 10; -fx-padding: 14;">
-                                <Label style="-fx-font-size: 32;" text="📄" />
+                            <HBox alignment="CENTER_LEFT" spacing="14"
+                                  style="-fx-background-color: #f0f2f5; -fx-background-radius: 10; -fx-padding: 14;">
+                                <Label style="-fx-font-size: 32;" text="📄"/>
                                 <VBox spacing="3">
-                                    <Label style="-fx-font-weight: bold; -fx-font-size: 13;" text="project_report.pdf" />
-                                    <Label style="-fx-text-fill: #777; -fx-font-size: 12;" text="2.4 MB  ·  PDF Document" />
+                                    <Label style="-fx-font-weight: bold; -fx-font-size: 13;" text="project_report.pdf"/>
+                                    <Label style="-fx-text-fill: #777; -fx-font-size: 12;"
+                                           text="2.4 MB  ·  PDF Document"/>
                                 </VBox>
-                                <Region HBox.hgrow="ALWAYS" />
-                                <Button style="-fx-background-color: #1B9AAA; -fx-background-radius: 8; -fx-text-fill: white; -fx-font-size: 12; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 6 14 6 14;" text="Download" />
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button style="-fx-background-color: #1B9AAA; -fx-background-radius: 8; -fx-text-fill: white; -fx-font-size: 12; -fx-cursor: hand; -fx-border-color: transparent; -fx-padding: 6 14 6 14;"
+                                        text="Download"/>
                             </HBox>
 
-                            <Separator />
+                            <Separator/>
                             <HBox spacing="0">
-                                <Button maxWidth="Infinity" prefHeight="34" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;" text="👍  Like" HBox.hgrow="ALWAYS" />
-                                <Button maxWidth="Infinity" prefHeight="34" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;" text="💬  Comment" HBox.hgrow="ALWAYS" />
-                                <Button maxWidth="Infinity" prefHeight="34" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;" text="↗  Share" HBox.hgrow="ALWAYS" />
+                                <Button maxWidth="Infinity" prefHeight="34"
+                                        style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;"
+                                        text="👍  Like" HBox.hgrow="ALWAYS"/>
+                                <Button maxWidth="Infinity" prefHeight="34"
+                                        style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;"
+                                        text="💬  Comment" HBox.hgrow="ALWAYS"/>
+                                <Button maxWidth="Infinity" prefHeight="34"
+                                        style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;"
+                                        text="↗  Share" HBox.hgrow="ALWAYS"/>
                             </HBox>
                         </VBox>
 
                         <!-- TEXT POST CARD 2 -->
-                        <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 1);">
+                        <VBox spacing="10"
+                              style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 1);">
                             <padding>
-                                <Insets bottom="14" left="16" right="16" top="14" />
+                                <Insets bottom="14" left="16" right="16" top="14"/>
                             </padding>
                             <HBox alignment="CENTER_LEFT" spacing="10">
-                                <StackPane prefHeight="42" prefWidth="42" style="-fx-background-color: #0F4C75; -fx-background-radius: 21;">
-                                    <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15;" text="A" />
+                                <StackPane prefHeight="42" prefWidth="42"
+                                           style="-fx-background-color: #0F4C75; -fx-background-radius: 21;">
+                                    <Label style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15;"
+                                           text="A"/>
                                 </StackPane>
                                 <VBox spacing="2">
-                                    <Label style="-fx-font-weight: bold; -fx-font-size: 14;" text="Another User" />
-                                    <Label style="-fx-text-fill: #777; -fx-font-size: 12;" text="5 minutes ago" />
+                                    <Label style="-fx-font-weight: bold; -fx-font-size: 14;" text="Another User"/>
+                                    <Label style="-fx-text-fill: #777; -fx-font-size: 12;" text="5 minutes ago"/>
                                 </VBox>
                             </HBox>
-                            <Label style="-fx-font-size: 14;" text="Just uploaded the latest project files! Check them out 🚀" wrapText="true" />
-                            <Separator />
+                            <Label style="-fx-font-size: 14;"
+                                   text="Just uploaded the latest project files! Check them out 🚀" wrapText="true"/>
+                            <Separator/>
                             <HBox spacing="0">
-                                <Button maxWidth="Infinity" prefHeight="34" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;" text="👍  Like" HBox.hgrow="ALWAYS" />
-                                <Button maxWidth="Infinity" prefHeight="34" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;" text="💬  Comment" HBox.hgrow="ALWAYS" />
-                                <Button maxWidth="Infinity" prefHeight="34" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;" text="↗  Share" HBox.hgrow="ALWAYS" />
+                                <Button maxWidth="Infinity" prefHeight="34"
+                                        style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;"
+                                        text="👍  Like" HBox.hgrow="ALWAYS"/>
+                                <Button maxWidth="Infinity" prefHeight="34"
+                                        style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;"
+                                        text="💬  Comment" HBox.hgrow="ALWAYS"/>
+                                <Button maxWidth="Infinity" prefHeight="34"
+                                        style="-fx-background-color: transparent; -fx-cursor: hand; -fx-font-size: 13; -fx-border-color: transparent;"
+                                        text="↗  Share" HBox.hgrow="ALWAYS"/>
                             </HBox>
                         </VBox>
 
@@ -145,65 +202,87 @@
             <!-- ===== RIGHT SIDEBAR (CHATS) ===== -->
             <VBox prefWidth="260" spacing="6" style="-fx-background-color: transparent;">
                 <padding>
-                    <Insets bottom="12" left="8" right="12" top="12" />
+                    <Insets bottom="12" left="8" right="12" top="12"/>
                 </padding>
 
                 <!-- Contacts header -->
                 <HBox alignment="CENTER_LEFT">
-                    <Label style="-fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: #444;" text="Contacts" />
-                    <Region HBox.hgrow="ALWAYS" />
-                    <Button prefHeight="32" prefWidth="32" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-color: transparent; -fx-font-size: 14;" text="🔍" />
-                    <Button prefHeight="32" prefWidth="32" style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-color: transparent;" text="•••" />
+                    <Label style="-fx-font-weight: bold; -fx-font-size: 15; -fx-text-fill: #444;" text="Contacts"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button prefHeight="32" prefWidth="32"
+                            style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-color: transparent; -fx-font-size: 14;"
+                            text="🔍"/>
+                    <Button prefHeight="32" prefWidth="32"
+                            style="-fx-background-color: transparent; -fx-cursor: hand; -fx-border-color: transparent;"
+                            text="•••"/>
                 </HBox>
 
                 <!-- Contact rows -->
                 <VBox fx:id="contactsContainer" spacing="0">
 
-                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 4;">
+                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10"
+                          style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 4;">
                         <StackPane prefHeight="36" prefWidth="36">
-                            <StackPane prefHeight="36" prefWidth="36" style="-fx-background-color: #00C9A7; -fx-background-radius: 18;">
-                                <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="J" />
+                            <StackPane prefHeight="36" prefWidth="36"
+                                       style="-fx-background-color: #00C9A7; -fx-background-radius: 18;">
+                                <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="J"/>
                             </StackPane>
-                            <StackPane prefHeight="11" prefWidth="11" style="-fx-background-color: #44c767; -fx-background-radius: 6; -fx-border-color: white; -fx-border-radius: 6; -fx-border-width: 1.5;" StackPane.alignment="BOTTOM_RIGHT" />
+                            <StackPane prefHeight="11" prefWidth="11"
+                                       style="-fx-background-color: #44c767; -fx-background-radius: 6; -fx-border-color: white; -fx-border-radius: 6; -fx-border-width: 1.5;"
+                                       StackPane.alignment="BOTTOM_RIGHT"/>
                         </StackPane>
-                        <Label style="-fx-font-size: 13;" text="Abid" />
+                        <Label style="-fx-font-size: 13;" text="Abid"/>
                     </HBox>
 
-                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 4;">
+                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10"
+                          style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 4;">
                         <StackPane prefHeight="36" prefWidth="36">
-                            <StackPane prefHeight="36" prefWidth="36" style="-fx-background-color: #f7b731; -fx-background-radius: 18;">
-                                <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="S" />
+                            <StackPane prefHeight="36" prefWidth="36"
+                                       style="-fx-background-color: #f7b731; -fx-background-radius: 18;">
+                                <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="S"/>
                             </StackPane>
-                            <StackPane prefHeight="11" prefWidth="11" style="-fx-background-color: #44c767; -fx-background-radius: 6; -fx-border-color: white; -fx-border-radius: 6; -fx-border-width: 1.5;" StackPane.alignment="BOTTOM_RIGHT" />
+                            <StackPane prefHeight="11" prefWidth="11"
+                                       style="-fx-background-color: #44c767; -fx-background-radius: 6; -fx-border-color: white; -fx-border-radius: 6; -fx-border-width: 1.5;"
+                                       StackPane.alignment="BOTTOM_RIGHT"/>
                         </StackPane>
-                        <Label style="-fx-font-size: 13;" text="Atanu" />
+                        <Label style="-fx-font-size: 13;" text="Atanu"/>
                     </HBox>
 
-                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 4;">
-                        <StackPane prefHeight="36" prefWidth="36" style="-fx-background-color: #e74c3c; -fx-background-radius: 18;">
-                            <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="M" />
+                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10"
+                          style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 4;">
+                        <StackPane prefHeight="36" prefWidth="36"
+                                   style="-fx-background-color: #e74c3c; -fx-background-radius: 18;">
+                            <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="M"/>
                         </StackPane>
-                        <Label style="-fx-font-size: 13; -fx-text-fill: #555;" text="Tahsinul" />
+                        <Label style="-fx-font-size: 13; -fx-text-fill: #555;" text="Tahsinul"/>
                     </HBox>
 
-                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 4;">
+                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10"
+                          style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 4;">
                         <StackPane prefHeight="36" prefWidth="36">
-                            <StackPane prefHeight="36" prefWidth="36" style="-fx-background-color: #8e44ad; -fx-background-radius: 18;">
-                                <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="L" />
+                            <StackPane prefHeight="36" prefWidth="36"
+                                       style="-fx-background-color: #8e44ad; -fx-background-radius: 18;">
+                                <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="L"/>
                             </StackPane>
-                            <StackPane prefHeight="11" prefWidth="11" style="-fx-background-color: #44c767; -fx-background-radius: 6; -fx-border-color: white; -fx-border-radius: 6; -fx-border-width: 1.5;" StackPane.alignment="BOTTOM_RIGHT" />
+                            <StackPane prefHeight="11" prefWidth="11"
+                                       style="-fx-background-color: #44c767; -fx-background-radius: 6; -fx-border-color: white; -fx-border-radius: 6; -fx-border-width: 1.5;"
+                                       StackPane.alignment="BOTTOM_RIGHT"/>
                         </StackPane>
-                        <Label style="-fx-font-size: 13;" text="Farreed" />
+                        <Label style="-fx-font-size: 13;" text="Farreed"/>
                     </HBox>
 
-                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 4;">
+                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10"
+                          style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 4;">
                         <StackPane prefHeight="36" prefWidth="36">
-                            <StackPane prefHeight="36" prefWidth="36" style="-fx-background-color: #2980b9; -fx-background-radius: 18;">
-                                <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="D" />
+                            <StackPane prefHeight="36" prefWidth="36"
+                                       style="-fx-background-color: #2980b9; -fx-background-radius: 18;">
+                                <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="D"/>
                             </StackPane>
-                            <StackPane prefHeight="11" prefWidth="11" style="-fx-background-color: #44c767; -fx-background-radius: 6; -fx-border-color: white; -fx-border-radius: 6; -fx-border-width: 1.5;" StackPane.alignment="BOTTOM_RIGHT" />
+                            <StackPane prefHeight="11" prefWidth="11"
+                                       style="-fx-background-color: #44c767; -fx-background-radius: 6; -fx-border-color: white; -fx-border-radius: 6; -fx-border-width: 1.5;"
+                                       StackPane.alignment="BOTTOM_RIGHT"/>
                         </StackPane>
-                        <Label style="-fx-font-size: 13;" text="Asif" />
+                        <Label style="-fx-font-size: 13;" text="Asif"/>
                     </HBox>
 
                 </VBox>
