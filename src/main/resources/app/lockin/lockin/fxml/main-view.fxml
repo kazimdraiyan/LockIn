@@ -2,8 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <BorderPane fx:id="rootPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="app.lockin.lockin.client.controller.MainController">
@@ -56,7 +55,10 @@
                 <HBox.margin>
                     <Insets bottom="10" top="10"/>
                 </HBox.margin>
-                <Label style="-fx-font-size: 13; -fx-text-fill: #777;" text="🔍"/>
+                <ImageView fitWidth="18" fitHeight="18"
+                        preserveRatio="true">
+                    <Image url="@../icon/search.png"/>
+                </ImageView>
                 <TextField prefHeight="36" prefWidth="260" promptText="Search..."
                            style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 13;"/>
             </HBox>
@@ -70,7 +72,7 @@
                         style="-fx-background-color: #dfdfdf; -fx-background-radius: 20; -fx-cursor: hand; -fx-border-color: transparent;">
                     <graphic>
                         <ImageView fx:id="themeToggleIcon"
-                                preserveRatio="true">
+                                   preserveRatio="true">
                         </ImageView>
                     </graphic>
                 </Button>

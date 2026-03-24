@@ -5,6 +5,8 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <AnchorPane maxHeight="Infinity" prefWidth="360.0" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/25"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controller.ChatsController">
 
@@ -16,7 +18,10 @@
             <padding>
                 <Insets bottom="8" left="12" right="12" top="8"/>
             </padding>
-            <Label style="-fx-font-size: 13; -fx-text-fill: #777;" text="🔍"/>
+            <ImageView fitWidth="18" fitHeight="18"
+                       preserveRatio="true">
+                <Image url="@../icon/search.png"/>
+            </ImageView>
             <TextField fx:id="searchField" prefHeight="34" promptText="Search Messenger"
                        style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 14;"
                        HBox.hgrow="ALWAYS"/>
