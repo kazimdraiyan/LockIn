@@ -7,12 +7,8 @@ import java.io.IOException;
 
 import app.lockin.lockin.util.ThemeManager;
 
-
 public class WelcomeController implements MainControllerAware {
-    @FXML
-    private ToggleButton darkModeToggle;
-
-    MainController mainController;
+    public MainController mainController;
 
     @Override
     public void setMainController(MainController mainController) {
@@ -38,11 +34,5 @@ public class WelcomeController implements MainControllerAware {
         catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    protected void handleDarkModeToggle() {
-
-        darkModeToggle.setText(ThemeManager.isDarkMode() ? "Disable Darkmode" : "Enable Darkmode");
     }
 }

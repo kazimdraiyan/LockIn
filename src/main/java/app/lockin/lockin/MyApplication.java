@@ -36,6 +36,10 @@ public class MyApplication extends Application {
         return MyApplication.class.getResource("/app/lockin/lockin/fxml/" + fileName);
     }
 
+    public static URL getIcon(String fileName) {
+        return MyApplication.class.getResource("/app/lockin/lockin/icon/" + fileName);
+    }
+
     private static Path getTokenPath() {
         String home = System.getProperty("user.home"); // Platform independent. For example, in Windows: C:\Users\User\
         return Path.of(home, ".lockin", "token.txt");
