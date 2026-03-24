@@ -5,13 +5,14 @@ import javafx.fxml.FXML;
 
 import java.io.IOException;
 
-// TODO: rename to a better name\
+// TODO: rename to a better name
 // TODO: fix dark mode in messages view
 public class MessengerController implements MainControllerAware {
     private MainController mainController;
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        mainController.setNavBar(true, "Chats", false);
     }
 
     public void onAttachFile(ActionEvent actionEvent) {
@@ -24,6 +25,6 @@ public class MessengerController implements MainControllerAware {
 
     @FXML
     protected void onHomeButtonClick() throws IOException {
-        mainController.navigateReplacement("home-view.fxml");
+        mainController.navigateReplacingRoot("home-view.fxml");
     }
 }

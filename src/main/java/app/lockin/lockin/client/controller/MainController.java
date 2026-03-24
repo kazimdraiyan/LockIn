@@ -1,17 +1,34 @@
 package app.lockin.lockin.client.controller;
 
 import app.lockin.lockin.MyApplication;
+import app.lockin.lockin.client.model.Page;
+import app.lockin.lockin.util.ThemeManager;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 import java.util.Stack;
 
 // The wrapper of every page. Every page is rendered on top of this view.
 public class MainController {
-    private final Stack<Parent> history = new Stack<>();
+    private final Stack<Page> history = new Stack<>();
+
+    @FXML
+    public Label title;
+
+    @FXML
+    public HBox navBar;
+
+    @FXML
+    public Button backButton;
+
+    @FXML
+    public HBox searchBar;
 
     @FXML
     private BorderPane rootPane;
@@ -19,43 +36,64 @@ public class MainController {
     @FXML
     public void initialize() throws IOException {
         if (MyApplication.clientManager.isLoggedIn) {
-            navigateReplacement("home-view.fxml");
+            navigateReplacingRoot("home-view.fxml");
         } else {
-            navigateReplacement("welcome-view.fxml");
+            navigateReplacingRoot("welcome-view.fxml");
         }
     }
 
-    private Parent loadFXML(String fxmlFileName) throws IOException {
+    public void setNavBar(boolean showNavBar, String titleString, boolean showSearchBar) {
+        navBar.setManaged(showNavBar);
+        backButton.setDisable(history.size() <= 1);
+        title.setText(titleString);
+        searchBar.setVisible(showSearchBar);
+        searchBar.setManaged(showSearchBar);
+    }
+
+    private Page loadFXML(String fxmlFileName) throws IOException {
         FXMLLoader loader = new FXMLLoader(MyApplication.getFXML(fxmlFileName));
         Parent page = loader.load();
-        Object controller = loader.getController();
-
-        // Inject this MainController object to the controller of the loaded page
-        if (controller instanceof MainControllerAware awareController) {
-            awareController.setMainController(this);
-        }
-        return page;
+        return new Page(page, loader);
     }
 
     // Keeps the history
     public void navigatePush(String fxmlFileName) throws IOException {
-        // Add the current page to history
-        Parent current = (Parent) rootPane.getCenter();
-        if (current != null) history.push(current);
+        Page loadedPage = loadFXML(fxmlFileName);
+        rootPane.setCenter(loadedPage.root);
+        history.push(loadedPage);
+        // Inject this MainController object to the controller of the loaded page
+        if (loadedPage.fxmlLoader.getController() instanceof MainControllerAware awareController) {
+            awareController.setMainController(this);
+        }
+    }
 
-        rootPane.setCenter(loadFXML(fxmlFileName));
+    // Replaces the last added page of the history
+    public void navigateReplacingCurrent(String fxmlFileName) throws IOException {
+        if (!history.isEmpty()) {
+            history.pop();
+        }
+        navigatePush(fxmlFileName);
     }
 
     // Deletes the history
-    public void navigateReplacement(String fxmlFileName) throws IOException {
+    public void navigateReplacingRoot(String fxmlFileName) throws IOException {
         history.clear();
-        rootPane.setCenter(loadFXML(fxmlFileName));
+        navigatePush(fxmlFileName);
     }
 
-    // TODO: Implement back button in every page
+    // Go back to the last page
     public void navigatePop() {
         if (!history.isEmpty()) {
-            rootPane.setCenter(history.pop());
+            history.pop(); // Removes the current page
+            rootPane.setCenter(history.peek().root); // Sets the last page
+            // Initializes the last page controller
+            if (history.peek().fxmlLoader.getController() instanceof MainControllerAware awareController) {
+                awareController.setMainController(this);
+            }
         }
+    }
+
+    public void toggleTheme() {
+        ThemeManager.toggle();
     }
 }

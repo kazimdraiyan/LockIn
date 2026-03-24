@@ -1,33 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<AnchorPane maxHeight="Infinity" prefWidth="360.0" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controller.ChatsController">
 
-<?import javafx.geometry.Insets?>
-<AnchorPane maxHeight="Infinity" VBox.vgrow="ALWAYS" prefWidth="360.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controller.ChatsController">
-
-    <VBox styleClass="left-panel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-padding: 14 16 6 16;">
-         <children>
-      
-              <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 16 16 8 16;" styleClass="chat-header-title" text="Chats" />
-      
-         </children>
-      </HBox>
-
+    <VBox styleClass="left-panel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0">
         <!-- Search -->
-        <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-padding: 0 14 0 14;">
-            <padding><Insets bottom="8" left="12" right="12" top="8" /></padding>
-            <Label style="-fx-font-size: 13; -fx-text-fill: #777;" text="🔍" />
-            <TextField prefHeight="34" fx:id="searchField" promptText="Search Messenger" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 14;" HBox.hgrow="ALWAYS" />
+        <HBox alignment="CENTER_LEFT" spacing="8"
+              style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-padding: 0 14 0 14;">
+            <padding>
+                <Insets bottom="8" left="12" right="12" top="8"/>
+            </padding>
+            <Label style="-fx-font-size: 13; -fx-text-fill: #777;" text="🔍"/>
+            <TextField fx:id="searchField" prefHeight="34" promptText="Search Messenger"
+                       style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 14;"
+                       HBox.hgrow="ALWAYS"/>
+            <VBox.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </VBox.margin>
         </HBox>
 
         <!-- Chat List -->
-        <ListView fx:id="chatListView" style="-fx-background-color: transparent; -fx-border-color: transparent;" styleClass="chat-list-view" VBox.vgrow="ALWAYS" />
+        <ListView fx:id="chatListView" style="-fx-background-color: transparent; -fx-border-color: transparent;"
+                  styleClass="chat-list-view" VBox.vgrow="ALWAYS"/>
     </VBox>
 </AnchorPane>

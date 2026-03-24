@@ -20,8 +20,6 @@
 
             <!-- ===== LEFT PANEL: CONVERSATIONS LIST ===== -->
             <VBox prefWidth="360" style="-fx-background-color: white;">
-                <!-- Header -->
-                <Button alignment="CENTER_RIGHT" onAction="#onHomeButtonClick" prefHeight="36.0" prefWidth="69.0" styleClass="primary-button" text="⌂  Home" textAlignment="CENTER" />
                 <!-- Chats-->
                 <fx:include source="chats-view.fxml"/>
             </VBox>

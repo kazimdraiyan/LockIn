@@ -21,16 +21,17 @@ public class LoginController implements MainControllerAware {
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        mainController.setNavBar(true, "Login", false);
     }
 
     @FXML
     protected void onHomeButtonClick() throws IOException {
-        mainController.navigateReplacement("welcome-view.fxml");
+        mainController.navigateReplacingRoot("welcome-view.fxml");
     }
 
     @FXML
     protected void onSignUpLinkClick() {
-        try { mainController.navigateReplacement("sign-up-view.fxml"); }
+        try { mainController.navigateReplacingCurrent("sign-up-view.fxml"); }
         catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -75,7 +76,7 @@ public class LoginController implements MainControllerAware {
                     MyApplication.clientManager.isLoggedIn = true;
                     MyApplication.saveToken((String) response.getData());
                     Platform.runLater(() -> {
-                        try { mainController.navigateReplacement("home-view.fxml"); }
+                        try { mainController.navigateReplacingRoot("home-view.fxml"); }
                         catch (Exception e) { e.printStackTrace(); }
                     });
                 } else {

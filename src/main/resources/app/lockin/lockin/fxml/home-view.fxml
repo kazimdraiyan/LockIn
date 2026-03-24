@@ -13,58 +13,6 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="720" prefWidth="1280" style="-fx-background-color: #f0f2f5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controller.HomeController">
-
-    <!-- ===================== TOP NAVBAR ===================== -->
-    <top>
-        <HBox alignment="CENTER_LEFT" prefHeight="56" spacing="0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 2);">
-            <padding>
-                <Insets left="16" right="16" />
-            </padding>
-
-            <!-- APP NAME -->
-            <Label style="-fx-text-fill: #1B9AAA; -fx-font-weight: bold; -fx-font-size: 22;" text="LockIn" />
-
-            <!-- SEARCH BAR -->
-            <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-padding: 0 14 0 14;">
-                <padding>
-                    <Insets left="16" />
-                </padding>
-                <Label style="-fx-font-size: 13; -fx-text-fill: #777;" text="🔍" />
-                <TextField prefHeight="36" prefWidth="180" promptText="Search LockIn..." style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 13;" />
-            </HBox>
-
-            <!-- SPACER -->
-            <Region HBox.hgrow="ALWAYS" />
-
-            <!-- NAV ICONS CENTER -->
-            <HBox alignment="CENTER" spacing="4">
-                <Button prefHeight="40" prefWidth="48" style="-fx-background-color: #e7f3ff; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 16; -fx-border-color: transparent;" text="🏠" />
-                <Button prefHeight="40" prefWidth="48" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 16; -fx-border-color: transparent;" text="👥" />
-                <Button prefHeight="40" prefWidth="48" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 16; -fx-border-color: transparent;" text="📺" />
-            </HBox>
-
-            <!-- SPACER -->
-            <Region HBox.hgrow="ALWAYS" />
-
-            <!-- RIGHT: NOTIFICATIONS + PROFILE -->
-            <HBox alignment="CENTER" spacing="8">
-
-                <Button prefHeight="40" prefWidth="40" style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-cursor: hand; -fx-font-size: 15; -fx-border-color: transparent;" text="🔔" />
-
-                <Button prefHeight="40" prefWidth="40" onAction="#onMessengerButtonClick" style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-cursor: hand; -fx-font-size: 15; -fx-border-color: transparent;" text="💬" />
-
-                <!-- CIRCULAR PROFILE PICTURE - click to go to profile -->
-                <StackPane fx:id="profilePicContainer" onMouseClicked="#onProfilePicClick" prefHeight="40" prefWidth="40" style="-fx-cursor: hand;">
-                    <StackPane prefHeight="40" prefWidth="40" style="                                    -fx-background-color: #1B9AAA;                                    -fx-background-radius: 20;                                    -fx-border-color: #0F4C75;                                    -fx-border-radius: 20;                                    -fx-border-width: 2;                                ">
-                        <!-- Swap this Label for an ImageView with clip when you have a real profile image -->
-                        <Label fx:id="profileInitialsLabel" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16;" text="U" />
-                    </StackPane>
-                </StackPane>
-
-            </HBox>
-        </HBox>
-    </top>
-
     <!-- ===================== MAIN BODY ===================== -->
     <center>
         <HBox spacing="0" style="-fx-background-color: #f0f2f5;">
@@ -75,32 +23,24 @@
                     <Insets bottom="12" left="12" right="8" top="12" />
                 </padding>
 
-                <!-- Profile shortcut -->
-                <HBox alignment="CENTER_LEFT" onMouseClicked="#onProfilePicClick" prefHeight="48" spacing="12" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
-                    <StackPane prefHeight="36" prefWidth="36" style="-fx-background-color: #1B9AAA; -fx-background-radius: 18;">
-                        <Label fx:id="sidebarInitialsLabel" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13;" text="U" />
-                    </StackPane>
-                    <Label fx:id="sidebarUsernameLabel" style="-fx-font-weight: bold; -fx-font-size: 14;" text="Your Profile" />
+                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
+                    <Label style="-fx-font-size: 14;" text="Home" />
                 </HBox>
 
                 <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
-                    <Label style="-fx-font-size: 20;" text="👥" />
-                    <Label style="-fx-font-size: 14;" text="Friends" />
+                    <Label style="-fx-font-size: 14;" text="Chats" onMouseClicked="#onChatsButtonClick" />
                 </HBox>
 
                 <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
-                    <Label style="-fx-font-size: 20;" text="📁" />
-                    <Label style="-fx-font-size: 14;" text="Files" />
+                    <Label style="-fx-font-size: 14;" text="Profile" />
                 </HBox>
 
                 <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
-                    <Label style="-fx-font-size: 20;" text="🔖" />
                     <Label style="-fx-font-size: 14;" text="Saved" />
                 </HBox>
 
                 <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" style="-fx-background-radius: 8; -fx-cursor: hand; -fx-padding: 0 8 0 8;">
-                    <Label style="-fx-font-size: 20;" text="⚙️" />
-                    <Label style="-fx-font-size: 14;" text="Settings" />
+                    <Label style="-fx-font-size: 14;" text="Logout" onMouseClicked="#logout" />
                 </HBox>
 
             </VBox>

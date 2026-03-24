@@ -22,6 +22,7 @@ public class WelcomeController implements MainControllerAware {
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        mainController.setNavBar(false, null, false);
     }
 
     @FXML
@@ -46,7 +47,7 @@ public class WelcomeController implements MainControllerAware {
 
     @FXML
     protected void handleDarkModeToggle() {
-        ThemeManager.toggle();
+
         darkModeToggle.setText(ThemeManager.isDarkMode() ? "Disable Darkmode" : "Enable Darkmode");
     }
 }

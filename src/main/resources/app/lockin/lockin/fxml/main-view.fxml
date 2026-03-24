@@ -1,7 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 
-<BorderPane fx:id="rootPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="app.lockin.lockin.client.controller.MainController">
+<BorderPane fx:id="rootPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controller.MainController">
+    <!-- Nav bar -->
+    <top>
+        <HBox fx:id="navBar" alignment="CENTER_LEFT" prefHeight="60" prefWidth="749.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 2);">
+            <padding>
+                <Insets left="16" right="16" />
+            </padding>
+
+            <!-- Leading icons -->
+            <HBox alignment="CENTER" spacing="8">
+                <Button fx:id="backButton" onAction="#navigatePop" prefHeight="40" prefWidth="40" style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-cursor: hand; -fx-font-size: 16; -fx-border-color: transparent;" text="B" />
+            </HBox>
+
+            <!-- Spacer -->
+            <Region prefWidth="16.0"/>
+
+            <!-- Page title -->
+            <!-- TODO: Add custom page title management -->
+            <HBox alignment="CENTER_LEFT" prefHeight="60">
+            <Label fx:id="title" style="-fx-text-fill: #1B9AAA; -fx-font-weight: bold; -fx-font-size: 22;" text="LockIn" />
+            </HBox>
+
+            <!-- Spacer -->
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- Search bar -->
+            <HBox fx:id="searchBar" alignment="CENTER_LEFT" spacing="8" style="-fx-background-color: #efefef; -fx-background-radius: 20; -fx-padding: 0 14 0 14;">
+                <HBox.margin>
+                    <Insets bottom="10" top="10" />
+                </HBox.margin>
+                <Label style="-fx-font-size: 13; -fx-text-fill: #777;" text="🔍" />
+                <TextField prefHeight="36" prefWidth="260" promptText="Search..." style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 13;" />
+            </HBox>
+
+            <!-- Spacer -->
+            <Region HBox.hgrow="ALWAYS" />
+
+            <!-- Trailing icons -->
+            <HBox alignment="CENTER" spacing="8">
+                <Button onAction="#toggleTheme" prefHeight="40" prefWidth="40" style="-fx-background-color: #f0f2f5; -fx-background-radius: 20; -fx-cursor: hand; -fx-font-size: 16; -fx-border-color: transparent;" text="D" />
+            </HBox>
+        </HBox>
+    </top>
+
     <!-- Placeholder for pages -->
 </BorderPane>

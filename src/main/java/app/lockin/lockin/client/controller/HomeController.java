@@ -1,8 +1,10 @@
 package app.lockin.lockin.client.controller;
 
+import app.lockin.lockin.MyApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -29,7 +31,9 @@ public class HomeController implements MainControllerAware {
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+        mainController.setNavBar(true, "LockIn", true);
     }
+
     @FXML
     protected void onProfilePicClick() {
         // TODO: navigate to profile view
@@ -41,7 +45,12 @@ public class HomeController implements MainControllerAware {
         System.out.println("Upload file clicked");
     }
 
-    public void onMessengerButtonClick(ActionEvent actionEvent) throws IOException {
+    public void onChatsButtonClick(MouseEvent mouseEvent) throws IOException {
         mainController.navigatePush("messenger-view.fxml");
+    }
+
+    public void logout(MouseEvent mouseEvent) {
+        System.out.println("Logout button clicked");
+        // TODO: Implement logout
     }
 }
