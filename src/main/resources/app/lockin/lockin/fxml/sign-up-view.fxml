@@ -23,8 +23,6 @@
                 <Insets bottom="40" left="50" right="50" top="40" />
             </padding>
 
-            <Button onAction="#onHomeButtonClick" styleClass="primary-button" text="⌂  Home" />
-
             <!-- APP NAME -->
             <Label text="LockIn" textFill="WHITE">
                 <font>
@@ -78,7 +76,7 @@
                 <!-- Footer -->
                 <HBox alignment="CENTER" spacing="6">
                     <Label styleClass="card-subtitle" text="Already have an account?" />
-                    <Hyperlink onAction="#onSignInLinkClick" styleClass="card" text="Sign In" />
+                    <Hyperlink onAction="#onSignInLinkClick" styleClass="card" text="Login" />
                 </HBox>
 
             </VBox>

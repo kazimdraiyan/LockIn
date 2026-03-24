@@ -19,7 +19,6 @@
                 <padding>
                     <Insets bottom="40" left="50" right="50" top="40" />
                 </padding>
-                <ToggleButton fx:id="darkModeToggle" mnemonicParsing="false" onAction="#handleDarkModeToggle" prefHeight="107.0" prefWidth="465.0" styleClass="dark-toggle" text="Enable Darkmode" />
 
                 <!-- APP NAME -->
                 <Label text="LockIn" textFill="WHITE">
@@ -47,7 +46,7 @@
                         </font>
                     </Label>
 
-                    <Label styleClass="card-subtitle" text="Sign in to your account or create a new one to get started." wrapText="true" />
+                    <Label styleClass="card-subtitle" text="Login to your account or create a new one to get started." wrapText="true" />
 
                     <!-- DIVIDER -->
                     <StackPane maxWidth="Infinity" prefHeight="1" styleClass="divider" />
@@ -55,7 +54,7 @@
                     <!-- LOGIN BUTTON -->
                     <VBox spacing="6">
                         <Label styleClass="card-label" text="Already have an account?" />
-                        <Button fx:id="loginButton" maxWidth="Infinity" onAction="#onLoginButtonClick" prefHeight="42" styleClass="primary-button" text="Sign In" />
+                        <Button fx:id="loginButton" maxWidth="Infinity" onAction="#onLoginButtonClick" prefHeight="42" styleClass="primary-button" text="Login" />
                     </VBox>
 
                     <!-- SIGN UP BUTTON -->

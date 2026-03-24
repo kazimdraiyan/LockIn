@@ -12,7 +12,6 @@ import java.io.IOException;
 
 public class LoginController implements MainControllerAware {
     @FXML public TextField usernameField;
-    @FXML public CheckBox keepSignedInCheckBox;
     @FXML public PasswordField passwordField;
     @FXML public Button signInButton;
 
@@ -52,7 +51,7 @@ public class LoginController implements MainControllerAware {
     }
 
     @FXML
-    protected void signIn() {
+    protected void login() {
         String name = usernameField.getText();
         String password = passwordField.getText();
 

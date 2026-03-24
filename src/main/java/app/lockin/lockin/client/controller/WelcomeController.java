@@ -14,11 +14,6 @@ public class WelcomeController implements MainControllerAware {
 
     MainController mainController;
 
-    @FXML
-    public void initialize() {
-        darkModeToggle.setSelected(ThemeManager.isDarkMode());
-    }
-
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
