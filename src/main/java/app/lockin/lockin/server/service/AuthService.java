@@ -15,8 +15,7 @@ import java.util.UUID;
 public class AuthService {
     private static final long DEFAULT_SESSION_DURATION_MILLIS = 365L * 24 * 60 * 60 * 1000; // 1 year in milliseconds
 
-    // TODO: Should I put the database inside resources folder?
-    private static final String DATABASE_PATH = "src/main/resources/app/lockin/lockin/database/";
+    private static final String DATABASE_PATH = "database/"; // Server database should not be put inside the resources/ directory. Because it's of server side and it's not read-only.
 
     ObjectMapper mapper = new ObjectMapper();
 
