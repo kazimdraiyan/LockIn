@@ -1,10 +1,9 @@
 package app.lockin.lockin.client;
 
-import app.lockin.lockin.MyApplication;
-import app.lockin.lockin.server.request.LoginUsingTokenRequest;
-import app.lockin.lockin.server.request.Request;
-import app.lockin.lockin.server.response.Response;
-import app.lockin.lockin.server.response.ResponseStatus;
+import app.lockin.lockin.common.requests.LoginUsingTokenRequest;
+import app.lockin.lockin.common.requests.Request;
+import app.lockin.lockin.common.response.Response;
+import app.lockin.lockin.common.response.ResponseStatus;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

@@ -1,7 +1,7 @@
 package app.lockin.lockin.server;
 
-import app.lockin.lockin.server.handler.AuthHandler;
-import app.lockin.lockin.server.network.ClientHandler;
+import app.lockin.lockin.server.handlers.AuthHandler;
+import app.lockin.lockin.server.handlers.ClientHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;

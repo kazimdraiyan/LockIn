@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="app.lockin.lockin.client.controller.WelcomeController"
+            fx:controller="app.lockin.lockin.client.controllers.WelcomeController"
             prefHeight="720" prefWidth="1280">
         <HBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
 
