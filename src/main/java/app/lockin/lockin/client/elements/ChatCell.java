@@ -1,12 +1,12 @@
 package app.lockin.lockin.client.elements;
 
-import app.lockin.lockin.client.models.Chat;
+import app.lockin.lockin.client.models.ChatListItem;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.geometry.Pos;
 
-public class ChatCell extends ListCell<Chat> {
+public class ChatCell extends ListCell<ChatListItem> {
     // Avatar
     private final ProfileAvatar avatar = new ProfileAvatar();
 
@@ -53,7 +53,7 @@ public class ChatCell extends ListCell<Chat> {
     }
 
     @Override
-    protected void updateItem(Chat item, boolean empty) {
+    protected void updateItem(ChatListItem item, boolean empty) {
         super.updateItem(item, empty);
 
         if (empty || item == null) {
@@ -71,7 +71,6 @@ public class ChatCell extends ListCell<Chat> {
             // Text
             nameLabel.setText(item.getUserName());
             msgLabel.setText(item.getLastMessage());
-            timeLabel.setText(item.getTimestamp());
 
             // Badge — only show if unread > 0
             if (item.getUnreadCount() > 0) {

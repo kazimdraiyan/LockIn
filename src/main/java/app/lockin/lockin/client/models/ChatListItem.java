@@ -2,19 +2,17 @@ package app.lockin.lockin.client.models;
 import javafx.beans.property.*;
 
 // TODO: Clean this. Current plan: client/model/ should contain only UI models. Whereas, common/model/ should contain data models
-public class Chat {
+public class ChatListItem {
     private final StringProperty userName = new SimpleStringProperty();
     private final StringProperty lastMessage = new SimpleStringProperty();
     private final IntegerProperty unreadCount = new SimpleIntegerProperty();
-    private final StringProperty timestamp = new SimpleStringProperty();
-    private final LongProperty timeValue = new SimpleLongProperty();
+    private final StringProperty timeAgo = new SimpleStringProperty();
 
-    public Chat(String name, String message, int unread, String time, long timeMinutes) {
+    public ChatListItem(String name, String message, int unread, String timeAgo) {
         setUserName(name);
         setLastMessage(message);
         setUnreadCount(unread);
-        setTimestamp(time);
-        setTimeValue(timeMinutes);
+        setTimeAgo(timeAgo);
     }
 
     // --- UserName Property ---
@@ -32,12 +30,7 @@ public class Chat {
     public void setUnreadCount(int count) { this.unreadCount.set(count); }
     public IntegerProperty unreadCountProperty() { return unreadCount; }
 
-    // --- Timestamp Property ---
-    public String getTimestamp() { return timestamp.get(); }
-    public void setTimestamp(String time) { this.timestamp.set(time); }
-    public StringProperty timestampProperty() { return timestamp; }
-
-    public long getTimeValue() { return timeValue.get(); }
-    public void setTimeValue(long val) { this.timeValue.set(val); }
-    public LongProperty timeValueProperty() { return timeValue; }
+    public String getTimeAgo() { return timeAgo.get(); }
+    public void setTimeAgo(String val) { this.timeAgo.set(val); }
+    public StringProperty timeAgoProperty() { return timeAgo; }
 }
