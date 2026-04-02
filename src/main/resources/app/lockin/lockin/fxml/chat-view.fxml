@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import app.lockin.lockin.client.elements.ProfileAvatar?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="720" prefWidth="1100" styleClass="screen-root" xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controllers.MessengerController">
+    <center>
+        <HBox prefHeight="720" spacing="0">
+            <VBox prefWidth="360" styleClass="surface-panel chat-sidebar">
+                <fx:include source="chats-view.fxml"/>
+            </VBox>
+
+            <Separator orientation="VERTICAL"/>
+
+            <VBox styleClass="surface-panel" HBox.hgrow="ALWAYS">
+                <HBox alignment="CENTER_LEFT" prefHeight="60" spacing="12" styleClass="chat-header">
+                    <padding>
+                        <Insets left="16" right="16"/>
+                    </padding>
+                    <ProfileAvatar size="42.0" text="Abid"/>
+                    <VBox spacing="2">
+                        <Label styleClass="message-name" text="Abid"/>
+                        <Label styleClass="status-text" text="Active now"/>
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button prefHeight="36" prefWidth="36" styleClass="action-icon-button" text="Call"/>
+                    <Button prefHeight="36" prefWidth="36" styleClass="action-icon-button" text="Video"/>
+                    <Button prefHeight="36" prefWidth="36" styleClass="action-icon-button" text="Info"/>
+                </HBox>
+
+                <ScrollPane fitToWidth="true" styleClass="message-thread" VBox.vgrow="ALWAYS">
+                    <VBox fx:id="messagesContainer" spacing="6">
+                        <padding>
+                            <Insets bottom="16" left="16" right="16" top="16"/>
+                        </padding>
+
+                        <HBox alignment="CENTER">
+                            <Label styleClass="message-meta" text="TODAY"/>
+                        </HBox>
+
+                        <HBox alignment="BOTTOM_LEFT" spacing="8">
+                            <ProfileAvatar size="28.0" text="Abid"/>
+                            <VBox maxWidth="340" spacing="4">
+                                <Label styleClass="message-bubble-text-in"
+                                       text="Hey! Did you get a chance to look at the project_report.pdf I sent?"
+                                       wrapText="true"/>
+                                <Label styleClass="message-meta" text="10:42 AM"/>
+                            </VBox>
+                        </HBox>
+
+                        <HBox alignment="BOTTOM_LEFT" spacing="8">
+                            <ProfileAvatar size="28.0" text="Abid"/>
+                            <VBox maxWidth="300" spacing="4">
+                                <HBox alignment="CENTER_LEFT" spacing="12" styleClass="message-bubble-in">
+                                    <Label styleClass="file-icon" text="FILE"/>
+                                    <VBox spacing="3">
+                                        <Label styleClass="text-strong" text="project_report.pdf"/>
+                                        <Label styleClass="file-meta" text="2.4 MB  |  PDF"/>
+                                    </VBox>
+                                </HBox>
+                                <Label styleClass="message-meta" text="10:43 AM"/>
+                            </VBox>
+                        </HBox>
+
+                        <HBox alignment="BOTTOM_RIGHT" spacing="8">
+                            <VBox alignment="CENTER_RIGHT" maxWidth="340" spacing="4">
+                                <Label styleClass="message-bubble-text-out"
+                                       text="Yeah, I just opened it. Looks great. I will review and get back to you."
+                                       wrapText="true"/>
+                                <HBox alignment="CENTER_RIGHT" spacing="4">
+                                    <Label styleClass="message-meta" text="10:45 AM"/>
+                                    <Label styleClass="sent-accent-text" text="Seen"/>
+                                </HBox>
+                            </VBox>
+                        </HBox>
+
+                        <HBox alignment="BOTTOM_LEFT" spacing="8">
+                            <ProfileAvatar size="28.0" text="Abid"/>
+                            <VBox maxWidth="340" spacing="4">
+                                <Label styleClass="message-bubble-text-in"
+                                       text="Awesome. I also sent the updated dataset file below."
+                                       wrapText="true"/>
+                                <Label styleClass="message-meta" text="10:47 AM"/>
+                            </VBox>
+                        </HBox>
+
+                        <HBox alignment="BOTTOM_LEFT" spacing="8">
+                            <ProfileAvatar size="28.0" text="Abid"/>
+                            <VBox maxWidth="300" spacing="4">
+                                <HBox alignment="CENTER_LEFT" spacing="12" styleClass="message-bubble-in">
+                                    <Label styleClass="file-icon" text="XLS"/>
+                                    <VBox spacing="3">
+                                        <Label styleClass="text-strong" text="dataset_v2.xlsx"/>
+                                        <Label styleClass="file-meta" text="1.1 MB  |  Excel Sheet"/>
+                                    </VBox>
+                                    <Button prefHeight="30" prefWidth="30" styleClass="primary-button" text="Go"/>
+                                </HBox>
+                                <Label styleClass="message-meta" text="10:47 AM"/>
+                            </VBox>
+                        </HBox>
+
+                        <HBox alignment="BOTTOM_RIGHT" spacing="8">
+                            <VBox alignment="CENTER_RIGHT" maxWidth="300" spacing="4">
+                                <HBox alignment="CENTER_LEFT" spacing="12" styleClass="message-bubble-out">
+                                    <Label styleClass="inverse-text" text="FXML"/>
+                                    <VBox spacing="3">
+                                        <Label styleClass="inverse-text" text="lockin_mockup.fxml"/>
+                                        <Label styleClass="inverse-text" text="48 KB  |  FXML File"/>
+                                    </VBox>
+                                </HBox>
+                                <HBox alignment="CENTER_RIGHT" spacing="4">
+                                    <Label styleClass="message-meta" text="10:50 AM"/>
+                                    <Label styleClass="sent-accent-text" text="Seen"/>
+                                </HBox>
+                            </VBox>
+                        </HBox>
+
+                        <HBox alignment="BOTTOM_LEFT" spacing="8">
+                            <ProfileAvatar size="28.0" text="Abid"/>
+                            <HBox alignment="CENTER" spacing="4" styleClass="typing-bubble">
+                                <Label styleClass="typing-text" text="typing..."/>
+                            </HBox>
+                        </HBox>
+                    </VBox>
+                </ScrollPane>
+
+                <HBox alignment="CENTER" spacing="8" styleClass="message-input-bar">
+                    <padding>
+                        <Insets bottom="10" left="16" right="16" top="10"/>
+                    </padding>
+
+                    <Button prefHeight="36" prefWidth="36" styleClass="message-tool-button sent-accent-text" text="+"/>
+                    <Button prefHeight="36" prefWidth="36" styleClass="message-tool-button sent-accent-text" text="Img"/>
+                    <Button fx:id="attachFileBtn" onAction="#onAttachFile" prefHeight="36" prefWidth="36"
+                            styleClass="message-tool-button sent-accent-text" text="File"/>
+                    <Button prefHeight="36" prefWidth="36" styleClass="message-tool-button sent-accent-text" text="Mic"/>
+
+                    <TextField fx:id="messageInputField" prefHeight="40" promptText="Write a message..."
+                               styleClass="pill-input pill-input-field" HBox.hgrow="ALWAYS"/>
+
+                    <Button prefHeight="36" prefWidth="36" styleClass="message-tool-button" text=":)"/>
+                    <Button fx:id="sendButton" onAction="#onSendMessage" prefHeight="36" prefWidth="36"
+                            styleClass="message-tool-button sent-accent-text" text="Send"/>
+                </HBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

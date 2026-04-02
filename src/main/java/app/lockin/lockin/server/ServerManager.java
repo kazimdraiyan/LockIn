@@ -2,6 +2,7 @@ package app.lockin.lockin.server;
 
 import app.lockin.lockin.server.handlers.AuthHandler;
 import app.lockin.lockin.server.handlers.ClientHandler;
+import app.lockin.lockin.server.handlers.PostHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -11,6 +12,7 @@ public class ServerManager {
     private ServerSocket serverSocket;
 
     private AuthHandler authHandler = new AuthHandler();
+    private PostHandler postHandler = new PostHandler();
     // Add other handlers like MessageHandler
 
     public ServerManager(ServerSocket serverSocket) {
@@ -27,7 +29,7 @@ public class ServerManager {
 
                 // TODO: Create thread per client
                 // Each thread should manage one logged-in / trying to login client
-                ClientHandler clientHandler = new ClientHandler(socket, authHandler);
+                ClientHandler clientHandler = new ClientHandler(socket, authHandler, postHandler);
                 Thread thread = new Thread(clientHandler);
                 thread.start();
             } catch (IOException e) {

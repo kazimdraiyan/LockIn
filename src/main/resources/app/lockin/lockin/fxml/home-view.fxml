@@ -6,13 +6,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="720" prefWidth="1280" styleClass="screen-root" xmlns="http://javafx.com/javafx/25"
@@ -70,21 +69,26 @@
                         <Insets bottom="12" left="16" right="16" top="12"/>
                     </padding>
 
-                    <HBox alignment="CENTER_LEFT" spacing="10">
-                        <ProfileAvatar size="40.0" text="Username"/>
-                        <TextField prefHeight="40" promptText="Share a file or post something..." styleClass="pill-input pill-input-field"
-                                   HBox.hgrow="ALWAYS"/>
+                    <HBox alignment="TOP_LEFT" spacing="10">
+                        <ProfileAvatar size="40.0" text="Me"/>
+                        <VBox spacing="8" HBox.hgrow="ALWAYS">
+                            <TextArea fx:id="postTextArea" prefRowCount="4" promptText="Share notes, upload a JPG/GIF/PDF/TXT, or post an update..."
+                                      styleClass="input-field" wrapText="true"/>
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label fx:id="selectedFileLabel" styleClass="muted-text" text="No file selected"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="composerStatusLabel" styleClass="muted-text"/>
+                            </HBox>
+                        </VBox>
                     </HBox>
 
                     <Separator/>
 
-                    <HBox alignment="CENTER" spacing="0">
-                        <Button maxWidth="Infinity" prefHeight="36" styleClass="feed-action-button" text="Photo/Video"
-                                HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="uploadFileButton" maxWidth="Infinity" onAction="#onUploadFileClick" prefHeight="36"
-                                styleClass="feed-action-button" text="Upload File" HBox.hgrow="ALWAYS"/>
-                        <Button maxWidth="Infinity" prefHeight="36" styleClass="feed-action-button" text="Feeling"
-                                HBox.hgrow="ALWAYS"/>
+                    <HBox alignment="CENTER" spacing="8">
+                        <Button maxWidth="Infinity" onAction="#onUploadFileClick" prefHeight="36" styleClass="feed-action-button"
+                                text="Choose JPG/GIF/PDF/TXT" fx:id="uploadFileButton" HBox.hgrow="ALWAYS"/>
+                        <Button maxWidth="Infinity" onAction="#onCreatePostClick" prefHeight="36" styleClass="primary-button"
+                                text="Post" fx:id="postButton" HBox.hgrow="ALWAYS"/>
                     </HBox>
                 </VBox>
 
@@ -93,68 +97,6 @@
                         <padding>
                             <Insets bottom="12"/>
                         </padding>
-
-                        <VBox spacing="10" styleClass="feed-card">
-                            <padding>
-                                <Insets bottom="14" left="16" right="16" top="14"/>
-                            </padding>
-                            <HBox alignment="CENTER_LEFT" spacing="10">
-                                <ProfileAvatar size="42.0" text="Username"/>
-                                <VBox spacing="2">
-                                    <Label styleClass="text-strong" text="Username"/>
-                                    <Label styleClass="muted-text" text="Just now"/>
-                                </VBox>
-                                <Region HBox.hgrow="ALWAYS"/>
-                                <Button styleClass="ghost-button" text="..."/>
-                            </HBox>
-
-                            <HBox alignment="CENTER_LEFT" spacing="14" styleClass="file-preview">
-                                <padding>
-                                    <Insets bottom="14" left="14" right="14" top="14"/>
-                                </padding>
-                                <Label styleClass="file-icon" text="FILE"/>
-                                <VBox spacing="3">
-                                    <Label styleClass="text-strong" text="project_report.pdf"/>
-                                    <Label styleClass="file-meta" text="2.4 MB  |  PDF Document"/>
-                                </VBox>
-                                <Region HBox.hgrow="ALWAYS"/>
-                                <Button styleClass="primary-button" text="Download"/>
-                            </HBox>
-
-                            <Separator/>
-                            <HBox spacing="0">
-                                <Button maxWidth="Infinity" prefHeight="34" styleClass="feed-action-button" text="Like"
-                                        HBox.hgrow="ALWAYS"/>
-                                <Button maxWidth="Infinity" prefHeight="34" styleClass="feed-action-button" text="Comment"
-                                        HBox.hgrow="ALWAYS"/>
-                                <Button maxWidth="Infinity" prefHeight="34" styleClass="feed-action-button" text="Share"
-                                        HBox.hgrow="ALWAYS"/>
-                            </HBox>
-                        </VBox>
-
-                        <VBox spacing="10" styleClass="feed-card">
-                            <padding>
-                                <Insets bottom="14" left="16" right="16" top="14"/>
-                            </padding>
-                            <HBox alignment="CENTER_LEFT" spacing="10">
-                                <ProfileAvatar size="42.0" text="Another User"/>
-                                <VBox spacing="2">
-                                    <Label styleClass="text-strong" text="Another User"/>
-                                    <Label styleClass="muted-text" text="5 minutes ago"/>
-                                </VBox>
-                            </HBox>
-                            <Label styleClass="body-text" text="Just uploaded the latest project files! Check them out."
-                                   wrapText="true"/>
-                            <Separator/>
-                            <HBox spacing="0">
-                                <Button maxWidth="Infinity" prefHeight="34" styleClass="feed-action-button" text="Like"
-                                        HBox.hgrow="ALWAYS"/>
-                                <Button maxWidth="Infinity" prefHeight="34" styleClass="feed-action-button" text="Comment"
-                                        HBox.hgrow="ALWAYS"/>
-                                <Button maxWidth="Infinity" prefHeight="34" styleClass="feed-action-button" text="Share"
-                                        HBox.hgrow="ALWAYS"/>
-                            </HBox>
-                        </VBox>
                     </VBox>
                 </ScrollPane>
             </VBox>

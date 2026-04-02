@@ -18,15 +18,17 @@ public class ClientHandler implements Runnable {
     private ObjectOutputStream out;
 
     private AuthHandler authHandler;
+    private PostHandler postHandler;
 
     private boolean isRunning = true;
 
     private Session authenticatedSession = null;
 
     // Dependency injection is used here by injecting AuthHandler into ClientHandler. TODO: Learn more about this
-    public ClientHandler(Socket socket, AuthHandler authHandler) {
+    public ClientHandler(Socket socket, AuthHandler authHandler, PostHandler postHandler) {
         this.socket = socket;
         this.authHandler = authHandler;
+        this.postHandler = postHandler;
     }
 
     @Override
@@ -89,6 +91,9 @@ public class ClientHandler implements Runnable {
             case FETCH:
                 response = handleFetchRequest((FetchRequest) request);
                 break;
+            case CREATE_POST:
+                response = postHandler.handleCreatePost((CreatePostRequest) request);
+                break;
         }
         if (response != null) {
             send(response);
@@ -102,6 +107,9 @@ public class ClientHandler implements Runnable {
                 response = authHandler.handleFetchChats(request);
                 break;
             case MESSAGES:
+                break;
+            case POSTS:
+                response = postHandler.handleFetchPosts(request);
                 break;
         }
         return response;
