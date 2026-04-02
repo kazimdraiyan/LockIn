@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="720" prefWidth="1100" styleClass="screen-root" xmlns="http://javafx.com/javafx/25"
+<BorderPane prefHeight="720" prefWidth="1100" styleClass="screen-root" xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controllers.MessengerController">
     <center>
         <HBox prefHeight="720" spacing="0">

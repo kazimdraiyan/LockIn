@@ -94,6 +94,9 @@ public class ClientHandler implements Runnable {
             case CREATE_POST:
                 response = postHandler.handleCreatePost((CreatePostRequest) request);
                 break;
+            case CREATE_COMMENT:
+                response = postHandler.handleCreateComment((CreateCommentRequest) request);
+                break;
         }
         if (response != null) {
             send(response);

@@ -35,6 +35,14 @@
     -fx-background-color: -color-surface;
 }
 
+.auth-brand-panel {
+    -fx-background-color: -color-sidebar;
+}
+
+.auth-brand-panel .label {
+    -fx-text-fill: -color-text-on-accent;
+}
+
 .nav-bar {
     -fx-background-color: -color-surface;
     -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.12), 8, 0, 0, 2);
@@ -94,6 +102,15 @@
 .inverse-text {
     -fx-text-fill: -color-text-on-accent;
     -fx-font-weight: bold;
+}
+
+.auth-brand-title {
+    -fx-text-fill: -color-text-on-accent;
+    -fx-font-weight: bold;
+}
+
+.auth-brand-subtitle {
+    -fx-text-fill: -color-sidebar-text-muted;
 }
 
 .divider {
@@ -200,6 +217,26 @@
     -fx-min-height: 42;
 }
 
+.search-bar {
+    -fx-background-color: -color-bg-muted;
+    -fx-border-color: transparent;
+    -fx-border-width: 1;
+    -fx-effect: none;
+    -fx-padding: 0 14 0 14;
+    -fx-min-height: 38;
+}
+
+.search-bar:hover {
+    -fx-background-color: derive(-color-surface-alt, 2%);
+    -fx-border-color: derive(-color-border, -8%);
+}
+
+.search-bar:focused-within {
+    -fx-background-color: -color-surface;
+    -fx-border-color: -color-primary;
+    -fx-effect: dropshadow(gaussian, rgba(30, 136, 168, 0.12), 8, 0, 0, 0);
+}
+
 .search-bar-input,
 .pill-input-field {
     -fx-background-color: transparent;
@@ -212,6 +249,11 @@
     -fx-padding: 0 0 0 2;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
+}
+
+.search-bar-input {
+    -fx-font-size: 13;
+    -fx-padding: 0 0 0 2;
 }
 
 .input-field {
@@ -242,8 +284,8 @@
 }
 
 .search-bar-navbar {
-    -fx-pref-width: 280;
-    -fx-max-width: 280;
+    -fx-pref-width: 320;
+    -fx-max-width: 320;
 }
 
 .search-bar-sidebar {

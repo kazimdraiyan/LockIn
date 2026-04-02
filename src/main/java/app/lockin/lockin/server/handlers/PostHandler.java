@@ -1,6 +1,8 @@
 package app.lockin.lockin.server.handlers;
 
+import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
+import app.lockin.lockin.common.requests.CreateCommentRequest;
 import app.lockin.lockin.common.requests.CreatePostRequest;
 import app.lockin.lockin.common.requests.FetchRequest;
 import app.lockin.lockin.common.response.Response;
@@ -25,6 +27,24 @@ public class PostHandler {
                     request.getAttachment()
             );
             return new Response(ResponseStatus.SUCCESS, "Post created successfully", post);
+        } catch (IOException e) {
+            return new Response(ResponseStatus.ERROR, e.getMessage(), null);
+        }
+    }
+
+    public Response handleCreateComment(CreateCommentRequest request) {
+        if (request.authenticatedSession == null) {
+            return new Response(ResponseStatus.ERROR, "Please log in before commenting", null);
+        }
+
+        try {
+            Comment comment = postService.createComment(
+                    request.authenticatedSession.getUsername(),
+                    request.getPostId(),
+                    request.getTextContent(),
+                    request.getAttachment()
+            );
+            return new Response(ResponseStatus.SUCCESS, "Comment added successfully", comment);
         } catch (IOException e) {
             return new Response(ResponseStatus.ERROR, e.getMessage(), null);
         }

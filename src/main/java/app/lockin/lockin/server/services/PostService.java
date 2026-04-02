@@ -1,5 +1,6 @@
 package app.lockin.lockin.server.services;
 
+import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
 import app.lockin.lockin.common.models.PostAttachment;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 
 public class PostService {
@@ -44,25 +46,67 @@ public class PostService {
         postNode.put("authorUsername", username);
         postNode.put("textContent", normalizedText);
         postNode.put("createdAt", createdAt);
+        postNode.set("comments", mapper.createArrayNode());
 
         PostAttachment storedAttachment = null;
         if (attachment != null) {
             storedAttachment = validateAttachment(attachment);
-            String storedFileName = postId + "_" + sanitizeFileName(storedAttachment.getOriginalFileName());
-            Path storedPath = UPLOADS_PATH.resolve(storedFileName);
-            Files.write(storedPath, storedAttachment.getData());
-
-            ObjectNode attachmentNode = mapper.createObjectNode();
-            attachmentNode.put("originalFileName", storedAttachment.getOriginalFileName());
-            attachmentNode.put("mimeType", storedAttachment.getMimeType());
-            attachmentNode.put("storedFileName", storedFileName);
+            ObjectNode attachmentNode = storeAttachment(postId, storedAttachment);
             postNode.set("attachment", attachmentNode);
         }
 
         posts.add(postNode);
         savePostsNode(posts);
 
-        return new Post(postId, username, normalizedText, storedAttachment, createdAt);
+        return new Post(postId, username, normalizedText, storedAttachment, createdAt, List.of());
+    }
+
+    public Comment createComment(String username, String postId, String textContent, PostAttachment attachment) throws IOException {
+        if (username == null || username.isBlank()) {
+            throw new IOException("Unauthenticated request");
+        }
+        if (postId == null || postId.isBlank()) {
+            throw new IOException("Missing post id");
+        }
+
+        String normalizedText = textContent == null ? "" : textContent.trim();
+        if (normalizedText.isEmpty() && attachment == null) {
+            throw new IOException("Comment must contain text or an attachment");
+        }
+
+        ensureStorageExists();
+        ArrayNode posts = loadPostsNode();
+
+        for (JsonNode postNode : posts) {
+            if (!postId.equals(postNode.path("id").asText())) {
+                continue;
+            }
+
+            ArrayNode commentsNode = ensureCommentsArray(postNode);
+            String commentId = UUID.randomUUID().toString();
+            long createdAt = System.currentTimeMillis();
+
+            ObjectNode commentNode = mapper.createObjectNode();
+            commentNode.put("id", commentId);
+            commentNode.put("postId", postId);
+            commentNode.put("authorUsername", username);
+            commentNode.put("textContent", normalizedText);
+            commentNode.put("createdAt", createdAt);
+
+            PostAttachment storedAttachment = null;
+            if (attachment != null) {
+                storedAttachment = validateAttachment(attachment);
+                ObjectNode attachmentNode = storeAttachment(commentId, storedAttachment);
+                commentNode.set("attachment", attachmentNode);
+            }
+
+            commentsNode.add(commentNode);
+            savePostsNode(posts);
+
+            return new Comment(commentId, postId, username, normalizedText, storedAttachment, createdAt);
+        }
+
+        throw new IOException("Post not found");
     }
 
     public ArrayList<Post> loadPosts() throws IOException {
@@ -71,24 +115,16 @@ public class PostService {
         ArrayNode postsNode = loadPostsNode();
 
         for (JsonNode postNode : postsNode) {
-            PostAttachment attachment = null;
-            JsonNode attachmentNode = postNode.get("attachment");
-            if (attachmentNode != null && !attachmentNode.isNull()) {
-                Path filePath = UPLOADS_PATH.resolve(attachmentNode.get("storedFileName").asText());
-                byte[] data = Files.exists(filePath) ? Files.readAllBytes(filePath) : new byte[0];
-                attachment = new PostAttachment(
-                        attachmentNode.get("originalFileName").asText(),
-                        attachmentNode.get("mimeType").asText(),
-                        data
-                );
-            }
+            PostAttachment attachment = loadAttachment(postNode.get("attachment"));
+            ArrayList<Comment> comments = loadComments(postNode.get("comments"), postNode.path("id").asText());
 
             posts.add(new Post(
                     postNode.get("id").asText(),
                     postNode.get("authorUsername").asText(),
                     postNode.path("textContent").asText(""),
                     attachment,
-                    postNode.get("createdAt").asLong()
+                    postNode.get("createdAt").asLong(),
+                    comments
             ));
         }
 
@@ -113,6 +149,64 @@ public class PostService {
 
     private void savePostsNode(ArrayNode posts) throws IOException {
         mapper.writerWithDefaultPrettyPrinter().writeValue(new File(POSTS_PATH.toString()), posts);
+    }
+
+    private ArrayList<Comment> loadComments(JsonNode commentsNode, String postId) throws IOException {
+        ArrayList<Comment> comments = new ArrayList<>();
+        if (commentsNode == null || !commentsNode.isArray()) {
+            return comments;
+        }
+
+        for (JsonNode commentNode : commentsNode) {
+            comments.add(new Comment(
+                    commentNode.path("id").asText(),
+                    postId,
+                    commentNode.path("authorUsername").asText(),
+                    commentNode.path("textContent").asText(""),
+                    loadAttachment(commentNode.get("attachment")),
+                    commentNode.path("createdAt").asLong()
+            ));
+        }
+
+        comments.sort(Comparator.comparingLong(Comment::getCreatedAt));
+        return comments;
+    }
+
+    private PostAttachment loadAttachment(JsonNode attachmentNode) throws IOException {
+        if (attachmentNode == null || attachmentNode.isNull()) {
+            return null;
+        }
+
+        Path filePath = UPLOADS_PATH.resolve(attachmentNode.get("storedFileName").asText());
+        byte[] data = Files.exists(filePath) ? Files.readAllBytes(filePath) : new byte[0];
+        return new PostAttachment(
+                attachmentNode.get("originalFileName").asText(),
+                attachmentNode.get("mimeType").asText(),
+                data
+        );
+    }
+
+    private ArrayNode ensureCommentsArray(JsonNode postNode) {
+        JsonNode commentsNode = postNode.get("comments");
+        if (commentsNode instanceof ArrayNode arrayNode) {
+            return arrayNode;
+        }
+
+        ArrayNode arrayNode = mapper.createArrayNode();
+        ((ObjectNode) postNode).set("comments", arrayNode);
+        return arrayNode;
+    }
+
+    private ObjectNode storeAttachment(String ownerId, PostAttachment attachment) throws IOException {
+        String storedFileName = ownerId + "_" + sanitizeFileName(attachment.getOriginalFileName());
+        Path storedPath = UPLOADS_PATH.resolve(storedFileName);
+        Files.write(storedPath, attachment.getData());
+
+        ObjectNode attachmentNode = mapper.createObjectNode();
+        attachmentNode.put("originalFileName", attachment.getOriginalFileName());
+        attachmentNode.put("mimeType", attachment.getMimeType());
+        attachmentNode.put("storedFileName", storedFileName);
+        return attachmentNode;
     }
 
     private PostAttachment validateAttachment(PostAttachment attachment) throws IOException {

@@ -1,28 +1,30 @@
 package app.lockin.lockin.common.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
-public class Post implements Serializable {
+public class Comment implements Serializable {
     private final String id;
+    private final String postId;
     private final String authorUsername;
     private final String textContent;
     private final PostAttachment attachment;
     private final long createdAt;
-    private final ArrayList<Comment> comments;
 
-    public Post(String id, String authorUsername, String textContent, PostAttachment attachment, long createdAt, List<Comment> comments) {
+    public Comment(String id, String postId, String authorUsername, String textContent, PostAttachment attachment, long createdAt) {
         this.id = id;
+        this.postId = postId;
         this.authorUsername = authorUsername;
         this.textContent = textContent;
         this.attachment = attachment;
         this.createdAt = createdAt;
-        this.comments = comments == null ? new ArrayList<>() : new ArrayList<>(comments);
     }
 
     public String getId() {
         return id;
+    }
+
+    public String getPostId() {
+        return postId;
     }
 
     public String getAuthorUsername() {
@@ -39,9 +41,5 @@ public class Post implements Serializable {
 
     public long getCreatedAt() {
         return createdAt;
-    }
-
-    public ArrayList<Comment> getComments() {
-        return new ArrayList<>(comments);
     }
 }

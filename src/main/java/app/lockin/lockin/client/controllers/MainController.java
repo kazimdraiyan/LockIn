@@ -78,6 +78,9 @@ public class MainController {
     public void navigatePush(String fxmlFileName) throws IOException {
         Page loadedPage = loadFXML(fxmlFileName);
         rootPane.setCenter(loadedPage.root);
+        if (rootPane.getScene() != null) {
+            ThemeManager.refresh(rootPane.getScene());
+        }
         history.push(loadedPage);
         // Inject this MainController object to the controller of the loaded page
         if (loadedPage.fxmlLoader.getController() instanceof MainControllerAware awareController) {

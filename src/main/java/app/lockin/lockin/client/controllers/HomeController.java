@@ -1,8 +1,10 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
 import app.lockin.lockin.common.models.PostAttachment;
+import app.lockin.lockin.common.requests.CreateCommentRequest;
 import app.lockin.lockin.common.requests.CreatePostRequest;
 import app.lockin.lockin.common.requests.FetchRequest;
 import app.lockin.lockin.common.requests.FetchType;
@@ -17,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -38,6 +41,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class HomeController implements MainControllerAware {
@@ -65,22 +69,12 @@ public class HomeController implements MainControllerAware {
 
     @FXML
     protected void onUploadFileClick() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select a file to post");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Supported files", "*.jpg", "*.jpeg", "*.gif", "*.pdf", "*.txt"),
-                new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.gif"),
-                new FileChooser.ExtensionFilter("PDF files", "*.pdf"),
-                new FileChooser.ExtensionFilter("Text files", "*.txt")
-        );
-
-        Window window = uploadFileButton.getScene() == null ? null : uploadFileButton.getScene().getWindow();
-        java.io.File chosenFile = fileChooser.showOpenDialog(window);
-        if (chosenFile == null) {
+        Path path = chooseAttachmentFile(uploadFileButton);
+        if (path == null) {
             return;
         }
 
-        selectedFilePath = chosenFile.toPath();
+        selectedFilePath = path;
         selectedFileLabel.setText("Selected: " + selectedFilePath.getFileName());
         composerStatusLabel.setText("");
     }
@@ -164,23 +158,7 @@ public class HomeController implements MainControllerAware {
     }
 
     private PostAttachment createAttachmentFromSelection() throws IOException {
-        if (selectedFilePath == null) {
-            return null;
-        }
-
-        if (!Files.exists(selectedFilePath)) {
-            throw new IOException("Selected file no longer exists.");
-        }
-
-        long size = Files.size(selectedFilePath);
-        if (size > MAX_ATTACHMENT_SIZE_BYTES) {
-            throw new IOException("File is too large. Limit is 10 MB.");
-        }
-
-        String mimeType = Files.probeContentType(selectedFilePath);
-        String fileName = selectedFilePath.getFileName().toString();
-        byte[] data = Files.readAllBytes(selectedFilePath);
-        return new PostAttachment(fileName, mimeType, data);
+        return createAttachmentFromPath(selectedFilePath);
     }
 
     private Response sendRequest(app.lockin.lockin.common.requests.Request request) throws IOException {
@@ -242,17 +220,116 @@ public class HomeController implements MainControllerAware {
         }
 
         card.getChildren().add(new Separator());
-
-        HBox actions = new HBox();
-        actions.setSpacing(0);
-        actions.getChildren().addAll(
-                createDisabledActionButton("Like"),
-                createDisabledActionButton("Comment"),
-                createDisabledActionButton("Share")
-        );
-        card.getChildren().add(actions);
+        card.getChildren().add(buildCommentsSection(post));
 
         return card;
+    }
+
+    private VBox buildCommentsSection(Post post) {
+        VBox section = new VBox(10);
+
+        List<Comment> comments = post.getComments();
+        if (comments.isEmpty()) {
+            Label emptyLabel = new Label("No comments yet.");
+            emptyLabel.getStyleClass().add("muted-text");
+            section.getChildren().add(emptyLabel);
+        } else {
+            for (Comment comment : comments) {
+                section.getChildren().add(buildCommentCard(comment));
+            }
+        }
+
+        section.getChildren().add(buildCommentComposer(post));
+        return section;
+    }
+
+    private VBox buildCommentCard(Comment comment) {
+        VBox card = new VBox(8);
+        card.setPadding(new Insets(12));
+        card.getStyleClass().add("file-preview");
+
+        HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.getChildren().add(createAvatar(comment.getAuthorUsername(), 32));
+
+        VBox metaBox = new VBox(2);
+        Label usernameLabel = new Label(comment.getAuthorUsername());
+        usernameLabel.getStyleClass().add("text-strong");
+        Label timeLabel = new Label(formatTimestamp(comment.getCreatedAt()));
+        timeLabel.getStyleClass().add("muted-text");
+        metaBox.getChildren().addAll(usernameLabel, timeLabel);
+        header.getChildren().add(metaBox);
+
+        card.getChildren().add(header);
+
+        if (comment.getTextContent() != null && !comment.getTextContent().isBlank()) {
+            Label contentLabel = new Label(comment.getTextContent());
+            contentLabel.setWrapText(true);
+            contentLabel.getStyleClass().add("body-text");
+            card.getChildren().add(contentLabel);
+        }
+
+        if (comment.getAttachment() != null) {
+            card.getChildren().add(buildAttachmentNode(comment.getAttachment()));
+        }
+
+        return card;
+    }
+
+    private VBox buildCommentComposer(Post post) {
+        VBox composer = new VBox(8);
+        composer.setPadding(new Insets(10, 0, 0, 0));
+
+        TextField commentField = new TextField();
+        commentField.setPromptText("Write a comment...");
+        commentField.getStyleClass().add("input-field");
+
+        Label selectedCommentFileLabel = new Label("No file selected");
+        selectedCommentFileLabel.getStyleClass().add("muted-text");
+
+        Label commentStatusLabel = new Label();
+        commentStatusLabel.getStyleClass().add("muted-text");
+
+        Button chooseFileButton = new Button("Attach JPG/GIF/PDF/TXT");
+        chooseFileButton.getStyleClass().add("feed-action-button");
+
+        Button commentButton = new Button("Comment");
+        commentButton.getStyleClass().add("primary-button");
+
+        final Path[] selectedCommentFilePath = new Path[1];
+
+        chooseFileButton.setOnAction(event -> {
+            Path path = chooseAttachmentFile(chooseFileButton);
+            if (path == null) {
+                return;
+            }
+
+            selectedCommentFilePath[0] = path;
+            selectedCommentFileLabel.setText("Selected: " + path.getFileName());
+            commentStatusLabel.setText("");
+        });
+
+        commentButton.setOnAction(event -> submitComment(
+                post.getId(),
+                commentField,
+                selectedCommentFilePath,
+                selectedCommentFileLabel,
+                commentStatusLabel,
+                chooseFileButton,
+                commentButton
+        ));
+
+        HBox actions = new HBox(8, chooseFileButton, commentButton);
+        HBox.setHgrow(chooseFileButton, Priority.ALWAYS);
+        HBox.setHgrow(commentButton, Priority.ALWAYS);
+        chooseFileButton.setMaxWidth(Double.MAX_VALUE);
+        commentButton.setMaxWidth(Double.MAX_VALUE);
+
+        HBox metaRow = new HBox(10, selectedCommentFileLabel, new Region(), commentStatusLabel);
+        HBox.setHgrow(metaRow.getChildren().get(1), Priority.ALWAYS);
+
+        composer.getChildren().addAll(commentField, metaRow, actions);
+        return composer;
     }
 
     private VBox buildAttachmentNode(PostAttachment attachment) {
@@ -303,16 +380,6 @@ public class HomeController implements MainControllerAware {
         return preview;
     }
 
-    private Button createDisabledActionButton(String text) {
-        Button button = new Button(text);
-        button.setDisable(true);
-        button.setMaxWidth(Double.MAX_VALUE);
-        button.setPrefHeight(34);
-        button.getStyleClass().add("feed-action-button");
-        HBox.setHgrow(button, Priority.ALWAYS);
-        return button;
-    }
-
     private VBox createAvatar(String username, double size) {
         VBox avatar = new VBox();
         avatar.setAlignment(Pos.CENTER);
@@ -348,6 +415,72 @@ public class HomeController implements MainControllerAware {
         postButton.setDisable(busy);
         uploadFileButton.setDisable(busy);
         composerStatusLabel.setText(message == null ? "" : message);
+    }
+
+    private Path chooseAttachmentFile(Button triggerButton) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select a file");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Supported files", "*.jpg", "*.jpeg", "*.gif", "*.pdf", "*.txt"),
+                new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.gif"),
+                new FileChooser.ExtensionFilter("PDF files", "*.pdf"),
+                new FileChooser.ExtensionFilter("Text files", "*.txt")
+        );
+
+        Window window = triggerButton.getScene() == null ? null : triggerButton.getScene().getWindow();
+        java.io.File chosenFile = fileChooser.showOpenDialog(window);
+        return chosenFile == null ? null : chosenFile.toPath();
+    }
+
+    private void submitComment(
+            String postId,
+            TextField commentField,
+            Path[] selectedCommentFilePath,
+            Label selectedCommentFileLabel,
+            Label commentStatusLabel,
+            Button chooseFileButton,
+            Button commentButton
+    ) {
+        String textContent = commentField.getText() == null ? "" : commentField.getText().trim();
+        if (textContent.isEmpty() && selectedCommentFilePath[0] == null) {
+            commentStatusLabel.setText("Write something or choose a file first.");
+            return;
+        }
+
+        setCommentComposerBusy(chooseFileButton, commentButton, commentStatusLabel, true, "Commenting...");
+        new Thread(() -> {
+            try {
+                PostAttachment attachment = createAttachmentFromPath(selectedCommentFilePath[0]);
+                Response response = sendRequest(new CreateCommentRequest(postId, textContent, attachment));
+
+                if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
+                    Platform.runLater(() -> {
+                        commentField.clear();
+                        selectedCommentFilePath[0] = null;
+                        selectedCommentFileLabel.setText("No file selected");
+                        setCommentComposerBusy(chooseFileButton, commentButton, commentStatusLabel, false, "Comment added.");
+                    });
+                    loadPosts();
+                } else {
+                    String message = response == null ? "No response from server." : response.getMessage();
+                    Platform.runLater(() -> setCommentComposerBusy(chooseFileButton, commentButton, commentStatusLabel, false, message));
+                }
+            } catch (IOException e) {
+                Platform.runLater(() -> setCommentComposerBusy(chooseFileButton, commentButton, commentStatusLabel, false, e.getMessage()));
+            }
+        }).start();
+    }
+
+    private void setCommentComposerBusy(
+            Button chooseFileButton,
+            Button commentButton,
+            Label commentStatusLabel,
+            boolean busy,
+            String message
+    ) {
+        chooseFileButton.setDisable(busy);
+        commentButton.setDisable(busy);
+        commentStatusLabel.setText(message == null ? "" : message);
     }
 
     private String extractInitials(String username) {
@@ -411,5 +544,25 @@ public class HomeController implements MainControllerAware {
             return text.substring(0, 240) + "...";
         }
         return text.isBlank() ? "(Empty text file)" : text;
+    }
+
+    private PostAttachment createAttachmentFromPath(Path filePath) throws IOException {
+        if (filePath == null) {
+            return null;
+        }
+
+        if (!Files.exists(filePath)) {
+            throw new IOException("Selected file no longer exists.");
+        }
+
+        long size = Files.size(filePath);
+        if (size > MAX_ATTACHMENT_SIZE_BYTES) {
+            throw new IOException("File is too large. Limit is 10 MB.");
+        }
+
+        String mimeType = Files.probeContentType(filePath);
+        String fileName = filePath.getFileName().toString();
+        byte[] data = Files.readAllBytes(filePath);
+        return new PostAttachment(fileName, mimeType, data);
     }
 }

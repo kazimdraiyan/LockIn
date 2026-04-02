@@ -32,5 +32,18 @@
     "originalFileName" : "A.pdf",
     "mimeType" : "application/pdf",
     "storedFileName" : "378a5696-696c-4dd2-a175-3c635cb83362_A.pdf"
-  }
+  },
+  "comments" : [ {
+    "id" : "e4badce3-96a1-40c6-96f0-12fa1b68de85",
+    "postId" : "378a5696-696c-4dd2-a175-3c635cb83362",
+    "authorUsername" : "raiyan2",
+    "textContent" : "asdfasdf",
+    "createdAt" : 1775162612543
+  } ]
+}, {
+  "id" : "b99fac05-7896-4510-8125-d9c1a1be37d1",
+  "authorUsername" : "shonyewest",
+  "textContent" : "asdfasdfasdf",
+  "createdAt" : 1775162860941,
+  "comments" : [ ]
 } ]
