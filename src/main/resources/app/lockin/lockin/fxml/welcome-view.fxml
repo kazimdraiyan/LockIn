@@ -21,14 +21,14 @@
                 </padding>
 
                 <!-- APP NAME -->
-                <Label text="LockIn" textFill="WHITE">
+                <Label styleClass="inverse-text" text="LockIn">
                     <font>
                         <Font size="34" />
                     </font>
                 </Label>
 
                 <!-- TAGLINE -->
-                <Label alignment="CENTER" style="-fx-text-fill: rgba(255,255,255,0.8); -fx-font-size:15;" text="Focus. Secure. Achieve." wrapText="true" />
+                <Label alignment="CENTER" styleClass="tagline-text" text="Focus. Secure. Achieve." wrapText="true" />
             </VBox>
 
             <!-- ================= RIGHT SIDE (HOME CARD) ================= -->
@@ -40,7 +40,7 @@
                     </padding>
 
                     <!-- HEADING -->
-                    <Label text="Welcome Back">
+                    <Label styleClass="section-title" text="Welcome Back">
                         <font>
                             <Font size="26" />
                         </font>

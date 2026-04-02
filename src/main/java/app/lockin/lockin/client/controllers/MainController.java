@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -33,6 +34,9 @@ public class MainController {
     public HBox searchBar;
 
     @FXML
+    private SearchBarController searchBarController;
+
+    @FXML
     public ImageView themeToggleIcon;
 
     @FXML
@@ -45,9 +49,15 @@ public class MainController {
         } else {
             navigateReplacingRoot("welcome-view.fxml");
         }
+        searchBarController.setPromptText("Search");
+        searchBar.getStyleClass().add("search-bar-navbar");
         themeToggleIcon.setImage(new Image(
                 MyApplication.getIcon(ThemeManager.isDarkMode() ? "light_mode.png" : "dark_mode.png").toExternalForm()
         ));
+    }
+
+    public TextField getSearchField() {
+        return searchBarController.getInputField();
     }
 
     public void setNavBar(boolean showNavBar, String titleString, boolean showSearchBar) {

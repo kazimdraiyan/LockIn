@@ -1,157 +1,27 @@
-.right-panel {
-    -fx-background-color: #f6f8fa;
-}
-
-.left-panel {
-    -fx-background-color: linear-gradient(to bottom right, #0F4C75, #1B9AAA);
-}
-
-.card {
-    -fx-background-color: white;
-    -fx-background-radius: 14;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 25, 0.2, 0, 6);
-}
-
-.card-subtitle {
-    -fx-text-fill: #777777;
-}
-
-.card-label {
-    -fx-text-fill: #555555;
-}
-
-.divider {
-    -fx-background-color: #eeeeee;
-}
-
-.primary-button {
-    -fx-background-color: linear-gradient(to right, #1B9AAA, #00C9A7);
-    -fx-background-radius: 10;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-}
-.primary-button:hover {
-    -fx-background-color: linear-gradient(to right, #178a99, #00b090);
-    -fx-text-fill: white;
-}
-.primary-button:pressed {
-    -fx-text-fill: white;
-}
-.primary-button:focused {
-    -fx-text-fill: white;
-}
-
-.secondary-button {
-    -fx-background-color: white;
-    -fx-background-radius: 10;
-    -fx-text-fill: #1B9AAA;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-    -fx-border-color: #1B9AAA;
-    -fx-border-radius: 10;
-    -fx-border-width: 2;
-}
-.secondary-button:hover {
-    -fx-background-color: #f0fafa;
-    -fx-text-fill: #1B9AAA;
-}
-.secondary-button:pressed {
-    -fx-text-fill: #1B9AAA;
-}
-.secondary-button:focused {
-    -fx-text-fill: #1B9AAA;
-}
-
-.dark-toggle {
-    -fx-background-color: linear-gradient(to right, #1B9AAA, #00C9A7);
-    -fx-background-radius: 10;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-}
-
-.primary-button .text {
-    -fx-fill: white;
-}
-
-.secondary-button .text {
-    -fx-fill: #1B9AAA;
-}
-
-.primary-button:hover {
-    -fx-opacity: 0.9;
-}
-
-.error-label {
-    -fx-text-fill: #e74c3c;
-    -fx-font-size: 13;
-}
-
-.input-field {
-    -fx-background-color: rgba(0, 0, 0, 0.08);
-    -fx-background-radius: 8;
-    -fx-text-fill: #222222;
-    -fx-prompt-text-fill: rgba(0, 0, 0, 0.4);
-    -fx-font-size: 14;
-    -fx-padding: 8 12 8 12;
-    -fx-border-color: rgba(0, 0, 0, 0.15);
-    -fx-border-radius: 8;
-    -fx-border-width: 1;
-}
-
-.input-field:focused {
-    -fx-border-color: #1B9AAA;
-    -fx-background-color: white;
-}
-
 .root {
-    -color-bg:           #ffffff;
-    -color-text-primary: #1a1a1a;
-    -color-text-secondary: #6b7280;
-    -color-time:         #9ca3af;
-    -color-divider:      #e5e7eb;
-    -color-hover:        #f3f4f6;
-    -color-selected:     #eff6ff;
-}
-
-/* Chat */
-.chat-header {
-    -fx-border-color: #e5e7eb;
-}
-
-.chat-header-title {
-    -fx-text-fill: #1a1a1a;
-}
-
-.chat-list-view .list-cell:hover {
-    -fx-background-color: #f3f4f6;
-}
-
-.chat-list-view .list-cell:selected {
-    -fx-background-color: #eff6ff;
-}
-
-.list-cell:filled:selected {
-    -fx-background-color: #eff6ff;
-}
-.chat-list-view {
-    -fx-background-color: transparent;
-}
-
-.chat-list-view .list-cell {
-    -fx-background-color: transparent;
-}
-
-.chat-name  { -fx-text-fill: #ffffff; }
-.chat-msg   { -fx-text-fill: rgba(255,255,255,0.65); }
-.chat-time  { -fx-text-fill: rgba(255,255,255,0.5); }
-
-.chat-list-view .list-cell:hover {
-    -fx-background-color: rgba(255,255,255,0.1);
-}
-
-.chat-list-view .list-cell:selected,
-.list-cell:filled:selected {
-    -fx-background-color: rgba(255,255,255,0.18);
+    -color-bg: #f4f7fb;
+    -color-bg-muted: #eaf0f6;
+    -color-surface: #ffffff;
+    -color-surface-alt: #eef3f8;
+    -color-text: #1f2937;
+    -color-text-strong: #0f172a;
+    -color-text-muted: #64748b;
+    -color-border: #dbe3ee;
+    -color-hover: #e6edf5;
+    -color-selected: #d9ebff;
+    -color-primary: #1e88a8;
+    -color-primary-hover: #176e87;
+    -color-primary-strong: #16627a;
+    -color-primary-soft: #d8eef4;
+    -color-primary-soft-hover: #c5e5ee;
+    -color-success: #2fa36b;
+    -color-message-in: #eef3f8;
+    -color-message-out: #1e88a8;
+    -color-sidebar: #16627a;
+    -color-sidebar-text-muted: rgba(255, 255, 255, 0.82);
+    -color-text-on-accent: #ffffff;
+    -color-accent-1: #1e88a8;
+    -color-accent-2: #f4a340;
+    -color-accent-3: #d96459;
+    -color-accent-4: #5b7cfa;
 }

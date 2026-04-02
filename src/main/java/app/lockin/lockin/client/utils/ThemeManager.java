@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.prefs.Preferences;
 
 public class ThemeManager {
+    private static final String BASE_CSS =
+            ThemeManager.class.getResource("/app/lockin/lockin/css/style.css").toExternalForm();
 
     private static final String DARK_CSS =
             ThemeManager.class.getResource("/app/lockin/lockin/css/dark-theme.css").toExternalForm();
@@ -26,6 +28,9 @@ public class ThemeManager {
 
     /** Register a scene so it participates in theme switching */
     public static void register(Scene scene) {
+        if (!scene.getStylesheets().contains(BASE_CSS)) {
+            scene.getStylesheets().add(BASE_CSS);
+        }
         registeredScenes.add(scene);
         if (darkMode) applyDark(scene);
         else applyLight(scene);
@@ -57,16 +62,19 @@ public class ThemeManager {
 
     public static boolean isDarkMode() { return darkMode; }
 
-    // ── private helpers ──────────────────────────────────────────────
-
+    // Helper functions
     private static void applyDark(Scene scene) {
         scene.getStylesheets().remove(LIGHT_CSS);
+        if (!scene.getStylesheets().contains(BASE_CSS))
+            scene.getStylesheets().add(BASE_CSS);
         if (!scene.getStylesheets().contains(DARK_CSS))
             scene.getStylesheets().add(DARK_CSS);
     }
 
     private static void applyLight(Scene scene) {
         scene.getStylesheets().remove(DARK_CSS);
+        if (!scene.getStylesheets().contains(BASE_CSS))
+            scene.getStylesheets().add(BASE_CSS);
         if (!scene.getStylesheets().contains(LIGHT_CSS))
             scene.getStylesheets().add(LIGHT_CSS);
     }

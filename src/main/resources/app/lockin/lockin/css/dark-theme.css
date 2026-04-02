@@ -1,149 +1,27 @@
-.right-panel {
-    -fx-background-color: #1e1e1e;
-}
-
-.left-panel {
-    -fx-background-color: linear-gradient(to bottom right, #0a2a40, #0f5a60);
-}
-
-.card {
-    -fx-background-color: #2b2b2b;
-    -fx-background-radius: 14;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 25, 0.2, 0, 6);
-}
-
-.card-subtitle {
-    -fx-text-fill: #aaaaaa;
-}
-
-.card-label {
-    -fx-text-fill: #cccccc;
-}
-
-.divider {
-    -fx-background-color: #444444;
-}
-
-.primary-button {
-    -fx-background-color: linear-gradient(to right, #0f6e7a, #00a085);
-    -fx-background-radius: 10;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-}
-.primary-button:hover {
-    -fx-background-color: linear-gradient(to right, #0d5f6a, #008f75);
-    -fx-text-fill: white;
-}
-.primary-button:pressed {
-    -fx-text-fill: white;
-}
-.primary-button:focused {
-    -fx-text-fill: white;
-}
-
-.secondary-button {
-    -fx-background-color: #2b2b2b;
-    -fx-background-radius: 10;
-    -fx-text-fill: #00C9A7;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-    -fx-border-color: #1B9AAA;
-    -fx-border-radius: 10;
-    -fx-border-width: 2;
-}
-.secondary-button:hover {
-    -fx-background-color: #333333;
-    -fx-text-fill: #00C9A7;
-}
-.secondary-button:pressed {
-    -fx-text-fill: #00C9A7;
-}
-.secondary-button:focused {
-    -fx-text-fill: #00C9A7;
-}
-
-.dark-toggle {
-    -fx-background-color: linear-gradient(to right, #0f6e7a, #00a085);
-    -fx-background-radius: 10;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-}
-
-.label {
-    -fx-text-fill: #e0e0e0;
-}
-
-.primary-button .text {
-    -fx-fill: white;
-}
-
-.secondary-button .text {
-    -fx-fill: #00C9A7;
-}
-
-.error-label {
-    -fx-text-fill: #ff6b6b;
-    -fx-font-size: 13;
-}
-
-.input-field {
-    -fx-background-color: rgba(255, 255, 255, 0.08);
-    -fx-background-radius: 8;
-    -fx-text-fill: rgba(255, 255, 255, 0.9);
-    -fx-prompt-text-fill: rgba(255, 255, 255, 0.4);
-    -fx-font-size: 14;
-    -fx-padding: 8 12 8 12;
-    -fx-border-color: rgba(255, 255, 255, 0.15);
-    -fx-border-radius: 8;
-    -fx-border-width: 1;
-}
-
-.input-field:focused {
-    -fx-border-color: #1B9AAA;
-    -fx-background-color: rgba(255, 255, 255, 0.12);
-}
-
-
-.root.dark {
-    -color-bg:           #111827;
-    -color-text-primary: #f9fafb;
-    -color-text-secondary: #9ca3af;
-    -color-time:         #6b7280;
-    -color-divider:      #1f2937;
-    -color-hover:        #1f2937;
-    -color-selected:     #1e3a5f;
-}
-/* Chat */
-.chat-header {
-    -fx-border-color: #1f2937;
-}
-
-.chat-header-title {
-    -fx-text-fill: #f9fafb;
-}
-
-.chat-list-view .list-cell:hover {
-    -fx-background-color: #1f2937;
-}
-
-.chat-list-view .list-cell:selected {
-    -fx-background-color: #1e3a5f;
-}
-
-.list-cell:filled:selected {
-    -fx-background-color: #1e3a5f;
-}
-
-.chat-name  { -fx-text-fill: #f9fafb; }
-.chat-msg   { -fx-text-fill: #9ca3af; }
-.chat-time  { -fx-text-fill: #6b7280; }
-
-.chat-list-view {
-    -fx-background-color: transparent;
-}
-
-.chat-list-view .list-cell {
-    -fx-background-color: transparent;
+.root {
+    -color-bg: #101720;
+    -color-bg-muted: #16212d;
+    -color-surface: #1a2430;
+    -color-surface-alt: #223041;
+    -color-text: #dbe4ee;
+    -color-text-strong: #f8fbff;
+    -color-text-muted: #93a4b8;
+    -color-border: #2a394b;
+    -color-hover: #243345;
+    -color-selected: #27465d;
+    -color-primary: #4db4d1;
+    -color-primary-hover: #63c1dc;
+    -color-primary-strong: #3494b3;
+    -color-primary-soft: #1f3948;
+    -color-primary-soft-hover: #274657;
+    -color-success: #4dbd82;
+    -color-message-in: #223041;
+    -color-message-out: #3494b3;
+    -color-sidebar: #132432;
+    -color-sidebar-text-muted: rgba(236, 244, 255, 0.78);
+    -color-text-on-accent: #f8fbff;
+    -color-accent-1: #4db4d1;
+    -color-accent-2: #f0b55a;
+    -color-accent-3: #e2796d;
+    -color-accent-4: #7f9bff;
 }

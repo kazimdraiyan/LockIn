@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox maxWidth="Infinity" minHeight="36.0" spacing="8" styleClass="search-bar" xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controllers.SearchBarController">
+    <ImageView fitHeight="18" fitWidth="18" preserveRatio="true">
+        <Image url="@../icon/search.png"/>
+    </ImageView>
+    <TextField fx:id="inputField" prefHeight="36" promptText="Search..." styleClass="search-bar-input" HBox.hgrow="ALWAYS"/>
+</HBox>

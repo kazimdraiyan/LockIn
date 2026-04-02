@@ -4,14 +4,11 @@ import app.lockin.lockin.client.models.Chat;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
 import javafx.geometry.Pos;
 
 public class ChatCell extends ListCell<Chat> {
     // Avatar
-    private final StackPane avatarPane = new StackPane();
-    private final Circle avatarCircle = new Circle(22);
-    private final Label avatarLetter = new Label();
+    private final ProfileAvatar avatar = new ProfileAvatar();
 
     // Text
     private final Label nameLabel = new Label();
@@ -27,9 +24,7 @@ public class ChatCell extends ListCell<Chat> {
     private final HBox root = new HBox(12);
 
     public ChatCell() {
-        // Avatar letter style
-        avatarLetter.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
-        avatarPane.getChildren().addAll(avatarCircle, avatarLetter);
+        avatar.setSize(44);
 
         // Name + message
         nameLabel.getStyleClass().add("chat-name");
@@ -47,21 +42,14 @@ public class ChatCell extends ListCell<Chat> {
         // Badge
         badgeLabel.setMinSize(20, 20);
         badgeLabel.setAlignment(Pos.CENTER);
-        badgeLabel.setStyle(
-                "-fx-background-color: #3B82F6;" +
-                        "-fx-text-fill: white;" +
-                        "-fx-font-size: 11px;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-background-radius: 10px;" +
-                        "-fx-padding: 2 5 2 5;"
-        );
+        badgeLabel.getStyleClass().add("badge");
 
         rightContainer.setAlignment(Pos.TOP_RIGHT);
         rightContainer.getChildren().addAll(timeLabel, badgeLabel);
 
         root.setAlignment(Pos.CENTER_LEFT);
         root.setPadding(new Insets(8, 12, 8, 12));
-        root.getChildren().addAll(avatarPane, textContainer, rightContainer);
+        root.getChildren().addAll(avatar, textContainer, rightContainer);
     }
 
     @Override
@@ -71,13 +59,14 @@ public class ChatCell extends ListCell<Chat> {
         if (empty || item == null) {
             setGraphic(null);
             setText(null);
-            setStyle("-fx-background-color: transparent;");
+            getStyleClass().remove("transparent-list");
             return;
         }
-            setStyle("-fx-background-color: transparent;");
+            if (!getStyleClass().contains("transparent-list")) {
+                getStyleClass().add("transparent-list");
+            }
             // Avatar
-            avatarCircle.setFill(item.getAvatarColor());
-            avatarLetter.setText(String.valueOf(item.getUserName().charAt(0)).toUpperCase());
+            avatar.setText(item.getUserName());
 
             // Text
             nameLabel.setText(item.getUserName());

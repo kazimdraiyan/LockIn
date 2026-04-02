@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.fxml.FXMLLoader?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane fx:id="rootPane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane fx:id="rootPane" styleClass="screen-root" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="app.lockin.lockin.client.controllers.MainController">
     <!-- Nav bar -->
     <top>
-        <HBox fx:id="navBar" alignment="CENTER_LEFT" prefHeight="60" prefWidth="749.0"
-              style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 2);">
+        <HBox fx:id="navBar" alignment="CENTER_LEFT" prefHeight="60" prefWidth="749.0" styleClass="nav-bar">
             <padding>
                 <Insets left="16" right="16"/>
             </padding>
@@ -21,11 +21,7 @@
                         prefHeight="40"
                         prefWidth="40"
                         alignment="CENTER"
-                        style="-fx-background-color: #dfdfdf;
-               -fx-background-radius: 20;
-               -fx-cursor: hand;
-               -fx-border-color: transparent;
-               -fx-padding: 0 0 0 8;">
+                        styleClass="surface-icon-button">
                     <graphic>
                         <ImageView
                                 preserveRatio="true">
@@ -42,7 +38,7 @@
             <!-- Page title -->
             <!-- TODO: Add custom page title management -->
             <HBox alignment="CENTER_LEFT" prefHeight="60">
-                <Label fx:id="title" style="-fx-text-fill: #1B9AAA; -fx-font-weight: bold; -fx-font-size: 22;"
+                <Label fx:id="title" styleClass="title-text title-large"
                        text="LockIn"/>
             </HBox>
 
@@ -50,18 +46,7 @@
             <Region HBox.hgrow="ALWAYS"/>
 
             <!-- Search bar -->
-            <HBox fx:id="searchBar" alignment="CENTER_LEFT" spacing="8"
-                  style="-fx-background-color: #efefef; -fx-background-radius: 20; -fx-padding: 0 14 0 14;">
-                <HBox.margin>
-                    <Insets bottom="10" top="10"/>
-                </HBox.margin>
-                <ImageView fitWidth="18" fitHeight="18"
-                        preserveRatio="true">
-                    <Image url="@../icon/search.png"/>
-                </ImageView>
-                <TextField prefHeight="36" prefWidth="260" promptText="Search..."
-                           style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-font-size: 13;"/>
-            </HBox>
+            <fx:include fx:id="searchBar" source="search-bar.fxml" />
 
             <!-- Spacer -->
             <Region HBox.hgrow="ALWAYS"/>
@@ -69,7 +54,7 @@
             <!-- Trailing icons -->
             <HBox alignment="CENTER" spacing="8">
                 <Button onAction="#toggleTheme" prefHeight="40" prefWidth="40"
-                        style="-fx-background-color: #dfdfdf; -fx-background-radius: 20; -fx-cursor: hand; -fx-border-color: transparent;">
+                        styleClass="surface-icon-button">
                     <graphic>
                         <ImageView fx:id="themeToggleIcon"
                                    preserveRatio="true">
