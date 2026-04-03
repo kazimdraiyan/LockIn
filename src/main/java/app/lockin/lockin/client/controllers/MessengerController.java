@@ -15,14 +15,6 @@ public class MessengerController implements MainControllerAware {
         mainController.setNavBar(true, "Chats", false);
     }
 
-    public void onAttachFile(ActionEvent actionEvent) {
-        // TODO: Learn more about ActionEvent
-    }
-
-    public void onSendMessage(ActionEvent actionEvent) {
-
-    }
-
     @FXML
     protected void onHomeButtonClick() throws IOException {
         mainController.navigateReplacingRoot("home-view.fxml");
