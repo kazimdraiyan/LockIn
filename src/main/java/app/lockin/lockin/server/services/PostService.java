@@ -132,6 +132,49 @@ public class PostService {
         return posts;
     }
 
+    public ArrayList<Post> loadPostsByAuthor(String username) throws IOException {
+        ArrayList<Post> ownPosts = new ArrayList<>();
+        for (Post post : loadPosts()) {
+            if (username.equals(post.getAuthorUsername())) {
+                ownPosts.add(post);
+            }
+        }
+        return ownPosts;
+    }
+
+    public void deletePost(String username, String postId) throws IOException {
+        if (username == null || username.isBlank()) {
+            throw new IOException("Unauthenticated request");
+        }
+        if (postId == null || postId.isBlank()) {
+            throw new IOException("Missing post id");
+        }
+
+        ensureStorageExists();
+        ArrayNode posts = loadPostsNode();
+        for (int i = 0; i < posts.size(); i++) {
+            JsonNode postNode = posts.get(i);
+            if (!postId.equals(postNode.path("id").asText())) {
+                continue;
+            }
+            if (!username.equals(postNode.path("authorUsername").asText())) {
+                throw new IOException("You can only delete your own posts");
+            }
+
+            deleteAttachmentIfPresent(postNode.get("attachment"));
+            JsonNode commentsNode = postNode.get("comments");
+            if (commentsNode != null && commentsNode.isArray()) {
+                for (JsonNode commentNode : commentsNode) {
+                    deleteAttachmentIfPresent(commentNode.get("attachment"));
+                }
+            }
+            posts.remove(i);
+            savePostsNode(posts);
+            return;
+        }
+        throw new IOException("Post not found");
+    }
+
     private void ensureStorageExists() throws IOException {
         Files.createDirectories(UPLOADS_PATH);
         if (!Files.exists(POSTS_PATH)) {
@@ -184,6 +227,14 @@ public class PostService {
                 attachmentNode.get("mimeType").asText(),
                 data
         );
+    }
+
+    private void deleteAttachmentIfPresent(JsonNode attachmentNode) throws IOException {
+        if (attachmentNode == null || attachmentNode.isNull()) {
+            return;
+        }
+        Path filePath = UPLOADS_PATH.resolve(attachmentNode.path("storedFileName").asText());
+        Files.deleteIfExists(filePath);
     }
 
     private ArrayNode ensureCommentsArray(JsonNode postNode) {

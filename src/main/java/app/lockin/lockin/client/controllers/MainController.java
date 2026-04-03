@@ -40,6 +40,9 @@ public class MainController {
     public ImageView themeToggleIcon;
 
     @FXML
+    public ImageView settingsIcon;
+
+    @FXML
     private BorderPane rootPane;
 
     @FXML
@@ -51,9 +54,7 @@ public class MainController {
         }
         searchBarController.setPromptText("Search");
         searchBar.getStyleClass().add("search-bar-navbar");
-        themeToggleIcon.setImage(new Image(
-                MyApplication.getIcon(ThemeManager.isDarkMode() ? "light_mode.png" : "dark_mode.png").toExternalForm()
-        ));
+        refreshToolbarIcons();
     }
 
     public TextField getSearchField() {
@@ -116,8 +117,19 @@ public class MainController {
 
     public void toggleTheme() {
         ThemeManager.toggle();
+        refreshToolbarIcons();
+    }
+
+    public void openSettings() {
+        // Placeholder until the settings page is implemented.
+    }
+
+    private void refreshToolbarIcons() {
         themeToggleIcon.setImage(new Image(
                 MyApplication.getIcon(ThemeManager.isDarkMode() ? "light_mode.png" : "dark_mode.png").toExternalForm()
+        ));
+        settingsIcon.setImage(new Image(
+                MyApplication.getIcon(ThemeManager.isDarkMode() ? "settings-white.png" : "settings.png").toExternalForm()
         ));
     }
 }

@@ -1,12 +1,15 @@
 package app.lockin.lockin.server.services;
 
 import app.lockin.lockin.common.models.Chat;
+import app.lockin.lockin.common.models.PostAttachment;
 import app.lockin.lockin.common.models.Session;
+import app.lockin.lockin.common.models.UserProfile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Base64;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.UUID;
@@ -44,6 +47,8 @@ public class AuthService {
         ObjectNode user = mapper.createObjectNode();
         // TODO: Use hashes instead of storing the password in plaintext
         user.put("password", password);
+        user.put("description", "");
+        user.putNull("profilePicture");
         usersDatabase.set(username, user);
 
         System.out.println("User successfully created");
@@ -115,5 +120,69 @@ public class AuthService {
             chats.add(new Chat(usernameIterator.next()));
         }
         return chats;
+    }
+
+    public UserProfile loadProfile(String username) throws IOException {
+        ObjectNode usersDatabase = loadDatabase("users.json");
+        if (!usersDatabase.has(username)) {
+            throw new IOException("User not found");
+        }
+
+        ObjectNode userNode = (ObjectNode) usersDatabase.get(username);
+        return new UserProfile(
+                username,
+                userNode.path("description").asText(""),
+                readAttachment(userNode.get("profilePicture"))
+        );
+    }
+
+    public UserProfile updateProfile(String username, String description, PostAttachment profilePicture) throws IOException {
+        ObjectNode usersDatabase = loadDatabase("users.json");
+        if (!usersDatabase.has(username)) {
+            throw new IOException("User not found");
+        }
+
+        ObjectNode userNode = (ObjectNode) usersDatabase.get(username);
+        userNode.put("description", description == null ? "" : description.trim());
+        if (profilePicture == null) {
+            userNode.putNull("profilePicture");
+        } else {
+            validateProfilePicture(profilePicture);
+            userNode.set("profilePicture", writeAttachment(profilePicture));
+        }
+        saveDatabase("users.json", usersDatabase);
+        return new UserProfile(username, userNode.path("description").asText(""), readAttachment(userNode.get("profilePicture")));
+    }
+
+    private void validateProfilePicture(PostAttachment profilePicture) throws IOException {
+        String mimeType = profilePicture.getMimeType();
+        if (!"image/jpeg".equals(mimeType) && !"image/png".equals(mimeType) && !"image/gif".equals(mimeType)) {
+            throw new IOException("Profile picture must be JPG, PNG, or GIF");
+        }
+        if (profilePicture.getData().length == 0) {
+            throw new IOException("Profile picture is empty");
+        }
+        if (profilePicture.getData().length > 10L * 1024 * 1024) {
+            throw new IOException("Profile picture is too large");
+        }
+    }
+
+    private ObjectNode writeAttachment(PostAttachment attachment) {
+        ObjectNode attachmentNode = mapper.createObjectNode();
+        attachmentNode.put("originalFileName", attachment.getOriginalFileName());
+        attachmentNode.put("mimeType", attachment.getMimeType());
+        attachmentNode.put("data", Base64.getEncoder().encodeToString(attachment.getData()));
+        return attachmentNode;
+    }
+
+    private PostAttachment readAttachment(com.fasterxml.jackson.databind.JsonNode attachmentNode) {
+        if (attachmentNode == null || attachmentNode.isNull()) {
+            return null;
+        }
+        return new PostAttachment(
+                attachmentNode.path("originalFileName").asText("profile-picture"),
+                attachmentNode.path("mimeType").asText("image/png"),
+                Base64.getDecoder().decode(attachmentNode.path("data").asText(""))
+        );
     }
 }

@@ -97,6 +97,12 @@ public class ClientHandler implements Runnable {
             case CREATE_COMMENT:
                 response = postHandler.handleCreateComment((CreateCommentRequest) request);
                 break;
+            case UPDATE_PROFILE:
+                response = authHandler.handleUpdateProfile((UpdateProfileRequest) request);
+                break;
+            case DELETE_POST:
+                response = postHandler.handleDeletePost((DeletePostRequest) request);
+                break;
         }
         if (response != null) {
             send(response);
@@ -113,6 +119,9 @@ public class ClientHandler implements Runnable {
                 break;
             case POSTS:
                 response = postHandler.handleFetchPosts(request);
+                break;
+            case PROFILE:
+                response = authHandler.handleFetchProfile(request, postHandler);
                 break;
         }
         return response;

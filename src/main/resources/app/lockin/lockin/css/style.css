@@ -190,6 +190,23 @@
     -fx-background-color: -color-primary-hover;
 }
 
+.danger-button {
+    -fx-background-color: -color-accent-3;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.danger-button:hover {
+    -fx-background-color: derive(-color-accent-3, -8%);
+}
+
+.danger-button .text {
+    -fx-fill: white;
+}
+
 .primary-button .text {
     -fx-fill: white;
 }
@@ -370,6 +387,90 @@
     -fx-background-color: -color-surface;
     -fx-background-radius: 10;
     -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.08), 6, 0, 0, 1);
+}
+
+.post-thread-card {
+    -fx-background-insets: 0;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+    -fx-background-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.12), 12, 0, 0, 3);
+}
+
+.comments-section {
+    -fx-background-color: -color-surface-alt;
+    -fx-background-radius: 12;
+    -fx-padding: 12;
+}
+
+.comment-card {
+    -fx-background-color: -color-surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+.comment-composer {
+    -fx-padding: 12 0 0 0;
+}
+
+.profile-header-card {
+    -fx-background-radius: 14;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.12), 14, 0, 0, 3);
+    -fx-min-height: 460;
+}
+
+.profile-name {
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-primary;
+}
+
+.profile-description {
+    -fx-pref-height: 132;
+    -fx-pref-width: 620;
+    -fx-max-width: 620;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 0;
+    -fx-font-size: 15;
+    -fx-text-fill: -color-text;
+    -fx-prompt-text-fill: -color-text-muted;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.profile-description .content {
+    -fx-background-color: linear-gradient(to bottom, derive(-color-surface-alt, 3%), -color-surface-alt);
+    -fx-background-radius: 16;
+    -fx-background-insets: 0;
+    -fx-border-color: -color-border;
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+    -fx-padding: 18 20 18 20;
+}
+
+.profile-description:focused .content {
+    -fx-background-color: linear-gradient(to bottom, derive(-color-surface, 1%), derive(-color-surface-alt, 2%));
+    -fx-border-color: -color-primary-soft;
+    -fx-border-radius: 16;
+    -fx-border-width: 1;
+}
+
+.profile-image {
+    -fx-background-color: -color-surface-alt;
+    -fx-background-radius: 999;
+    -fx-border-color: -color-primary-soft;
+    -fx-border-radius: 999;
+    -fx-border-width: 6;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.14), 22, 0, 0, 4);
 }
 
 .file-preview {

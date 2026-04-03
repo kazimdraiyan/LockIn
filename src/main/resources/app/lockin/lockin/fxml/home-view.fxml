@@ -37,10 +37,8 @@
                     <Label styleClass="text-strong" text="Chats"/>
                 </HBox>
 
-                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" styleClass="nav-item">
-                    <ImageView preserveRatio="true">
-                        <Image url="@../icon/account.png"/>
-                    </ImageView>
+                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" styleClass="nav-item" onMouseClicked="#onProfileButtonClick">
+                    <ProfileAvatar fx:id="profileNavAvatar" size="32.0" text="Me"/>
                     <Label styleClass="text-strong" text="Profile"/>
                 </HBox>
 
@@ -51,11 +49,11 @@
                     <Label styleClass="text-strong" text="Saved"/>
                 </HBox>
 
-                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" styleClass="nav-item">
+                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" styleClass="nav-item" onMouseClicked="#logout">
                     <ImageView preserveRatio="true">
                         <Image url="@../icon/logout.png"/>
                     </ImageView>
-                    <Label onMouseClicked="#logout" styleClass="text-strong" text="Logout"/>
+                    <Label styleClass="text-strong" text="Logout"/>
                 </HBox>
             </VBox>
 
@@ -93,9 +91,9 @@
                 </VBox>
 
                 <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-                    <VBox fx:id="feedContainer" spacing="12">
+                    <VBox fx:id="feedContainer" spacing="22">
                         <padding>
-                            <Insets bottom="12"/>
+                            <Insets bottom="18" top="4"/>
                         </padding>
                     </VBox>
                 </ScrollPane>

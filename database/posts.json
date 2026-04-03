@@ -1,14 +1,4 @@
 [ {
-  "id" : "1777a7c9-2d03-4ed9-b4f4-d4c13b7acf1c",
-  "authorUsername" : "shonyewest",
-  "textContent" : "",
-  "createdAt" : 1775157115541,
-  "attachment" : {
-    "originalFileName" : "autisticpola.jpg",
-    "mimeType" : "image/jpeg",
-    "storedFileName" : "1777a7c9-2d03-4ed9-b4f4-d4c13b7acf1c_autisticpola.jpg"
-  }
-}, {
   "id" : "5658699c-9ef1-492c-9198-b88a567f4f2f",
   "authorUsername" : "shonyewest",
   "textContent" : "sdasdadsasdf",
@@ -40,10 +30,4 @@
     "textContent" : "asdfasdf",
     "createdAt" : 1775162612543
   } ]
-}, {
-  "id" : "b99fac05-7896-4510-8125-d9c1a1be37d1",
-  "authorUsername" : "shonyewest",
-  "textContent" : "asdfasdfasdf",
-  "createdAt" : 1775162860941,
-  "comments" : [ ]
 } ]

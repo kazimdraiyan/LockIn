@@ -1,7 +1,9 @@
 package app.lockin.lockin.server.handlers;
 
 import app.lockin.lockin.common.models.Chat;
+import app.lockin.lockin.common.models.ProfilePageData;
 import app.lockin.lockin.common.models.Session;
+import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.*;
 import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
@@ -79,6 +81,36 @@ public class AuthHandler {
         } catch (IOException e) {
             System.out.println("An error occurred while trying to load chat list");
             return new Response(ResponseStatus.ERROR, "An unknown error occurred. Please try again later.", null);
+        }
+    }
+
+    public Response handleFetchProfile(FetchRequest request, PostHandler postHandler) {
+        if (request.authenticatedSession == null) {
+            return new Response(ResponseStatus.ERROR, "Please log in before loading profile", null);
+        }
+        try {
+            String username = request.authenticatedSession.getUsername();
+            UserProfile profile = authService.loadProfile(username);
+            ProfilePageData pageData = new ProfilePageData(profile, postHandler.loadPostsByAuthor(username));
+            return new Response(ResponseStatus.SUCCESS, "Profile loaded successfully", pageData);
+        } catch (IOException e) {
+            return new Response(ResponseStatus.ERROR, e.getMessage(), null);
+        }
+    }
+
+    public Response handleUpdateProfile(UpdateProfileRequest request) {
+        if (request.authenticatedSession == null) {
+            return new Response(ResponseStatus.ERROR, "Please log in before updating profile", null);
+        }
+        try {
+            UserProfile profile = authService.updateProfile(
+                    request.authenticatedSession.getUsername(),
+                    request.getDescription(),
+                    request.getProfilePicture()
+            );
+            return new Response(ResponseStatus.SUCCESS, "Profile updated successfully", profile);
+        } catch (IOException e) {
+            return new Response(ResponseStatus.ERROR, e.getMessage(), null);
         }
     }
 }

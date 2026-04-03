@@ -8,5 +8,7 @@ public enum RequestType {
     FETCH,
     CREATE_POST,
     CREATE_COMMENT,
+    UPDATE_PROFILE,
+    DELETE_POST,
     // TODO: Add others, like MESSAGE
 }

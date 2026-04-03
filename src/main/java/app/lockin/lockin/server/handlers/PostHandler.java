@@ -4,6 +4,7 @@ import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
 import app.lockin.lockin.common.requests.CreateCommentRequest;
 import app.lockin.lockin.common.requests.CreatePostRequest;
+import app.lockin.lockin.common.requests.DeletePostRequest;
 import app.lockin.lockin.common.requests.FetchRequest;
 import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
@@ -61,5 +62,22 @@ public class PostHandler {
         } catch (IOException e) {
             return new Response(ResponseStatus.ERROR, "An unknown error occurred", null);
         }
+    }
+
+    public Response handleDeletePost(DeletePostRequest request) {
+        if (request.authenticatedSession == null) {
+            return new Response(ResponseStatus.ERROR, "Please log in before deleting posts", null);
+        }
+
+        try {
+            postService.deletePost(request.authenticatedSession.getUsername(), request.getPostId());
+            return new Response(ResponseStatus.SUCCESS, "Post deleted successfully", null);
+        } catch (IOException e) {
+            return new Response(ResponseStatus.ERROR, e.getMessage(), null);
+        }
+    }
+
+    public ArrayList<Post> loadPostsByAuthor(String username) throws IOException {
+        return postService.loadPostsByAuthor(username);
     }
 }

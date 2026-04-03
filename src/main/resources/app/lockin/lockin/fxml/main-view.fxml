@@ -53,6 +53,14 @@
 
             <!-- Trailing icons -->
             <HBox alignment="CENTER" spacing="8">
+                <Button onAction="#openSettings" prefHeight="40" prefWidth="40"
+                        styleClass="surface-icon-button">
+                    <graphic>
+                        <ImageView fx:id="settingsIcon"
+                                   preserveRatio="true">
+                        </ImageView>
+                    </graphic>
+                </Button>
                 <Button onAction="#toggleTheme" prefHeight="40" prefWidth="40"
                         styleClass="surface-icon-button">
                     <graphic>

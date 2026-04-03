@@ -1,9 +1,12 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
 import app.lockin.lockin.common.models.PostAttachment;
+import app.lockin.lockin.common.models.ProfilePageData;
+import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.CreateCommentRequest;
 import app.lockin.lockin.common.requests.CreatePostRequest;
 import app.lockin.lockin.common.requests.FetchRequest;
@@ -56,6 +59,7 @@ public class HomeController implements MainControllerAware {
     @FXML private Label composerStatusLabel;
     @FXML private Button uploadFileButton;
     @FXML private Button postButton;
+    @FXML private ProfileAvatar profileNavAvatar;
 
     private MainController mainController;
     private Path selectedFilePath;
@@ -64,6 +68,7 @@ public class HomeController implements MainControllerAware {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         mainController.setNavBar(true, "LockIn", true);
+        loadSidebarProfileImage();
         loadPosts();
     }
 
@@ -112,8 +117,22 @@ public class HomeController implements MainControllerAware {
         }).start();
     }
 
-    public void onChatsButtonClick(MouseEvent mouseEvent) throws IOException {
-        mainController.navigatePush("messenger-view.fxml");
+    public void onChatsButtonClick(MouseEvent mouseEvent) {
+        try {
+            mainController.navigatePush("messenger-view.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+            composerStatusLabel.setText("Could not open chats.");
+        }
+    }
+
+    public void onProfileButtonClick(MouseEvent mouseEvent) {
+        try {
+            mainController.navigatePush("profile-view.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+            composerStatusLabel.setText("Could not open profile page.");
+        }
     }
 
     public void logout(MouseEvent mouseEvent) {
@@ -157,6 +176,22 @@ public class HomeController implements MainControllerAware {
         }).start();
     }
 
+    private void loadSidebarProfileImage() {
+        new Thread(() -> {
+            try {
+                Response response = sendRequest(new FetchRequest(FetchType.PROFILE));
+                if (response != null && response.getStatus() == ResponseStatus.SUCCESS && response.getData() instanceof ProfilePageData pageData) {
+                    UserProfile profile = pageData.getProfile();
+                    Platform.runLater(() -> renderSidebarProfileImage(profile == null ? null : profile.getProfilePicture()));
+                } else {
+                    Platform.runLater(() -> renderSidebarProfileImage(null));
+                }
+            } catch (IOException e) {
+                Platform.runLater(() -> renderSidebarProfileImage(null));
+            }
+        }).start();
+    }
+
     private PostAttachment createAttachmentFromSelection() throws IOException {
         return createAttachmentFromPath(selectedFilePath);
     }
@@ -191,7 +226,7 @@ public class HomeController implements MainControllerAware {
 
     private VBox buildPostCard(Post post) {
         VBox card = new VBox(10);
-        card.getStyleClass().add("feed-card");
+        card.getStyleClass().addAll("feed-card", "post-thread-card");
         card.setPadding(new Insets(14, 16, 14, 16));
 
         HBox header = new HBox(10);
@@ -227,6 +262,7 @@ public class HomeController implements MainControllerAware {
 
     private VBox buildCommentsSection(Post post) {
         VBox section = new VBox(10);
+        section.getStyleClass().add("comments-section");
 
         List<Comment> comments = post.getComments();
         if (comments.isEmpty()) {
@@ -246,7 +282,7 @@ public class HomeController implements MainControllerAware {
     private VBox buildCommentCard(Comment comment) {
         VBox card = new VBox(8);
         card.setPadding(new Insets(12));
-        card.getStyleClass().add("file-preview");
+        card.getStyleClass().add("comment-card");
 
         HBox header = new HBox(10);
         header.setAlignment(Pos.CENTER_LEFT);
@@ -279,6 +315,7 @@ public class HomeController implements MainControllerAware {
     private VBox buildCommentComposer(Post post) {
         VBox composer = new VBox(8);
         composer.setPadding(new Insets(10, 0, 0, 0));
+        composer.getStyleClass().add("comment-composer");
 
         TextField commentField = new TextField();
         commentField.setPromptText("Write a comment...");
@@ -380,18 +417,20 @@ public class HomeController implements MainControllerAware {
         return preview;
     }
 
-    private VBox createAvatar(String username, double size) {
-        VBox avatar = new VBox();
-        avatar.setAlignment(Pos.CENTER);
-        avatar.getStyleClass().add("profile-avatar");
-        avatar.setMinSize(size, size);
-        avatar.setPrefSize(size, size);
-        avatar.setMaxSize(size, size);
-
-        Label initials = new Label(extractInitials(username));
-        initials.getStyleClass().add("profile-avatar-text");
-        avatar.getChildren().add(initials);
+    private ProfileAvatar createAvatar(String username, double size) {
+        ProfileAvatar avatar = new ProfileAvatar();
+        avatar.setSize(size);
+        avatar.setText(extractInitials(username));
         return avatar;
+    }
+
+    private void renderSidebarProfileImage(PostAttachment profilePicture) {
+        profileNavAvatar.setText("ME");
+        if (profilePicture == null || profilePicture.getData().length == 0) {
+            profileNavAvatar.setImage(new Image(MyApplication.getIcon("account.png").toExternalForm()));
+            return;
+        }
+        profileNavAvatar.setImage(new Image(new ByteArrayInputStream(profilePicture.getData())));
     }
 
     private void downloadAttachment(PostAttachment attachment) {
