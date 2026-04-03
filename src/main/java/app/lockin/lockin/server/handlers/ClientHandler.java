@@ -1,9 +1,11 @@
 package app.lockin.lockin.server.handlers;
 
+import app.lockin.lockin.common.models.MessageRealtimeEvent;
 import app.lockin.lockin.common.models.Session;
 import app.lockin.lockin.common.requests.*;
 import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
+import app.lockin.lockin.server.services.ConnectedClientRegistry;
 
 import java.io.*;
 import java.net.Socket;
@@ -19,16 +21,18 @@ public class ClientHandler implements Runnable {
 
     private AuthHandler authHandler;
     private PostHandler postHandler;
+    private MessageHandler messageHandler;
 
     private boolean isRunning = true;
 
     private Session authenticatedSession = null;
 
-    // Dependency injection is used here by injecting AuthHandler into ClientHandler. TODO: Learn more about this
-    public ClientHandler(Socket socket, AuthHandler authHandler, PostHandler postHandler) {
+    // Dependency injection is used here by injecting AuthHandler, PostHandler, and MessageHandler into ClientHandler. TODO: Learn more about this
+    public ClientHandler(Socket socket, AuthHandler authHandler, PostHandler postHandler, MessageHandler messageHandler) {
         this.socket = socket;
         this.authHandler = authHandler;
         this.postHandler = postHandler;
+        this.messageHandler = messageHandler;
     }
 
     @Override
@@ -45,16 +49,18 @@ public class ClientHandler implements Runnable {
                 handleRequest(request);
             }
         } catch (IOException | ClassNotFoundException e) {
-            // TODO: Close socket and other things
             e.printStackTrace();
             System.out.println("Client thread stopped due to error");
+        } finally {
+            clearAuthenticatedSession();
+            closeResources();
         }
     }
 
     private Response authenticateUsingToken(LoginUsingTokenRequest request) {
         Response response = authHandler.handleLoginUsingToken(request);
         if (response.getData() != null) {
-            authenticatedSession = (Session) response.getData();
+            updateAuthenticatedSession((Session) response.getData());
             System.out.println("Authentication successful: " + authenticatedSession.getUsername());
         }
         else {
@@ -72,7 +78,9 @@ public class ClientHandler implements Runnable {
             case LOGIN:
                 response = authHandler.handleLogin((LoginRequest) request);
                 newSession = (Session) response.getData();
-                authenticateUsingToken(new LoginUsingTokenRequest(newSession == null ? null : newSession.getToken()));
+                if (newSession != null) {
+                    updateAuthenticatedSession(newSession);
+                }
                 break;
             case LOGIN_USING_TOKEN:
                 response = authenticateUsingToken((LoginUsingTokenRequest) request);
@@ -80,16 +88,21 @@ public class ClientHandler implements Runnable {
             case LOGOUT:
                 response = authHandler.handleLogout((LogoutRequest) request);
                 if (response.getStatus() == ResponseStatus.SUCCESS) {
-                    authenticatedSession = null;
+                    clearAuthenticatedSession();
                 }
                 break;
             case SIGNUP:
                 response = authHandler.handleSignUp((SignUpRequest) request);
                 newSession = (Session) response.getData();
-                authenticateUsingToken(new LoginUsingTokenRequest(newSession == null ? null : newSession.getToken()));
+                if (newSession != null) {
+                    updateAuthenticatedSession(newSession);
+                }
                 break;
             case FETCH:
                 response = handleFetchRequest((FetchRequest) request);
+                break;
+            case FETCH_MESSAGES:
+                response = messageHandler.handleFetchMessages((FetchMessagesRequest) request);
                 break;
             case CREATE_POST:
                 response = postHandler.handleCreatePost((CreatePostRequest) request);
@@ -97,6 +110,9 @@ public class ClientHandler implements Runnable {
             case CREATE_COMMENT:
                 response = postHandler.handleCreateComment((CreateCommentRequest) request);
                 break;
+            case CREATE_MESSAGE:
+                handleCreateMessage((CreateMessageRequest) request);
+                return;
         }
         if (response != null) {
             send(response);
@@ -107,9 +123,7 @@ public class ClientHandler implements Runnable {
         Response response = null;
         switch (request.getFetchType()) {
             case CHATS:
-                response = authHandler.handleFetchChats(request);
-                break;
-            case MESSAGES:
+                response = messageHandler.handleFetchChats(request);
                 break;
             case POSTS:
                 response = postHandler.handleFetchPosts(request);
@@ -118,14 +132,83 @@ public class ClientHandler implements Runnable {
         return response;
     }
 
-    private void send(Response response) {
+    private void handleCreateMessage(CreateMessageRequest request) {
+        MessageHandler.MessageCommandResult result = messageHandler.handleCreateMessage(request);
+        send(result.getResponse());
+
+        if (result.getResponse().getStatus() != ResponseStatus.SUCCESS) {
+            return;
+        }
+
+        Response recipientEvent = new Response(
+                ResponseStatus.SUCCESS,
+                "Incoming message",
+                new MessageRealtimeEvent(result.getRecipientDelivery())
+        );
+        broadcastToUser(result.getRecipientUsername(), recipientEvent, null);
+
+        Response senderEvent = new Response(
+                ResponseStatus.SUCCESS,
+                "Incoming message",
+                new MessageRealtimeEvent(result.getSenderDelivery())
+        );
+        broadcastToUser(result.getSenderUsername(), senderEvent, this);
+    }
+
+    private void broadcastToUser(String username, Response response, ClientHandler excludedClient) {
+        for (ClientHandler client : ConnectedClientRegistry.getClients(username)) {
+            if (client == excludedClient) {
+                continue;
+            }
+            client.send(response);
+        }
+    }
+
+    private void updateAuthenticatedSession(Session newSession) {
+        clearAuthenticatedSession();
+        authenticatedSession = newSession;
+        if (authenticatedSession != null) {
+            ConnectedClientRegistry.register(authenticatedSession.getUsername(), this);
+        }
+    }
+
+    private void clearAuthenticatedSession() {
+        if (authenticatedSession != null) {
+            ConnectedClientRegistry.unregister(authenticatedSession.getUsername(), this);
+            authenticatedSession = null;
+        }
+    }
+
+    // TODO: Reasons of using synchronized here?
+    public synchronized void send(Response response) {
         try {
             out.writeObject(response); // Serialize
             out.flush(); // TODO: Why it's needed?
         } catch (IOException e) {
-            // TODO: Close everything
             e.printStackTrace();
             System.out.println("Client thread stopped due to error while sending a response");
+            isRunning = false;
+        }
+    }
+
+    private void closeResources() {
+        try {
+            if (in != null) {
+                in.close();
+            }
+        } catch (IOException ignored) {
+        }
+        try {
+            if (out != null) {
+                out.close();
+            }
+        } catch (IOException ignored) {
+        }
+        try {
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+            }
+        } catch (IOException ignored) {
         }
     }
 }

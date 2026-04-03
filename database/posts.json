@@ -22,7 +22,19 @@
     "originalFileName" : "bilai.jpg",
     "mimeType" : "image/jpeg",
     "storedFileName" : "4f49007f-5b17-4d09-ad3b-b473d7d18c84_bilai.jpg"
-  }
+  },
+  "comments" : [ {
+    "id" : "968597fa-9a4d-41a7-88df-b6c7b39c8119",
+    "postId" : "4f49007f-5b17-4d09-ad3b-b473d7d18c84",
+    "authorUsername" : "raiyankazi",
+    "textContent" : "",
+    "createdAt" : 1775212659682,
+    "attachment" : {
+      "originalFileName" : "Reiner.jpg",
+      "mimeType" : "image/jpeg",
+      "storedFileName" : "968597fa-9a4d-41a7-88df-b6c7b39c8119_Reiner.jpg"
+    }
+  } ]
 }, {
   "id" : "378a5696-696c-4dd2-a175-3c635cb83362",
   "authorUsername" : "shonyewest",

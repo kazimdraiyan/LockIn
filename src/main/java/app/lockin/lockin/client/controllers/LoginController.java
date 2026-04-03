@@ -65,10 +65,7 @@ public class LoginController implements MainControllerAware {
         new Thread(() -> {
             try {
                 LoginRequest request = new LoginRequest(usernameField.getText(), passwordField.getText());
-
-                MyApplication.clientManager.send(request);
-
-                Response response = MyApplication.clientManager.receive();
+                Response response = MyApplication.clientManager.sendRequest(request);
                 System.out.println(response.getMessage());
                 System.out.println(response.getData());
 
