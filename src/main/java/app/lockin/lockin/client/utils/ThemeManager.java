@@ -28,11 +28,9 @@ public class ThemeManager {
     private static final List<Scene> registeredScenes = new ArrayList<>();
     private static boolean darkMode = prefs.getBoolean("darkMode", false);
 
-    static{
-        System.out.println("Loaded darkMode from prefs: " + darkMode);
-    }
+    public static boolean isDarkMode() { return darkMode; }
 
-    /** Register a scene so it participates in theme switching */
+    // Add scene to registeredScenes
     public static void register(Scene scene) {
         if (!scene.getStylesheets().contains(BASE_CSS)) {
             scene.getStylesheets().add(BASE_CSS);
@@ -41,7 +39,6 @@ public class ThemeManager {
         applyCurrentTheme(scene);
     }
 
-    /** Toggle between dark and light mode across all registered scenes */
     public static void toggle() {
         darkMode = !darkMode;
         prefs.putBoolean("darkMode", darkMode);
@@ -55,28 +52,16 @@ public class ThemeManager {
         }
     }
 
-    /** Force set a specific mode */
-    /*public static void setDarkMode(boolean enabled) {
-        darkMode = enabled;
-        for (Scene scene : registeredScenes) {
-            if (darkMode) applyDark(scene);
-            else applyLight(scene);
+    public static void applyCurrentTheme(Scene scene) {
+        if (darkMode) applyDark(scene);
+        else applyLight(scene);
+        if (scene.getRoot() == null) {
+            return;
         }
-    }*/
-
-    public static boolean isDarkMode() { return darkMode; }
-
-    public static void refresh(Scene scene) {
-        applyCurrentTheme(scene);
+        applyIcons(scene.getRoot());
     }
 
     // Helper functions
-    private static void applyCurrentTheme(Scene scene) {
-        if (darkMode) applyDark(scene);
-        else applyLight(scene);
-        applyIcons(scene);
-    }
-
     private static void applyDark(Scene scene) {
         scene.getStylesheets().remove(LIGHT_CSS);
         if (!scene.getStylesheets().contains(BASE_CSS))
@@ -93,13 +78,6 @@ public class ThemeManager {
             scene.getStylesheets().add(LIGHT_CSS);
     }
 
-    private static void applyIcons(Scene scene) {
-        if (scene.getRoot() == null) {
-            return;
-        }
-        applyIcons(scene.getRoot());
-    }
-
     private static void applyIcons(Parent parent) {
         for (Node node : parent.getChildrenUnmodifiable()) {
             if (node instanceof ImageView imageView) {
@@ -112,43 +90,24 @@ public class ThemeManager {
     }
 
     private static void applyIcon(ImageView imageView) {
-        Object storedPath = imageView.getProperties().get("themeIconBasePath");
-        String basePath;
-
-        if (storedPath instanceof String path) {
-            basePath = path;
-        } else {
-            Image image = imageView.getImage();
-            if (image == null || image.getUrl() == null) {
-                return;
-            }
-
-            basePath = extractBaseIconPath(image.getUrl());
-            if (basePath == null) {
-                return;
-            }
-            imageView.getProperties().put("themeIconBasePath", basePath);
+        Image image = imageView.getImage();
+        if (image == null || image.getUrl() == null) {
+            return;
         }
-
-        String themedPath = themedIconPath(basePath);
+        String themedPath = themedIconPath(extractBaseIconPath(image.getUrl()));
         if (themedPath == null) {
             return;
         }
-
         URL resource = ThemeManager.class.getResource(themedPath);
         if (resource != null) {
             imageView.setImage(new Image(resource.toExternalForm()));
         }
     }
 
+    // Return base icon name (without path, -white suffix; with extension)
     private static String extractBaseIconPath(String imageUrl) {
-        String marker = "/app/lockin/lockin/icon/";
-        int markerIndex = imageUrl.indexOf(marker);
-        if (markerIndex < 0) {
-            return null;
-        }
-
-        String resourcePath = imageUrl.substring(markerIndex);
+        int fileNameStartIndex = imageUrl.indexOf("/app/lockin/lockin/icon/");
+        String resourcePath = imageUrl.substring(fileNameStartIndex);
         if (resourcePath.endsWith("dark_mode.png") || resourcePath.endsWith("light_mode.png")) {
             return null;
         }
@@ -159,15 +118,9 @@ public class ThemeManager {
     }
 
     private static String themedIconPath(String basePath) {
-        if (!darkMode) {
-            return basePath;
+        if (basePath == null || !darkMode) {
+            return basePath; // Icon for white mode
         }
-
-        if (!basePath.endsWith(".png")) {
-            return basePath;
-        }
-
-        String whitePath = basePath.replace(".png", "-white.png");
-        return ThemeManager.class.getResource(whitePath) != null ? whitePath : basePath;
+        return basePath.replace(".png", "-white.png"); // Icon for dark mode
     }
 }

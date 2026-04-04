@@ -449,8 +449,8 @@ public class HomeController implements MainControllerAware {
             return;
         }
         try {
-            if (MyApplication.clientManager.getAuthenticatedUsername() != null && MyApplication.clientManager.getAuthenticatedUsername().equals(username)) {
-                mainController.navigatePush("profile-view.fxml");
+            if (MyApplication.clientManager.getAuthenticatedUsername() == null) {
+                System.out.println("Can't open profile. User is not logged in.");
                 return;
             }
             mainController.openProfile(username);

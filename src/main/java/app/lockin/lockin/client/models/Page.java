@@ -5,7 +5,7 @@ import javafx.scene.Parent;
 
 public class Page {
     public Parent root;
-    public FXMLLoader fxmlLoader;
+    public FXMLLoader fxmlLoader; // For accessing controller of the current page
 
     public Page(Parent root, FXMLLoader fxmlLoader) {
         this.root = root;

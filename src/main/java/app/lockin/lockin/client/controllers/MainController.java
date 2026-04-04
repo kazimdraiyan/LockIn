@@ -8,7 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -20,30 +19,24 @@ import java.util.Stack;
 // The wrapper of every page. Every page is rendered on top of this view.
 public class MainController {
     private final Stack<Page> history = new Stack<>();
-    private String pendingSearchQuery;
-    private String pendingProfileUsername;
+    public String viewedProfileUsername;
 
     @FXML
     public Label title;
-
     @FXML
     public HBox navBar;
-
     @FXML
     public Button backButton;
-
     @FXML
     public HBox searchBar;
-
     @FXML
     private SearchBarController searchBarController;
-
     @FXML
     public ImageView themeToggleIcon;
-
     @FXML
     public ImageView settingsIcon;
-
+    @FXML
+    public ImageView backIcon;
     @FXML
     private BorderPane rootPane;
 
@@ -57,11 +50,7 @@ public class MainController {
         searchBarController.setPromptText("Search");
         searchBar.getStyleClass().add("search-bar-navbar");
         searchBarController.getInputField().setOnAction(event -> submitSearch());
-        refreshToolbarIcons();
-    }
-
-    public TextField getSearchField() {
-        return searchBarController.getInputField();
+        loadNavBarIcons();
     }
 
     public void setNavBar(boolean showNavBar, String titleString, boolean showSearchBar) {
@@ -73,20 +62,8 @@ public class MainController {
     }
 
     public void openProfile(String username) throws IOException {
-        pendingProfileUsername = username;
+        viewedProfileUsername = username;
         navigatePush("profile-view.fxml");
-    }
-
-    public String consumeRequestedProfileUsername() {
-        String username = pendingProfileUsername;
-        pendingProfileUsername = null;
-        return username;
-    }
-
-    public String consumeSearchQuery() {
-        String query = pendingSearchQuery;
-        pendingSearchQuery = null;
-        return query;
     }
 
     private Page loadFXML(String fxmlFileName) throws IOException {
@@ -100,7 +77,7 @@ public class MainController {
         Page loadedPage = loadFXML(fxmlFileName);
         rootPane.setCenter(loadedPage.root);
         if (rootPane.getScene() != null) {
-            ThemeManager.refresh(rootPane.getScene());
+            ThemeManager.applyCurrentTheme(rootPane.getScene());
         }
         history.push(loadedPage);
         // Inject this MainController object to the controller of the loaded page
@@ -137,20 +114,27 @@ public class MainController {
 
     public void toggleTheme() {
         ThemeManager.toggle();
-        refreshToolbarIcons();
+        loadNavBarIcons();
     }
 
     public void openSettings() {
         // Placeholder until the settings page is implemented.
     }
 
-    private void refreshToolbarIcons() {
+    private void loadNavBarIcons() {
         themeToggleIcon.setImage(new Image(
                 MyApplication.getIcon(ThemeManager.isDarkMode() ? "light_mode.png" : "dark_mode.png").toExternalForm()
         ));
         settingsIcon.setImage(new Image(
                 MyApplication.getIcon(ThemeManager.isDarkMode() ? "settings-white.png" : "settings.png").toExternalForm()
         ));
+        backIcon.setImage(new Image(
+                MyApplication.getIcon(ThemeManager.isDarkMode() ? "back-white.png" : "back.png").toExternalForm()
+        ));
+    }
+
+    public String getSearchQuery() {
+        return searchBarController.getInputField().getText().trim();
     }
 
     private void submitSearch() {
@@ -158,7 +142,6 @@ public class MainController {
         if (query == null || query.isBlank() || !MyApplication.clientManager.isLoggedIn) {
             return;
         }
-        pendingSearchQuery = query.trim();
         try {
             navigatePush("search-results-view.fxml");
         } catch (IOException e) {

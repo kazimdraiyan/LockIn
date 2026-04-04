@@ -13,6 +13,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -23,12 +24,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import javafx.scene.image.Image;
-
 public class SearchResultsController implements MainControllerAware {
-    @FXML private Label queryLabel;
-    @FXML private Label statusLabel;
-    @FXML private VBox resultsContainer;
+    @FXML
+    private Label queryLabel;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private VBox resultsContainer;
 
     private MainController mainController;
     private String query;
@@ -36,10 +38,7 @@ public class SearchResultsController implements MainControllerAware {
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-        this.query = mainController.consumeSearchQuery();
-        if (query == null || query.isBlank()) {
-            query = mainController.getSearchField().getText();
-        }
+        query = mainController.getSearchQuery();
         mainController.setNavBar(true, "Search", true);
         queryLabel.setText(query == null || query.isBlank() ? "All users" : "Results for \"" + query + "\"");
         loadResults();

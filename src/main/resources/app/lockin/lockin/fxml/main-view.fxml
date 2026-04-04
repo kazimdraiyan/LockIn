@@ -23,7 +23,7 @@
                         alignment="CENTER"
                         styleClass="surface-icon-button">
                     <graphic>
-                        <ImageView
+                        <ImageView fx:id="backIcon"
                                 preserveRatio="true">
                             <Image url="@../icon/back.png"/>
                         </ImageView>

@@ -17,7 +17,8 @@ public class MyApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        clientManager.connect("localhost", 1234);
+        clientManager.connect("localhost", 5000); // Waits till response of initial request (login using token)
+        // TODO: Add loading indicator
 
         FXMLLoader fxmlLoader = new FXMLLoader(getFXML("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());

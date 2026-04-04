@@ -67,9 +67,9 @@ public class ProfileController implements MainControllerAware {
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-        viewedUsername = mainController.consumeRequestedProfileUsername();
+        viewedUsername = mainController.viewedProfileUsername;
         ownProfile = viewedUsername == null || viewedUsername.isBlank();
-        mainController.setNavBar(true, ownProfile ? "Profile" : "User Profile", true);
+        mainController.setNavBar(true, ownProfile ? "Profile" : viewedUsername, true);
         loadProfile();
     }
 
