@@ -123,6 +123,9 @@ public class ClientHandler implements Runnable {
             case PROFILE:
                 response = authHandler.handleFetchProfile(request, postHandler);
                 break;
+            case USER_SEARCH:
+                response = authHandler.handleSearchUsers(request);
+                break;
         }
         return response;
     }

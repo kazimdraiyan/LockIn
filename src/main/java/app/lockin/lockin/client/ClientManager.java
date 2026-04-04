@@ -19,6 +19,7 @@ public class ClientManager {
     private ObjectOutputStream out;
 
     public boolean isLoggedIn = false;
+    public String username;
 
     // Returns whether successful logging in using saved token
     public void connect(String host, int port) throws IOException {
@@ -42,6 +43,9 @@ public class ClientManager {
         send(new LoginUsingTokenRequest(token));
         Response response = receive();
         isLoggedIn = response.getStatus() == ResponseStatus.SUCCESS;
+        username = isLoggedIn && response.getData() instanceof app.lockin.lockin.common.models.Session session
+                ? session.getUsername()
+                : null;
     }
 
     public void send(Request request) throws IOException {

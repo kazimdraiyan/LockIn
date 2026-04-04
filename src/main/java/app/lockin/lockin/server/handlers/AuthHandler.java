@@ -89,10 +89,28 @@ public class AuthHandler {
             return new Response(ResponseStatus.ERROR, "Please log in before loading profile", null);
         }
         try {
-            String username = request.authenticatedSession.getUsername();
+            String username = request.getQuery();
+            if (username == null || username.isBlank()) {
+                username = request.authenticatedSession.getUsername();
+            }
             UserProfile profile = authService.loadProfile(username);
             ProfilePageData pageData = new ProfilePageData(profile, postHandler.loadPostsByAuthor(username));
             return new Response(ResponseStatus.SUCCESS, "Profile loaded successfully", pageData);
+        } catch (IOException e) {
+            return new Response(ResponseStatus.ERROR, e.getMessage(), null);
+        }
+    }
+
+    public Response handleSearchUsers(FetchRequest request) {
+        if (request.authenticatedSession == null) {
+            return new Response(ResponseStatus.ERROR, "Please log in before searching users", null);
+        }
+        try {
+            ArrayList<UserProfile> matches = authService.searchUsers(
+                    request.getQuery(),
+                    request.authenticatedSession.getUsername()
+            );
+            return new Response(ResponseStatus.SUCCESS, "Users loaded successfully", matches);
         } catch (IOException e) {
             return new Response(ResponseStatus.ERROR, e.getMessage(), null);
         }

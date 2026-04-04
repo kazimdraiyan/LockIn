@@ -20,6 +20,8 @@ import java.util.Stack;
 // The wrapper of every page. Every page is rendered on top of this view.
 public class MainController {
     private final Stack<Page> history = new Stack<>();
+    private String pendingSearchQuery;
+    private String pendingProfileUsername;
 
     @FXML
     public Label title;
@@ -54,6 +56,7 @@ public class MainController {
         }
         searchBarController.setPromptText("Search");
         searchBar.getStyleClass().add("search-bar-navbar");
+        searchBarController.getInputField().setOnAction(event -> submitSearch());
         refreshToolbarIcons();
     }
 
@@ -67,6 +70,23 @@ public class MainController {
         title.setText(titleString);
         searchBar.setVisible(showSearchBar);
         searchBar.setManaged(showSearchBar);
+    }
+
+    public void openProfile(String username) throws IOException {
+        pendingProfileUsername = username;
+        navigatePush("profile-view.fxml");
+    }
+
+    public String consumeRequestedProfileUsername() {
+        String username = pendingProfileUsername;
+        pendingProfileUsername = null;
+        return username;
+    }
+
+    public String consumeSearchQuery() {
+        String query = pendingSearchQuery;
+        pendingSearchQuery = null;
+        return query;
     }
 
     private Page loadFXML(String fxmlFileName) throws IOException {
@@ -131,5 +151,18 @@ public class MainController {
         settingsIcon.setImage(new Image(
                 MyApplication.getIcon(ThemeManager.isDarkMode() ? "settings-white.png" : "settings.png").toExternalForm()
         ));
+    }
+
+    private void submitSearch() {
+        String query = searchBarController.getInputField().getText();
+        if (query == null || query.isBlank() || !MyApplication.clientManager.isLoggedIn) {
+            return;
+        }
+        pendingSearchQuery = query.trim();
+        try {
+            navigatePush("search-results-view.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -41,7 +41,7 @@
     </VBox>
 
     <VBox spacing="8">
-        <Label styleClass="section-title" text="Your posts"/>
+        <Label fx:id="postsTitleLabel" styleClass="section-title" text="Your posts"/>
         <Separator/>
     </VBox>
 

@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Comparator;
+import java.util.Locale;
 import java.util.UUID;
 
 // Does auth related backend tasks
@@ -134,6 +136,27 @@ public class AuthService {
                 userNode.path("description").asText(""),
                 readAttachment(userNode.get("profilePicture"))
         );
+    }
+
+    public ArrayList<UserProfile> searchUsers(String query, String authenticatedUsername) throws IOException {
+        ArrayList<UserProfile> matches = new ArrayList<>();
+        ObjectNode usersDatabase = loadDatabase("users.json");
+        String normalizedQuery = query == null ? "" : query.trim().toLowerCase(Locale.ENGLISH);
+
+        Iterator<String> usernameIterator = usersDatabase.fieldNames();
+        while (usernameIterator.hasNext()) {
+            String username = usernameIterator.next();
+            if (authenticatedUsername != null && authenticatedUsername.equals(username)) {
+                continue;
+            }
+            if (!normalizedQuery.isEmpty() && !username.toLowerCase(Locale.ENGLISH).contains(normalizedQuery)) {
+                continue;
+            }
+            matches.add(loadProfile(username));
+        }
+
+        matches.sort(Comparator.comparing(UserProfile::getUsername, String.CASE_INSENSITIVE_ORDER));
+        return matches;
     }
 
     public UserProfile updateProfile(String username, String description, PostAttachment profilePicture) throws IOException {

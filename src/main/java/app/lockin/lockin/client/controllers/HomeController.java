@@ -142,6 +142,7 @@ public class HomeController implements MainControllerAware {
                 Response response = sendRequest(request);
                 if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
                     MyApplication.clientManager.isLoggedIn = false;
+                    MyApplication.clientManager.username = null;
                     MyApplication.deleteToken();
                     Platform.runLater(() -> {
                         try {
@@ -236,6 +237,7 @@ public class HomeController implements MainControllerAware {
         VBox metaBox = new VBox(2);
         Label usernameLabel = new Label(post.getAuthorUsername());
         usernameLabel.getStyleClass().add("text-strong");
+        usernameLabel.setOnMouseClicked(event -> openUserProfile(post.getAuthorUsername()));
         Label timeLabel = new Label(formatTimestamp(post.getCreatedAt()));
         timeLabel.getStyleClass().add("muted-text");
         metaBox.getChildren().addAll(usernameLabel, timeLabel);
@@ -291,6 +293,7 @@ public class HomeController implements MainControllerAware {
         VBox metaBox = new VBox(2);
         Label usernameLabel = new Label(comment.getAuthorUsername());
         usernameLabel.getStyleClass().add("text-strong");
+        usernameLabel.setOnMouseClicked(event -> openUserProfile(comment.getAuthorUsername()));
         Label timeLabel = new Label(formatTimestamp(comment.getCreatedAt()));
         timeLabel.getStyleClass().add("muted-text");
         metaBox.getChildren().addAll(usernameLabel, timeLabel);
@@ -447,6 +450,21 @@ public class HomeController implements MainControllerAware {
             composerStatusLabel.setText("Saved to " + targetPath);
         } catch (IOException e) {
             composerStatusLabel.setText("Could not save file.");
+        }
+    }
+
+    private void openUserProfile(String username) {
+        if (username == null || username.isBlank()) {
+            return;
+        }
+        try {
+            if (MyApplication.clientManager.username != null && MyApplication.clientManager.username.equals(username)) {
+                mainController.navigatePush("profile-view.fxml");
+                return;
+            }
+            mainController.openProfile(username);
+        } catch (IOException e) {
+            composerStatusLabel.setText("Could not open profile.");
         }
     }
 

@@ -4,5 +4,6 @@ public enum FetchType {
     CHATS, // Chat list loading
     MESSAGES, // Message loading
     POSTS,
-    PROFILE
+    PROFILE,
+    USER_SEARCH
 }

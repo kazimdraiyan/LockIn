@@ -92,6 +92,7 @@ public class SignUpController implements MainControllerAware {
 
                 if (response.getStatus() == ResponseStatus.SUCCESS) {
                     MyApplication.clientManager.isLoggedIn = true;
+                    MyApplication.clientManager.username = ((Session) response.getData()).getUsername();
                     MyApplication.saveToken(((Session) response.getData()).getToken());
                     Platform.runLater(() -> {
                         try { mainController.navigateReplacingRoot("home-view.fxml"); }

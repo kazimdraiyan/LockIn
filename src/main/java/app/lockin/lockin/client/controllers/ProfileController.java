@@ -56,15 +56,20 @@ public class ProfileController implements MainControllerAware {
     @FXML private ScrollPane postsScrollPane;
     @FXML private Button chooseProfilePictureButton;
     @FXML private Button saveProfileButton;
+    @FXML private Label postsTitleLabel;
 
     private MainController mainController;
     private Path selectedProfileImagePath;
     private PostAttachment currentProfilePicture;
+    private String viewedUsername;
+    private boolean ownProfile;
 
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-        mainController.setNavBar(true, "Profile", true);
+        viewedUsername = mainController.consumeRequestedProfileUsername();
+        ownProfile = viewedUsername == null || viewedUsername.isBlank();
+        mainController.setNavBar(true, ownProfile ? "Profile" : "User Profile", true);
         loadProfile();
     }
 
@@ -122,7 +127,7 @@ public class ProfileController implements MainControllerAware {
         postsContainer.getChildren().setAll(new Label("Loading profile..."));
         new Thread(() -> {
             try {
-                Response response = sendRequest(new FetchRequest(FetchType.PROFILE));
+                Response response = sendRequest(new FetchRequest(FetchType.PROFILE, viewedUsername));
                 if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
                     ProfilePageData data = (ProfilePageData) response.getData();
                     Platform.runLater(() -> renderProfilePage(data));
@@ -138,26 +143,36 @@ public class ProfileController implements MainControllerAware {
 
     private void renderProfilePage(ProfilePageData data) {
         UserProfile profile = data.getProfile();
+        ownProfile = mainController != null
+                && MyApplication.clientManager.username != null
+                && MyApplication.clientManager.username.equals(profile.getUsername());
         usernameLabel.setText(profile.getUsername());
         profileAvatar.setText(extractInitials(profile.getUsername()));
         descriptionTextArea.setText(profile.getDescription());
+        descriptionTextArea.setEditable(ownProfile);
+        descriptionTextArea.setDisable(!ownProfile);
         currentProfilePicture = profile.getProfilePicture();
         selectedProfileImagePath = null;
         renderProfileImage(currentProfilePicture);
         profilePictureLabel.setText(currentProfilePicture == null ? "Using default account image" : "Current picture saved");
         profileStatusLabel.setText("");
+        chooseProfilePictureButton.setManaged(ownProfile);
+        chooseProfilePictureButton.setVisible(ownProfile);
+        saveProfileButton.setManaged(ownProfile);
+        saveProfileButton.setVisible(ownProfile);
+        postsTitleLabel.setText(ownProfile ? "Your posts" : profile.getUsername() + "'s posts");
 
         postsContainer.getChildren().clear();
         List<Post> posts = data.getPosts();
         if (posts.isEmpty()) {
-            Label emptyLabel = new Label("You have not posted anything yet.");
+            Label emptyLabel = new Label(ownProfile ? "You have not posted anything yet." : "This user has not posted anything yet.");
             emptyLabel.getStyleClass().add("muted-text");
             postsContainer.getChildren().add(emptyLabel);
             return;
         }
 
         for (Post post : posts) {
-            postsContainer.getChildren().add(buildOwnPostCard(post));
+            postsContainer.getChildren().add(ownProfile ? buildOwnPostCard(post) : buildReadOnlyPostCard(post));
         }
         postsScrollPane.setVvalue(0);
     }
@@ -193,6 +208,50 @@ public class ProfileController implements MainControllerAware {
 
         topRow.getChildren().addAll(metaBox, spacer, deleteButton);
         card.getChildren().add(topRow);
+
+        if (post.getTextContent() != null && !post.getTextContent().isBlank()) {
+            Label contentLabel = new Label(post.getTextContent());
+            contentLabel.setWrapText(true);
+            contentLabel.getStyleClass().add("body-text");
+            card.getChildren().add(contentLabel);
+        }
+
+        if (post.getAttachment() != null) {
+            card.getChildren().add(buildAttachmentNode(post.getAttachment()));
+        }
+
+        VBox commentsSection = new VBox(8);
+        commentsSection.getStyleClass().add("comments-section");
+        Label commentsTitle = new Label("Comments");
+        commentsTitle.getStyleClass().add("text-strong");
+        commentsSection.getChildren().add(commentsTitle);
+
+        if (post.getComments().isEmpty()) {
+            Label emptyLabel = new Label("No comments yet.");
+            emptyLabel.getStyleClass().add("muted-text");
+            commentsSection.getChildren().add(emptyLabel);
+        } else {
+            for (Comment comment : post.getComments()) {
+                commentsSection.getChildren().add(buildCommentCard(comment));
+            }
+        }
+
+        card.getChildren().addAll(new Separator(), commentsSection);
+        return card;
+    }
+
+    private VBox buildReadOnlyPostCard(Post post) {
+        VBox card = new VBox(10);
+        card.getStyleClass().addAll("feed-card", "post-thread-card");
+        card.setPadding(new Insets(16));
+
+        VBox metaBox = new VBox(2);
+        Label titleLabel = new Label(post.getAuthorUsername());
+        titleLabel.getStyleClass().add("text-strong");
+        Label timeLabel = new Label(formatTimestamp(post.getCreatedAt()));
+        timeLabel.getStyleClass().add("muted-text");
+        metaBox.getChildren().addAll(titleLabel, timeLabel);
+        card.getChildren().add(metaBox);
 
         if (post.getTextContent() != null && !post.getTextContent().isBlank()) {
             Label contentLabel = new Label(post.getTextContent());
