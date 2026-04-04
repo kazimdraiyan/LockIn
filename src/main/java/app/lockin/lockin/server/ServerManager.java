@@ -41,7 +41,7 @@ public class ServerManager {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Server main is running");
-        ServerSocket serverSocket = new ServerSocket(1234);
+        ServerSocket serverSocket = new ServerSocket(5000);
         ServerManager serverManager = new ServerManager(serverSocket);
         serverManager.startServer();
     }

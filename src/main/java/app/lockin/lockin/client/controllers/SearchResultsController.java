@@ -129,8 +129,7 @@ public class SearchResultsController implements MainControllerAware {
 
     private Response sendRequest(app.lockin.lockin.common.requests.Request request) throws IOException {
         synchronized (MyApplication.clientManager) {
-            MyApplication.clientManager.send(request);
-            return MyApplication.clientManager.receive();
+            return MyApplication.clientManager.sendRequest(request);
         }
     }
 

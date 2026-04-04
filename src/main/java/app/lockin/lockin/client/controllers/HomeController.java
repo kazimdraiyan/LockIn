@@ -449,7 +449,7 @@ public class HomeController implements MainControllerAware {
             return;
         }
         try {
-            if (MyApplication.clientManager.username != null && MyApplication.clientManager.username.equals(username)) {
+            if (MyApplication.clientManager.getAuthenticatedUsername() != null && MyApplication.clientManager.getAuthenticatedUsername().equals(username)) {
                 mainController.navigatePush("profile-view.fxml");
                 return;
             }
@@ -537,6 +537,36 @@ public class HomeController implements MainControllerAware {
         }
         String trimmed = username.trim();
         return trimmed.substring(0, Math.min(2, trimmed.length())).toUpperCase(Locale.ENGLISH);
+    }
+
+    private String readableFileType(PostAttachment attachment) {
+        return switch (attachment.getMimeType()) {
+            case "image/jpeg" -> "JPEG Image";
+            case "image/gif" -> "GIF Image";
+            case "application/pdf" -> "PDF Document";
+            case "text/plain" -> "Text File";
+            default -> "File";
+        };
+    }
+
+    private String fileBadgeText(PostAttachment attachment) {
+        return switch (attachment.getMimeType()) {
+            case "image/jpeg" -> "JPG";
+            case "image/gif" -> "GIF";
+            case "application/pdf" -> "PDF";
+            case "text/plain" -> "TXT";
+            default -> "FILE";
+        };
+    }
+
+    private String readableFileSize(long sizeBytes) {
+        if (sizeBytes < 1024) {
+            return sizeBytes + " B";
+        }
+        if (sizeBytes < 1024 * 1024) {
+            return String.format(Locale.ENGLISH, "%.1f KB", sizeBytes / 1024.0);
+        }
+        return String.format(Locale.ENGLISH, "%.1f MB", sizeBytes / (1024.0 * 1024.0));
     }
 
     private String extractTextPreview(PostAttachment attachment) {

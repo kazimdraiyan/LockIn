@@ -82,6 +82,10 @@ public class ClientManager {
         return authenticatedSession == null ? null : authenticatedSession.getUsername();
     }
 
+    public void setAuthenticatedSession(Session session) {
+        authenticatedSession = session;
+    }
+
     public void clearAuthenticatedSession() {
         authenticatedSession = null;
         isLoggedIn = false;

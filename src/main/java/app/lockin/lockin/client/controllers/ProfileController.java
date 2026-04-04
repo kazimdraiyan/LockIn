@@ -144,8 +144,8 @@ public class ProfileController implements MainControllerAware {
     private void renderProfilePage(ProfilePageData data) {
         UserProfile profile = data.getProfile();
         ownProfile = mainController != null
-                && MyApplication.clientManager.username != null
-                && MyApplication.clientManager.username.equals(profile.getUsername());
+                && MyApplication.clientManager.getAuthenticatedUsername() != null
+                && MyApplication.clientManager.getAuthenticatedUsername().equals(profile.getUsername());
         usernameLabel.setText(profile.getUsername());
         profileAvatar.setText(extractInitials(profile.getUsername()));
         descriptionTextArea.setText(profile.getDescription());
@@ -366,8 +366,7 @@ public class ProfileController implements MainControllerAware {
 
     private Response sendRequest(app.lockin.lockin.common.requests.Request request) throws IOException {
         synchronized (MyApplication.clientManager) {
-            MyApplication.clientManager.send(request);
-            return MyApplication.clientManager.receive();
+            return MyApplication.clientManager.sendRequest(request);
         }
     }
 
