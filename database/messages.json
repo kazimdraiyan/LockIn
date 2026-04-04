@@ -1,0 +1,91 @@
+[ {
+  "id" : "4338573a-c5eb-4674-95a3-82df97007ea7",
+  "participants" : [ "raiyan2", "raiyankazi" ],
+  "messages" : [ {
+    "id" : "77d702f6-75cb-4d5d-8a14-ee3bbcc18ffa",
+    "senderUsername" : "raiyankazi",
+    "text" : "hello",
+    "createdAt" : 1775200672217
+  }, {
+    "id" : "6650e833-291f-498c-904a-7ea46b3a2089",
+    "senderUsername" : "raiyankazi",
+    "text" : "hi",
+    "createdAt" : 1775200682924
+  }, {
+    "id" : "554dd928-5df7-4929-a90c-e01ad3b7f9ad",
+    "senderUsername" : "raiyankazi",
+    "text" : "skibidi toilet",
+    "createdAt" : 1775200723125
+  }, {
+    "id" : "f2330bdd-9d32-4f4b-b34d-47efd0effd37",
+    "senderUsername" : "raiyankazi",
+    "text" : "hi",
+    "createdAt" : 1775200923421
+  } ],
+  "updatedAt" : 1775200923421
+}, {
+  "id" : "d3f770a4-f63b-450a-80ee-936b19835f6a",
+  "participants" : [ "raiyankazi", "shonyewest" ],
+  "messages" : [ {
+    "id" : "bd4b14b5-5228-4757-877f-34f4daa7d70f",
+    "senderUsername" : "shonyewest",
+    "text" : "hi",
+    "createdAt" : 1775200931954
+  }, {
+    "id" : "866396a8-bb71-40ea-b468-86fa883ad39a",
+    "senderUsername" : "raiyankazi",
+    "text" : "meowl",
+    "createdAt" : 1775200946038
+  }, {
+    "id" : "ebeddaac-e28e-45d6-847e-d7b67f2815ce",
+    "senderUsername" : "raiyankazi",
+    "text" : "",
+    "createdAt" : 1775201033703,
+    "attachment" : {
+      "originalFileName" : "received_813617011783609.jpeg",
+      "mimeType" : "image/jpeg",
+      "storedFileName" : "ebeddaac-e28e-45d6-847e-d7b67f2815ce_received_813617011783609.jpeg"
+    }
+  }, {
+    "id" : "70a6997d-36da-4b41-a597-b2ba1a4c8230",
+    "senderUsername" : "shonyewest",
+    "text" : "meowl",
+    "createdAt" : 1775217714974
+  }, {
+    "id" : "298c735f-02da-4a79-823a-4017f6536337",
+    "senderUsername" : "shonyewest",
+    "text" : "sigma goon",
+    "createdAt" : 1775217771442
+  }, {
+    "id" : "561aa949-b42c-4b9b-bf9f-8d88937097d1",
+    "senderUsername" : "shonyewest",
+    "text" : "hoit",
+    "createdAt" : 1775217777012
+  }, {
+    "id" : "ffa7e143-ce5c-40aa-9539-3b2786b51fc7",
+    "senderUsername" : "shonyewest",
+    "text" : "meowl",
+    "createdAt" : 1775221132663
+  }, {
+    "id" : "68f82f50-3701-493f-9f5f-f2b0887d7095",
+    "senderUsername" : "shonyewest",
+    "text" : "ami morbo",
+    "createdAt" : 1775222746569
+  }, {
+    "id" : "8dd597c2-8504-4923-b9df-ac02a6351987",
+    "senderUsername" : "raiyankazi",
+    "text" : "you're so skibidi you're so fanum tax",
+    "createdAt" : 1775225568391
+  }, {
+    "id" : "4dde7967-ba11-4510-922d-473f3672f06c",
+    "senderUsername" : "shonyewest",
+    "text" : "",
+    "createdAt" : 1775225581659,
+    "attachment" : {
+      "originalFileName" : "Screenshot (1).png",
+      "mimeType" : "image/png",
+      "storedFileName" : "4dde7967-ba11-4510-922d-473f3672f06c_Screenshot__1_.png"
+    }
+  } ],
+  "updatedAt" : 1775225581659
+} ]

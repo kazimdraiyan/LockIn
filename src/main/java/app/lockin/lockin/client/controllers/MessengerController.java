@@ -1,30 +1,63 @@
 package app.lockin.lockin.client.controllers;
 
-import javafx.event.ActionEvent;
+import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.common.models.Chat;
+import app.lockin.lockin.common.models.MessageDelivery;
+import app.lockin.lockin.common.models.MessageRealtimeEvent;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.layout.BorderPane;
 
-import java.io.IOException;
+import java.util.function.Consumer;
 
-// TODO: rename to a better name
-// TODO: fix dark mode in messages view
 public class MessengerController implements MainControllerAware {
+    @FXML private BorderPane root;
+    @FXML private ChatsController chatsViewController;
+    @FXML private MessagesController messagesViewController;
+
+    private final Consumer<MessageRealtimeEvent> messageListener = event -> Platform.runLater(() -> {
+        String activeChatUsername = messagesViewController == null ? null : messagesViewController.getCurrentChatUsername();
+        if (chatsViewController != null) {
+            chatsViewController.applyMessageDelivery(event.getDelivery(), activeChatUsername);
+        }
+        if (messagesViewController != null) {
+            messagesViewController.handleRealtimeDelivery(event.getDelivery());
+        }
+    });
+
+    private boolean listenerRegistered;
     private MainController mainController;
 
+    @FXML
+    public void initialize() {
+        chatsViewController.setMessengerController(this);
+        messagesViewController.setMessengerController(this);
+
+        // TODO: How does this listeners work?
+        root.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null && !listenerRegistered) {
+                MyApplication.clientManager.addMessageListener(messageListener);
+                listenerRegistered = true;
+            } else if (newScene == null && listenerRegistered) {
+                MyApplication.clientManager.removeMessageListener(messageListener);
+                listenerRegistered = false;
+            }
+        });
+    }
+
+    @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         mainController.setNavBar(true, "Chats", false);
     }
 
-    public void onAttachFile(ActionEvent actionEvent) {
-        // TODO: Learn more about ActionEvent
+    public void openConversation(Chat chat) {
+        chatsViewController.markConversationOpen(chat.getName());
+        messagesViewController.openConversation(chat);
     }
 
-    public void onSendMessage(ActionEvent actionEvent) {
-
-    }
-
-    @FXML
-    protected void onHomeButtonClick() throws IOException {
-        mainController.navigateReplacingRoot("home-view.fxml");
+    // Update chat list after sending a message
+    public void onLocalMessage(MessageDelivery delivery) {
+        chatsViewController.applyMessageDelivery(delivery, messagesViewController.getCurrentChatUsername());
     }
 }

@@ -1,17 +1,14 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.utils.TextFormatter;
 import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
 import app.lockin.lockin.common.models.PostAttachment;
 import app.lockin.lockin.common.models.ProfilePageData;
 import app.lockin.lockin.common.models.UserProfile;
-import app.lockin.lockin.common.requests.CreateCommentRequest;
-import app.lockin.lockin.common.requests.CreatePostRequest;
-import app.lockin.lockin.common.requests.FetchRequest;
-import app.lockin.lockin.common.requests.FetchType;
-import app.lockin.lockin.common.requests.LogoutRequest;
+import app.lockin.lockin.common.requests.*;
 import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
 import javafx.application.Platform;
@@ -49,8 +46,6 @@ import java.util.Locale;
 
 public class HomeController implements MainControllerAware {
     private static final long MAX_ATTACHMENT_SIZE_BYTES = 10L * 1024 * 1024;
-    private static final DateTimeFormatter ABSOLUTE_TIME_FORMAT =
-            DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a", Locale.ENGLISH).withZone(ZoneId.systemDefault());
 
     @FXML private VBox feedContainer;
     @FXML private VBox contactsContainer;
@@ -141,8 +136,7 @@ public class HomeController implements MainControllerAware {
                 LogoutRequest request = new LogoutRequest();
                 Response response = sendRequest(request);
                 if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
-                    MyApplication.clientManager.isLoggedIn = false;
-                    MyApplication.clientManager.username = null;
+                    MyApplication.clientManager.clearAuthenticatedSession(); // TODO: Double check this
                     MyApplication.deleteToken();
                     Platform.runLater(() -> {
                         try {
@@ -197,11 +191,8 @@ public class HomeController implements MainControllerAware {
         return createAttachmentFromPath(selectedFilePath);
     }
 
-    private Response sendRequest(app.lockin.lockin.common.requests.Request request) throws IOException {
-        synchronized (MyApplication.clientManager) {
-            MyApplication.clientManager.send(request);
-            return MyApplication.clientManager.receive();
-        }
+    private Response sendRequest(Request request) throws IOException {
+        return MyApplication.clientManager.sendRequest(request);
     }
 
     private void renderPosts(ArrayList<Post> posts) {
@@ -238,7 +229,7 @@ public class HomeController implements MainControllerAware {
         Label usernameLabel = new Label(post.getAuthorUsername());
         usernameLabel.getStyleClass().add("text-strong");
         usernameLabel.setOnMouseClicked(event -> openUserProfile(post.getAuthorUsername()));
-        Label timeLabel = new Label(formatTimestamp(post.getCreatedAt()));
+        Label timeLabel = new Label(TextFormatter.formatTimestamp(post.getCreatedAt()));
         timeLabel.getStyleClass().add("muted-text");
         metaBox.getChildren().addAll(usernameLabel, timeLabel);
 
@@ -294,7 +285,7 @@ public class HomeController implements MainControllerAware {
         Label usernameLabel = new Label(comment.getAuthorUsername());
         usernameLabel.getStyleClass().add("text-strong");
         usernameLabel.setOnMouseClicked(event -> openUserProfile(comment.getAuthorUsername()));
-        Label timeLabel = new Label(formatTimestamp(comment.getCreatedAt()));
+        Label timeLabel = new Label(TextFormatter.formatTimestamp(comment.getCreatedAt()));
         timeLabel.getStyleClass().add("muted-text");
         metaBox.getChildren().addAll(usernameLabel, timeLabel);
         header.getChildren().add(metaBox);
@@ -399,13 +390,13 @@ public class HomeController implements MainControllerAware {
         preview.setPadding(new Insets(14));
         preview.getStyleClass().add("file-preview");
 
-        Label iconLabel = new Label(fileBadgeText(attachment));
+        Label iconLabel = new Label(TextFormatter.fileBadgeText(attachment.getMimeType()));
         iconLabel.getStyleClass().add("file-icon");
 
         VBox textBox = new VBox(3);
         Label fileNameLabel = new Label(attachment.getOriginalFileName());
         fileNameLabel.getStyleClass().add("text-strong");
-        Label metaLabel = new Label(readableFileSize(attachment.getData().length) + "  |  " + readableFileType(attachment));
+        Label metaLabel = new Label(TextFormatter.readableFileSize(attachment.getData().length) + "  |  " + TextFormatter.readableFileType(attachment.getMimeType()));
         metaLabel.getStyleClass().add("file-meta");
         textBox.getChildren().addAll(fileNameLabel, metaLabel);
 
@@ -546,53 +537,6 @@ public class HomeController implements MainControllerAware {
         }
         String trimmed = username.trim();
         return trimmed.substring(0, Math.min(2, trimmed.length())).toUpperCase(Locale.ENGLISH);
-    }
-
-    private String formatTimestamp(long createdAt) {
-        Duration age = Duration.between(Instant.ofEpochMilli(createdAt), Instant.now());
-        if (age.toMinutes() < 1) {
-            return "Just now";
-        }
-        if (age.toHours() < 1) {
-            return age.toMinutes() + " minutes ago";
-        }
-        if (age.toDays() < 1) {
-            return age.toHours() + " hours ago";
-        }
-        if (age.toDays() < 7) {
-            return age.toDays() + " days ago";
-        }
-        return ABSOLUTE_TIME_FORMAT.format(Instant.ofEpochMilli(createdAt));
-    }
-
-    private String readableFileType(PostAttachment attachment) {
-        return switch (attachment.getMimeType()) {
-            case "image/jpeg" -> "JPEG Image";
-            case "image/gif" -> "GIF Image";
-            case "application/pdf" -> "PDF Document";
-            case "text/plain" -> "Text File";
-            default -> "File";
-        };
-    }
-
-    private String fileBadgeText(PostAttachment attachment) {
-        return switch (attachment.getMimeType()) {
-            case "image/jpeg" -> "JPG";
-            case "image/gif" -> "GIF";
-            case "application/pdf" -> "PDF";
-            case "text/plain" -> "TXT";
-            default -> "FILE";
-        };
-    }
-
-    private String readableFileSize(long sizeBytes) {
-        if (sizeBytes < 1024) {
-            return sizeBytes + " B";
-        }
-        if (sizeBytes < 1024 * 1024) {
-            return String.format(Locale.ENGLISH, "%.1f KB", sizeBytes / 1024.0);
-        }
-        return String.format(Locale.ENGLISH, "%.1f MB", sizeBytes / (1024.0 * 1024.0));
     }
 
     private String extractTextPreview(PostAttachment attachment) {

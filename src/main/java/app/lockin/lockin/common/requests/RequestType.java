@@ -6,9 +6,10 @@ public enum RequestType {
     LOGOUT,
     SIGNUP,
     FETCH,
+    FETCH_MESSAGES,
     CREATE_POST,
     CREATE_COMMENT,
+    CREATE_MESSAGE,
     UPDATE_PROFILE,
     DELETE_POST,
-    // TODO: Add others, like MESSAGE
 }

@@ -82,11 +82,7 @@ public class SignUpController implements MainControllerAware {
         new Thread(() -> {
             try {
                 SignUpRequest request = new SignUpRequest(usernameField.getText(), passwordField.getText());
-
-                // TODO: Should I rename LockInApplication?
-                MyApplication.clientManager.send(request);
-
-                Response response = MyApplication.clientManager.receive();
+                Response response = MyApplication.clientManager.sendRequest(request);
                 System.out.println(response.getMessage());
                 System.out.println(response.getData());
 
