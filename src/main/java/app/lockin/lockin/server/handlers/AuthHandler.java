@@ -8,6 +8,7 @@ import app.lockin.lockin.common.requests.*;
 import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
 import app.lockin.lockin.server.services.AuthService;
+import app.lockin.lockin.server.services.ConnectedClientRegistry;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -114,6 +115,15 @@ public class AuthHandler {
         } catch (IOException e) {
             return new Response(ResponseStatus.ERROR, e.getMessage(), null);
         }
+    }
+
+    public Response handleFetchConnectedUsers(FetchRequest request) {
+        if (request.authenticatedSession == null) {
+            return new Response(ResponseStatus.ERROR, "Please log in before loading connected users", null);
+        }
+        ArrayList<String> usernames = ConnectedClientRegistry.getConnectedUsernames();
+        usernames.remove(request.authenticatedSession.getUsername());
+        return new Response(ResponseStatus.SUCCESS, "Connected users loaded successfully", usernames);
     }
 
     public Response handleUpdateProfile(UpdateProfileRequest request) {

@@ -39,7 +39,7 @@
 
                 <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" styleClass="nav-item" onMouseClicked="#onProfileButtonClick">
                     <ProfileAvatar fx:id="profileNavAvatar" size="32.0" text="Me"/>
-                    <Label styleClass="text-strong" text="Profile"/>
+                    <Label fx:id="profileNavLabel" styleClass="text-strong" text="Profile"/>
                 </HBox>
 
                 <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" styleClass="nav-item">
@@ -68,7 +68,7 @@
                     </padding>
 
                     <HBox alignment="TOP_LEFT" spacing="10">
-                        <ProfileAvatar size="40.0" text="Me"/>
+                        <ProfileAvatar fx:id="composerAvatar" size="40.0" text="Me"/>
                         <VBox spacing="8" HBox.hgrow="ALWAYS">
                             <TextArea fx:id="postTextArea" prefRowCount="4" promptText="Share notes, upload a JPG/GIF/PDF/TXT, or post an update..."
                                       styleClass="input-field" wrapText="true"/>
@@ -105,38 +105,17 @@
                 </padding>
 
                 <HBox alignment="CENTER_LEFT">
-                    <Label styleClass="section-title" text="Contacts"/>
+                    <Label styleClass="section-title" text="Users"/>
                     <Region HBox.hgrow="ALWAYS"/>
-                    <Button prefHeight="32" prefWidth="32" styleClass="ghost-button" text="?"/>
-                    <Button prefHeight="32" prefWidth="32" styleClass="ghost-button" text="..."/>
                 </HBox>
 
-                <VBox fx:id="contactsContainer" spacing="0">
-                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10" styleClass="contact-item">
-                        <ProfileAvatar size="36.0" text="Tahsinul"/>
-                        <Label styleClass="body-text" text="Tahsinul"/>
-                    </HBox>
-
-                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10" styleClass="contact-item">
-                        <ProfileAvatar size="36.0" text="Tahsinul"/>
-                        <Label styleClass="body-text" text="Tahsinul"/>
-                    </HBox>
-
-                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10" styleClass="contact-item">
-                        <ProfileAvatar size="36.0" text="Tahsinul"/>
-                        <Label styleClass="body-text" text="Tahsinul"/>
-                    </HBox>
-
-                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10" styleClass="contact-item">
-                        <ProfileAvatar size="36.0" text="Tahsinul"/>
-                        <Label styleClass="body-text" text="Tahsinul"/>
-                    </HBox>
-
-                    <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="10" styleClass="contact-item">
-                        <ProfileAvatar size="36.0" text="Tahsinul"/>
-                        <Label styleClass="body-text" text="Tahsinul"/>
-                    </HBox>
-                </VBox>
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                    <VBox fx:id="contactsContainer" spacing="0">
+                        <padding>
+                            <Insets top="4"/>
+                        </padding>
+                    </VBox>
+                </ScrollPane>
             </VBox>
         </HBox>
     </center>

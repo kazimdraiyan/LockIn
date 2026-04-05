@@ -22,6 +22,7 @@ public class MainController {
     private final Stack<Page> history = new Stack<>();
     private String pendingSearchQuery;
     private String pendingProfileUsername;
+    private String pendingChatUsername;
 
     @FXML
     public Label title;
@@ -87,6 +88,17 @@ public class MainController {
         String query = pendingSearchQuery;
         pendingSearchQuery = null;
         return query;
+    }
+
+    public void openChat(String username) throws IOException {
+        pendingChatUsername = username;
+        navigatePush("messenger-view.fxml");
+    }
+
+    public String consumeRequestedChatUsername() {
+        String username = pendingChatUsername;
+        pendingChatUsername = null;
+        return username;
     }
 
     private Page loadFXML(String fxmlFileName) throws IOException {

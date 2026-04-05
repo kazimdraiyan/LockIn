@@ -3,7 +3,9 @@ package app.lockin.lockin.client.controllers;
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.utils.TextFormatter;
 import app.lockin.lockin.client.elements.ProfileAvatar;
+import app.lockin.lockin.client.models.ChatListItem;
 import app.lockin.lockin.common.models.Comment;
+import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.Post;
 import app.lockin.lockin.common.models.PostAttachment;
 import app.lockin.lockin.common.models.ProfilePageData;
@@ -36,13 +38,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 public class HomeController implements MainControllerAware {
     private static final long MAX_ATTACHMENT_SIZE_BYTES = 10L * 1024 * 1024;
@@ -55,16 +57,21 @@ public class HomeController implements MainControllerAware {
     @FXML private Button uploadFileButton;
     @FXML private Button postButton;
     @FXML private ProfileAvatar profileNavAvatar;
+    @FXML private ProfileAvatar composerAvatar;
+    @FXML private Label profileNavLabel;
 
     private MainController mainController;
     private Path selectedFilePath;
+    private final Map<String, PostAttachment> profilePicturesByUsername = new HashMap<>();
 
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         mainController.setNavBar(true, "LockIn", true);
+        profileNavLabel.setText(MyApplication.clientManager.getAuthenticatedUsername());
         loadSidebarProfileImage();
         loadPosts();
+        loadConnectedUsers();
     }
 
     @FXML
@@ -160,6 +167,7 @@ public class HomeController implements MainControllerAware {
                 if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
                     @SuppressWarnings("unchecked")
                     ArrayList<Post> posts = (ArrayList<Post>) response.getData();
+                    loadProfilePictures(posts);
                     Platform.runLater(() -> renderPosts(posts));
                 } else {
                     String message = response == null ? "Could not load posts." : response.getMessage();
@@ -167,6 +175,57 @@ public class HomeController implements MainControllerAware {
                 }
             } catch (IOException e) {
                 Platform.runLater(() -> renderErrorState("Could not load posts."));
+            }
+        }).start();
+    }
+
+    private void loadProfilePictures(List<Post> posts) {
+        Set<String> usernames = collectAuthorUsernames(posts);
+        Map<String, PostAttachment> loadedPictures = new HashMap<>();
+
+        try {
+            Response response = sendRequest(new FetchRequest(FetchType.PROFILE));
+            if (response != null && response.getStatus() == ResponseStatus.SUCCESS && response.getData() instanceof ProfilePageData pageData) {
+                UserProfile profile = pageData.getProfile();
+                if (profile != null && usernames.contains(profile.getUsername())) {
+                    loadedPictures.put(profile.getUsername(), profile.getProfilePicture());
+                }
+            }
+        } catch (IOException ignored) {
+        }
+
+        try {
+            Response response = sendRequest(new FetchRequest(FetchType.USER_SEARCH, ""));
+            if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
+                @SuppressWarnings("unchecked")
+                ArrayList<UserProfile> users = (ArrayList<UserProfile>) response.getData();
+                for (UserProfile user : users) {
+                    if (user != null && usernames.contains(user.getUsername())) {
+                        loadedPictures.put(user.getUsername(), user.getProfilePicture());
+                    }
+                }
+            }
+        } catch (IOException ignored) {
+        }
+
+        profilePicturesByUsername.clear();
+        profilePicturesByUsername.putAll(loadedPictures);
+    }
+
+    private void loadConnectedUsers() {
+        new Thread(() -> {
+            try {
+                Response response = sendRequest(new FetchRequest(FetchType.CHATS));
+                if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
+                    @SuppressWarnings("unchecked")
+                    ArrayList<Chat> chats = (ArrayList<Chat>) response.getData();
+                    Platform.runLater(() -> renderConnectedUsers(chats));
+                } else {
+                    String message = response == null ? "Could not load users." : response.getMessage();
+                    Platform.runLater(() -> renderContactsMessage(message));
+                }
+            } catch (IOException e) {
+                Platform.runLater(() -> renderContactsMessage("Could not load users."));
             }
         }).start();
     }
@@ -216,6 +275,49 @@ public class HomeController implements MainControllerAware {
         feedContainer.getChildren().add(errorLabel);
     }
 
+    private void renderConnectedUsers(List<Chat> chats) {
+        contactsContainer.getChildren().clear();
+        if (chats == null || chats.isEmpty()) {
+            renderContactsMessage("No users found.");
+            return;
+        }
+
+        for (Chat chat : chats) {
+            ChatListItem item = buildChatListItem(chat);
+            contactsContainer.getChildren().add(buildConnectedUserItem(item));
+        }
+    }
+
+    private void renderContactsMessage(String message) {
+        contactsContainer.getChildren().clear();
+        Label label = new Label(message);
+        label.getStyleClass().add("muted-text");
+        contactsContainer.getChildren().add(label);
+    }
+
+    private HBox buildConnectedUserItem(ChatListItem item) {
+        String username = item.getUserName();
+        HBox row = new HBox(10);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.setPrefHeight(48);
+        row.getStyleClass().add("contact-item");
+        row.getChildren().addAll(createAvatar(username, 36, profilePicturesByUsername.get(username)), new Label(username));
+        ((Label) row.getChildren().get(1)).getStyleClass().add("body-text");
+        row.setOnMouseClicked(event -> openChat(username));
+        return row;
+    }
+
+    private ChatListItem buildChatListItem(Chat chat) {
+        return new ChatListItem(
+                chat,
+                chat.getName(),
+                "",
+                chat.getUnreadCount(),
+                "",
+                chat.getLastMessage() == null ? 0L : chat.getLastMessage().getCreatedAt()
+        );
+    }
+
     private VBox buildPostCard(Post post) {
         VBox card = new VBox(10);
         card.getStyleClass().addAll("feed-card", "post-thread-card");
@@ -223,7 +325,7 @@ public class HomeController implements MainControllerAware {
 
         HBox header = new HBox(10);
         header.setAlignment(Pos.CENTER_LEFT);
-        header.getChildren().add(createAvatar(post.getAuthorUsername(), 42));
+        header.getChildren().add(createAvatar(post.getAuthorUsername(), 42, profilePicturesByUsername.get(post.getAuthorUsername())));
 
         VBox metaBox = new VBox(2);
         Label usernameLabel = new Label(post.getAuthorUsername());
@@ -279,7 +381,7 @@ public class HomeController implements MainControllerAware {
 
         HBox header = new HBox(10);
         header.setAlignment(Pos.CENTER_LEFT);
-        header.getChildren().add(createAvatar(comment.getAuthorUsername(), 32));
+        header.getChildren().add(createAvatar(comment.getAuthorUsername(), 32, profilePicturesByUsername.get(comment.getAuthorUsername())));
 
         VBox metaBox = new VBox(2);
         Label usernameLabel = new Label(comment.getAuthorUsername());
@@ -411,20 +513,28 @@ public class HomeController implements MainControllerAware {
         return preview;
     }
 
-    private ProfileAvatar createAvatar(String username, double size) {
+    private ProfileAvatar createAvatar(String username, double size, PostAttachment profilePicture) {
         ProfileAvatar avatar = new ProfileAvatar();
         avatar.setSize(size);
         avatar.setText(extractInitials(username));
+        if (profilePicture != null && profilePicture.getData() != null && profilePicture.getData().length > 0) {
+            avatar.setImage(new Image(new ByteArrayInputStream(profilePicture.getData())));
+        }
         return avatar;
     }
 
     private void renderSidebarProfileImage(PostAttachment profilePicture) {
-        profileNavAvatar.setText("ME");
+        applyOwnProfileImage(profileNavAvatar, profilePicture);
+        applyOwnProfileImage(composerAvatar, profilePicture);
+    }
+
+    private void applyOwnProfileImage(ProfileAvatar avatar, PostAttachment profilePicture) {
+        avatar.setText("ME");
         if (profilePicture == null || profilePicture.getData().length == 0) {
-            profileNavAvatar.setImage(new Image(MyApplication.getIcon("account.png").toExternalForm()));
+            avatar.setImage(new Image(MyApplication.getIcon("account.png").toExternalForm()));
             return;
         }
-        profileNavAvatar.setImage(new Image(new ByteArrayInputStream(profilePicture.getData())));
+        avatar.setImage(new Image(new ByteArrayInputStream(profilePicture.getData())));
     }
 
     private void downloadAttachment(PostAttachment attachment) {
@@ -457,6 +567,35 @@ public class HomeController implements MainControllerAware {
         } catch (IOException e) {
             composerStatusLabel.setText("Could not open profile.");
         }
+    }
+
+    private void openChat(String username) {
+        if (username == null || username.isBlank()) {
+            return;
+        }
+        try {
+            mainController.openChat(username);
+        } catch (IOException e) {
+            composerStatusLabel.setText("Could not open chat.");
+        }
+    }
+
+    private Set<String> collectAuthorUsernames(List<Post> posts) {
+        Set<String> usernames = new HashSet<>();
+        if (posts == null) {
+            return usernames;
+        }
+
+        for (Post post : posts) {
+            if (post == null) {
+                continue;
+            }
+            usernames.add(post.getAuthorUsername());
+            for (Comment comment : post.getComments()) {
+                usernames.add(comment.getAuthorUsername());
+            }
+        }
+        return usernames;
     }
 
     private void setComposerBusy(boolean busy, String message) {

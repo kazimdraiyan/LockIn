@@ -140,6 +140,9 @@ public class ClientHandler implements Runnable {
             case USER_SEARCH:
                 response = authHandler.handleSearchUsers(request);
                 break;
+            case CONNECTED_USERS:
+                response = authHandler.handleFetchConnectedUsers(request);
+                break;
         }
         return response;
     }

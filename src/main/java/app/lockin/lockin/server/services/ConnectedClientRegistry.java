@@ -3,6 +3,7 @@ package app.lockin.lockin.server.services;
 import app.lockin.lockin.server.handlers.ClientHandler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -37,5 +38,11 @@ public final class ConnectedClientRegistry {
     public static ArrayList<ClientHandler> getClients(String username) {
         CopyOnWriteArraySet<ClientHandler> handlers = CLIENTS.get(username);
         return handlers == null ? new ArrayList<>() : new ArrayList<>(handlers);
+    }
+
+    public static ArrayList<String> getConnectedUsernames() {
+        ArrayList<String> usernames = new ArrayList<>(CLIENTS.keySet());
+        Collections.sort(usernames, String.CASE_INSENSITIVE_ORDER);
+        return usernames;
     }
 }
