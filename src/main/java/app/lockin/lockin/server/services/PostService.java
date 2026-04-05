@@ -248,8 +248,8 @@ public class PostService {
         return arrayNode;
     }
 
-    private ObjectNode storeAttachment(String ownerId, PostAttachment attachment) throws IOException {
-        String storedFileName = ownerId + "_" + sanitizeFileName(attachment.getOriginalFileName());
+    private ObjectNode storeAttachment(String postId, PostAttachment attachment) throws IOException {
+        String storedFileName = postId + "_" + sanitizeFileName(attachment.getOriginalFileName());
         Path storedPath = UPLOADS_PATH.resolve(storedFileName);
         Files.write(storedPath, attachment.getData());
 

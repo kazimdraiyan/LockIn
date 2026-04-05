@@ -4,27 +4,39 @@ import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.PostAttachment;
 import app.lockin.lockin.common.models.Session;
 import app.lockin.lockin.common.models.UserProfile;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Comparator;
-import java.util.Locale;
-import java.util.UUID;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 // Does auth related backend tasks
 public class AuthService {
     private static final long DEFAULT_SESSION_DURATION_MILLIS = 365L * 24 * 60 * 60 * 1000; // 1 year in milliseconds
 
     private static final String DATABASE_PATH = "database/"; // Server database should not be put inside the resources/ directory. Because it's of server side and it's not read-only.
+    private static final Path PROFILE_IMAGES_PATH = Path.of("database", "profile_images");
+    private static final Path USERS_PATH = Path.of("database", "users.json");
+    private static final Path SESSIONS_PATH = Path.of("database", "sessions.json");
 
     ObjectMapper mapper = new ObjectMapper();
 
+    private void ensureStorageExists() throws IOException {
+        Files.createDirectories(PROFILE_IMAGES_PATH);
+        if (!Files.exists(USERS_PATH)) {
+            Files.writeString(USERS_PATH, "{}");
+        }
+        if (!Files.exists(SESSIONS_PATH)) {
+            Files.writeString(SESSIONS_PATH, "{}");
+        }
+    }
+
     private ObjectNode loadDatabase(String filename) throws IOException {
+        ensureStorageExists();
         return (ObjectNode) mapper.readTree(new File(DATABASE_PATH + filename));
     }
 
@@ -134,7 +146,7 @@ public class AuthService {
         return new UserProfile(
                 username,
                 userNode.path("description").asText(""),
-                readAttachment(userNode.get("profilePicture"))
+                loadAttachment(userNode.get("profilePicture"))
         );
     }
 
@@ -168,13 +180,16 @@ public class AuthService {
         ObjectNode userNode = (ObjectNode) usersDatabase.get(username);
         userNode.put("description", description == null ? "" : description.trim());
         if (profilePicture == null) {
+            System.out.println("Meowl");
             userNode.putNull("profilePicture");
+            deleteAttachmentIfPresent(userNode.get("profilePicture"));
         } else {
             validateProfilePicture(profilePicture);
-            userNode.set("profilePicture", writeAttachment(profilePicture));
+            String fileName = username + "." + Arrays.stream(profilePicture.getOriginalFileName().split("\\.")).toList().getLast();
+            userNode.set("profilePicture", storeAttachment(fileName, profilePicture));
         }
         saveDatabase("users.json", usersDatabase);
-        return new UserProfile(username, userNode.path("description").asText(""), readAttachment(userNode.get("profilePicture")));
+        return new UserProfile(username, userNode.path("description").asText(""), loadAttachment(userNode.get("profilePicture")));
     }
 
     private void validateProfilePicture(PostAttachment profilePicture) throws IOException {
@@ -190,22 +205,35 @@ public class AuthService {
         }
     }
 
-    private ObjectNode writeAttachment(PostAttachment attachment) {
+    private ObjectNode storeAttachment(String attachmentId, PostAttachment attachment) throws IOException {
+        Path storedPath = PROFILE_IMAGES_PATH.resolve(attachmentId);
+        Files.write(storedPath, attachment.getData());
+
         ObjectNode attachmentNode = mapper.createObjectNode();
         attachmentNode.put("originalFileName", attachment.getOriginalFileName());
         attachmentNode.put("mimeType", attachment.getMimeType());
-        attachmentNode.put("data", Base64.getEncoder().encodeToString(attachment.getData()));
+        attachmentNode.put("storedFileName", attachmentId);
         return attachmentNode;
     }
 
-    private PostAttachment readAttachment(com.fasterxml.jackson.databind.JsonNode attachmentNode) {
+    private PostAttachment loadAttachment(com.fasterxml.jackson.databind.JsonNode attachmentNode) throws IOException {
         if (attachmentNode == null || attachmentNode.isNull()) {
             return null;
         }
+        Path filePath = PROFILE_IMAGES_PATH.resolve(attachmentNode.get("storedFileName").asText());
+        byte[] data = Files.exists(filePath) ? Files.readAllBytes(filePath) : new byte[0];
         return new PostAttachment(
                 attachmentNode.path("originalFileName").asText("profile-picture"),
                 attachmentNode.path("mimeType").asText("image/png"),
-                Base64.getDecoder().decode(attachmentNode.path("data").asText(""))
+                data
         );
+    }
+
+    private void deleteAttachmentIfPresent(JsonNode attachmentNode) throws IOException {
+        if (attachmentNode == null || attachmentNode.isNull()) {
+            return;
+        }
+        Path filePath = PROFILE_IMAGES_PATH.resolve(attachmentNode.path("storedFileName").asText());
+        Files.deleteIfExists(filePath);
     }
 }
