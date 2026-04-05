@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfilePageData implements Serializable {
+public class UserPosts implements Serializable {
     private final UserProfile profile;
     private final ArrayList<Post> posts;
 
-    public ProfilePageData(UserProfile profile, List<Post> posts) {
+    public UserPosts(UserProfile profile, List<Post> posts) {
         this.profile = profile;
         this.posts = posts == null ? new ArrayList<>() : new ArrayList<>(posts);
     }

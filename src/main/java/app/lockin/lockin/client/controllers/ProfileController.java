@@ -5,7 +5,7 @@ import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
 import app.lockin.lockin.common.models.PostAttachment;
-import app.lockin.lockin.common.models.ProfilePageData;
+import app.lockin.lockin.common.models.UserPosts;
 import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.DeletePostRequest;
 import app.lockin.lockin.common.requests.FetchRequest;
@@ -129,7 +129,7 @@ public class ProfileController implements MainControllerAware {
             try {
                 Response response = sendRequest(new FetchRequest(FetchType.PROFILE, viewedUsername));
                 if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
-                    ProfilePageData data = (ProfilePageData) response.getData();
+                    UserPosts data = (UserPosts) response.getData();
                     Platform.runLater(() -> renderProfilePage(data));
                 } else {
                     String message = response == null ? "Could not load profile." : response.getMessage();
@@ -141,7 +141,7 @@ public class ProfileController implements MainControllerAware {
         }).start();
     }
 
-    private void renderProfilePage(ProfilePageData data) {
+    private void renderProfilePage(UserPosts data) {
         UserProfile profile = data.getProfile();
         ownProfile = mainController != null
                 && MyApplication.clientManager.getAuthenticatedUsername() != null

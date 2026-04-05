@@ -25,7 +25,9 @@ public class AuthService {
 
     ObjectMapper mapper = new ObjectMapper();
 
-    private void ensureStorageExists() throws IOException {
+
+    private ObjectNode loadDatabase(String filename) throws IOException {
+
         Files.createDirectories(PROFILE_IMAGES_PATH);
         if (!Files.exists(USERS_PATH)) {
             Files.writeString(USERS_PATH, "{}");
@@ -33,10 +35,6 @@ public class AuthService {
         if (!Files.exists(SESSIONS_PATH)) {
             Files.writeString(SESSIONS_PATH, "{}");
         }
-    }
-
-    private ObjectNode loadDatabase(String filename) throws IOException {
-        ensureStorageExists();
         return (ObjectNode) mapper.readTree(new File(DATABASE_PATH + filename));
     }
 

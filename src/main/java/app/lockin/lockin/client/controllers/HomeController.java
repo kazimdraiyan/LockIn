@@ -8,7 +8,7 @@ import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.Post;
 import app.lockin.lockin.common.models.PostAttachment;
-import app.lockin.lockin.common.models.ProfilePageData;
+import app.lockin.lockin.common.models.UserPosts;
 import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.*;
 import app.lockin.lockin.common.response.Response;
@@ -185,7 +185,7 @@ public class HomeController implements MainControllerAware {
 
         try {
             Response response = sendRequest(new FetchRequest(FetchType.PROFILE));
-            if (response != null && response.getStatus() == ResponseStatus.SUCCESS && response.getData() instanceof ProfilePageData pageData) {
+            if (response != null && response.getStatus() == ResponseStatus.SUCCESS && response.getData() instanceof UserPosts pageData) {
                 UserProfile profile = pageData.getProfile();
                 if (profile != null && usernames.contains(profile.getUsername())) {
                     loadedPictures.put(profile.getUsername(), profile.getProfilePicture());
@@ -234,7 +234,7 @@ public class HomeController implements MainControllerAware {
         new Thread(() -> {
             try {
                 Response response = sendRequest(new FetchRequest(FetchType.PROFILE));
-                if (response != null && response.getStatus() == ResponseStatus.SUCCESS && response.getData() instanceof ProfilePageData pageData) {
+                if (response != null && response.getStatus() == ResponseStatus.SUCCESS && response.getData() instanceof UserPosts pageData) {
                     UserProfile profile = pageData.getProfile();
                     Platform.runLater(() -> renderSidebarProfileImage(profile == null ? null : profile.getProfilePicture()));
                 } else {

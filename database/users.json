@@ -11,7 +11,11 @@
   "shonyewest" : {
     "password" : "1234",
     "description" : "I am shonye west, bully",
-    "profilePicture" : null
+    "profilePicture" : {
+      "originalFileName" : "3leggeddog.jpg",
+      "mimeType" : "image/jpeg",
+      "storedFileName" : "shonyewest.jpg"
+    }
   },
   "raiyan2" : {
     "password" : "1234",

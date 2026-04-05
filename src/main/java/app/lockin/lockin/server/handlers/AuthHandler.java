@@ -1,7 +1,7 @@
 package app.lockin.lockin.server.handlers;
 
 import app.lockin.lockin.common.models.Chat;
-import app.lockin.lockin.common.models.ProfilePageData;
+import app.lockin.lockin.common.models.UserPosts;
 import app.lockin.lockin.common.models.Session;
 import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.*;
@@ -95,7 +95,7 @@ public class AuthHandler {
                 username = request.authenticatedSession.getUsername();
             }
             UserProfile profile = authService.loadProfile(username);
-            ProfilePageData pageData = new ProfilePageData(profile, postHandler.loadPostsByAuthor(username));
+            UserPosts pageData = new UserPosts(profile, postHandler.loadPostsByAuthor(username));
             return new Response(ResponseStatus.SUCCESS, "Profile loaded successfully", pageData);
         } catch (IOException e) {
             return new Response(ResponseStatus.ERROR, e.getMessage(), null);
