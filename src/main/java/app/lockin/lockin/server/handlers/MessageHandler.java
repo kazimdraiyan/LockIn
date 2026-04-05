@@ -2,7 +2,6 @@ package app.lockin.lockin.server.handlers;
 
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.ConversationData;
-import app.lockin.lockin.common.models.MessageDelivery;
 import app.lockin.lockin.common.requests.CreateMessageRequest;
 import app.lockin.lockin.common.requests.FetchMessagesRequest;
 import app.lockin.lockin.common.requests.FetchRequest;
@@ -45,86 +44,17 @@ public class MessageHandler {
         }
     }
 
-    public MessageCommandResult handleCreateMessage(CreateMessageRequest request) {
+    public MessageService.MessageCreationResult handleCreateMessage(CreateMessageRequest request) throws IOException {
         if (request.authenticatedSession == null) {
-            return MessageCommandResult.error("Please log in before sending messages");
+            throw new IOException("Please log in before sending messages");
         }
 
-        try {
-            MessageService.MessageCreationResult result = messageService.createMessage(
-                    request.authenticatedSession.getUsername(),
-                    request.getRecipientUsername(),
-                    request.getText(),
-                    request.getAttachment(),
-                    request.getReplyOf()
-            );
-            return MessageCommandResult.success(result);
-        } catch (IOException e) {
-            return MessageCommandResult.error(e.getMessage());
-        }
-    }
-
-    // TODO: Find alternative of this nested class
-    public static class MessageCommandResult {
-        private final Response response;
-        private final String senderUsername;
-        private final String recipientUsername;
-        private final MessageDelivery senderDelivery;
-        private final MessageDelivery recipientDelivery;
-
-        private MessageCommandResult(
-                Response response,
-                String senderUsername,
-                String recipientUsername,
-                MessageDelivery senderDelivery,
-                MessageDelivery recipientDelivery
-        ) {
-            this.response = response;
-            this.senderUsername = senderUsername;
-            this.recipientUsername = recipientUsername;
-            this.senderDelivery = senderDelivery;
-            this.recipientDelivery = recipientDelivery;
-        }
-
-        public static MessageCommandResult success(MessageService.MessageCreationResult result) {
-            MessageDelivery senderDelivery = result.getSenderDelivery();
-            return new MessageCommandResult(
-                    new Response(ResponseStatus.SUCCESS, "Message sent successfully", senderDelivery),
-                    result.getSenderUsername(),
-                    result.getRecipientUsername(),
-                    senderDelivery,
-                    result.getRecipientDelivery()
-            );
-        }
-
-        public static MessageCommandResult error(String message) {
-            return new MessageCommandResult(
-                    new Response(ResponseStatus.ERROR, message, null),
-                    null,
-                    null,
-                    null,
-                    null
-            );
-        }
-
-        public Response getResponse() {
-            return response;
-        }
-
-        public String getSenderUsername() {
-            return senderUsername;
-        }
-
-        public String getRecipientUsername() {
-            return recipientUsername;
-        }
-
-        public MessageDelivery getSenderDelivery() {
-            return senderDelivery;
-        }
-
-        public MessageDelivery getRecipientDelivery() {
-            return recipientDelivery;
-        }
+        return messageService.createMessage(
+                request.authenticatedSession.getUsername(),
+                request.getRecipientUsername(),
+                request.getText(),
+                request.getAttachment(),
+                request.getReplyOf()
+        );
     }
 }

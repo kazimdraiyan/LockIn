@@ -6,6 +6,7 @@ import app.lockin.lockin.common.requests.*;
 import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
 import app.lockin.lockin.server.services.ConnectedClientRegistry;
+import app.lockin.lockin.server.services.MessageService;
 
 import java.io.*;
 import java.net.Socket;
@@ -148,26 +149,26 @@ public class ClientHandler implements Runnable {
     }
 
     private void handleCreateMessage(CreateMessageRequest request) {
-        MessageHandler.MessageCommandResult result = messageHandler.handleCreateMessage(request);
-        send(result.getResponse());
+        try {
+            MessageService.MessageCreationResult result = messageHandler.handleCreateMessage(request);
+            send(new Response(ResponseStatus.SUCCESS, "Message sent successfully", result.getSenderDelivery()));
 
-        if (result.getResponse().getStatus() != ResponseStatus.SUCCESS) {
-            return;
+            Response recipientEvent = new Response(
+                    ResponseStatus.SUCCESS,
+                    "Incoming message",
+                    new MessageRealtimeEvent(result.getRecipientDelivery())
+            );
+            broadcastToUser(result.getRecipientUsername(), recipientEvent, null);
+
+            Response senderEvent = new Response(
+                    ResponseStatus.SUCCESS,
+                    "Incoming message",
+                    new MessageRealtimeEvent(result.getSenderDelivery())
+            );
+            broadcastToUser(result.getSenderUsername(), senderEvent, this);
+        } catch (IOException e) {
+            send(new Response(ResponseStatus.ERROR, e.getMessage(), null));
         }
-
-        Response recipientEvent = new Response(
-                ResponseStatus.SUCCESS,
-                "Incoming message",
-                new MessageRealtimeEvent(result.getRecipientDelivery())
-        );
-        broadcastToUser(result.getRecipientUsername(), recipientEvent, null);
-
-        Response senderEvent = new Response(
-                ResponseStatus.SUCCESS,
-                "Incoming message",
-                new MessageRealtimeEvent(result.getSenderDelivery())
-        );
-        broadcastToUser(result.getSenderUsername(), senderEvent, this);
     }
 
     private void broadcastToUser(String username, Response response, ClientHandler excludedClient) {
