@@ -1,0 +1,255 @@
+[33mcommit 8cd7b40fd31012c643159e74ac4aee0a92587061[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mrefactor[m[33m, [m[1;31morigin/vibe[m[33m, [m[1;32mvibe[m[33m)[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Sat Apr 4 23:27:48 2026 +0600
+
+    Fix faulty merge
+
+[33mcommit 2a25c5ebc839c337ca23d6192eaa84bd04d40283[m
+Merge: 60bbf50 760fab5
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Sat Apr 4 23:05:13 2026 +0600
+
+    Merge posting and profile with messaging
+
+[33mcommit 60bbf500e3cd98657da43928738f5889ecb92a6d[m
+Author: Typhon13 <sazzad.tahsif@gmail.com>
+Date:   Sat Apr 4 21:51:53 2026 +0600
+
+    Added basic searching
+
+[33mcommit 760fab502b4ba8ce6d0b0c2cf031136f7bc16e35[m[33m ([m[1;31morigin/messaging[m[33m)[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Fri Apr 3 21:48:40 2026 +0600
+
+    Add messaging feature
+
+[33mcommit ba050c2360395cded1c129cdd7aafbbba0155ede[m
+Author: Typhon13 <sazzad.tahsif@gmail.com>
+Date:   Fri Apr 3 21:30:52 2026 +0600
+
+    ProfilePage
+
+[33mcommit 364582b7cf101fda7f8152f295a588d771f3224b[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Fri Apr 3 12:35:27 2026 +0600
+
+    Move messages view to a new fxml file
+
+[33mcommit fe18da8b12d24cef7e71d5d7ae837cefadb3885d[m
+Author: Typhon13 <sazzad.tahsif@gmail.com>
+Date:   Fri Apr 3 03:52:31 2026 +0600
+
+    ui polishing
+
+[33mcommit b979d50d49b961c22d2461f3757bf1193a6d0096[m
+Author: Typhon13 <sazzad.tahsif@gmail.com>
+Date:   Fri Apr 3 02:36:08 2026 +0600
+
+    postmaxxing 1.1
+
+[33mcommit fd45c9dcb3901300dd5458d043c63632e2146520[m
+Author: Typhon13 <sazzad.tahsif@gmail.com>
+Date:   Fri Apr 3 01:27:14 2026 +0600
+
+    postmaxxing
+
+[33mcommit 8df4ccd921b7acac6f25a35f9ccb94cddee4cfc8[m[33m ([m[1;32mmessaging[m[33m)[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Thu Apr 2 17:48:52 2026 +0600
+
+    Show loaded chat list
+
+[33mcommit 329c2d9ca6875b3c03bc3257ca57c6b84cf84240[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Thu Apr 2 13:17:48 2026 +0600
+
+    Vibe: Make UI consistent
+    
+    - light-theme.css and dark-theme.css only contain colors
+    - Reusable styles defined on style.css
+    - Reusable search bar
+    - Reusable profile avatar
+    - Remove gradient
+    - Make the UI consistent overall
+
+[33mcommit a66bc106e8c5824325517e92cc76f61f0f7d0f18[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Wed Mar 25 12:11:35 2026 +0600
+
+    Clean folder structure
+    - Move requests/, response/, models/ to common/
+    - Pluralize folder names
+    - Move MyApplication to client/
+
+[33mcommit 7e2fe8ef6ec1418e88562fe6ea8adfdafc24f5d1[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Wed Mar 25 11:31:47 2026 +0600
+
+    Move server database from resources folder to project root
+
+[33mcommit 9a6c4b1074bbe67cf8634a9fbc473a68c7c2aea8[m[33m ([m[1;31morigin/ui[m[33m, [m[1;31morigin/auth[m[33m, [m[1;32mui[m[33m)[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Tue Mar 24 13:33:04 2026 +0600
+
+    Handle logout: delete session, delete token
+
+[33mcommit 2cfbf0c292ce2f06ff93de17a7bcb303200c1287[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Tue Mar 24 12:27:30 2026 +0600
+
+    Add search icon in search bars
+
+[33mcommit b93125e51fbd231306fadb1d0b32056a59ce927c[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Tue Mar 24 12:19:14 2026 +0600
+
+    Add home page tab icons
+
+[33mcommit d4df21daca5937b08af9b3519c00c17788a5d6cb[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Tue Mar 24 12:11:22 2026 +0600
+
+    Add back and toggle theme icons
+
+[33mcommit 611e1d7d37a31ffdddb4ac9ec6616739590de88c[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Tue Mar 24 11:28:06 2026 +0600
+
+    Minor UI tweek
+
+[33mcommit faa9e67d57f171075783c85944ca4dbb0b4c4ecd[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Tue Mar 24 11:18:46 2026 +0600
+
+    Add common nav bar; fix navigateReplacement; add navigateReplacingRoot
+
+[33mcommit 49e2d9ad73681b3146cd87d404c9eaba04b8495a[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Fri Mar 20 15:40:16 2026 +0600
+
+    Refactor MainController; add navigateReplacement
+
+[33mcommit 61d5b38e1dcf7e729e487598ca08104cececc4f0[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Fri Mar 20 14:26:51 2026 +0600
+
+    Refactor module-info
+
+[33mcommit 7f1105f76e56af28ae1d761788f77dbe6c2e7100[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Fri Mar 20 13:54:02 2026 +0600
+
+    Rename LockInApplication to MyApplication; Remove Launcher
+
+[33mcommit e8d6f7b0f20fde4b5adb9ba622dd70689af2449a[m
+Merge: 225e270 dc3435d
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Fri Mar 20 13:25:07 2026 +0600
+
+    Merge messaging server logic with messenger UI
+
+[33mcommit dc3435d8355d615b8d97d2514bf5008a2eb76d5f[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Fri Mar 20 11:49:08 2026 +0600
+
+    Move chats-view into messenger-view
+
+[33mcommit f570afafc51085c3a9d7437cc66d93d01e2d821d[m[33m ([m[1;31morigin/temp[m[33m, [m[1;32mtemp[m[33m)[m
+Author: Typhon13 <90.ahon.sazzad.09@gmail.com>
+Date:   Tue Mar 17 23:45:26 2026 +0600
+
+    trial of Message UI
+
+[33mcommit 225e27061c293d140a18b4c4062c711833804270[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Tue Mar 17 20:38:36 2026 +0600
+
+    Add rough chat list fetching; add chat related models
+
+[33mcommit 2b499905ebfb57e6c28a072dc51dddee7da23f88[m
+Author: Typhon13 <90.ahon.sazzad.09@gmail.com>
+Date:   Tue Mar 17 15:55:41 2026 +0600
+
+    Unfinished chat list
+
+[33mcommit 26d479583ab9cafcea50f6da471975ac8938d2b4[m
+Merge: 1479316 c2edebf
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Tue Mar 17 14:29:15 2026 +0600
+
+    Merge: homepage at startup with GUI error message
+
+[33mcommit c2edebf7afe3cd2e838ac2408e939340fc9a3be3[m
+Author: Typhon13 <90.ahon.sazzad.09@gmail.com>
+Date:   Tue Mar 17 14:20:13 2026 +0600
+
+    GUI Error Message Logic
+
+[33mcommit 1479316993daa9c7e2ded875bd26a5af9790fcc1[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Tue Mar 17 14:11:46 2026 +0600
+
+    Opening homepage by default for previously logged in users; move welcome content from main-view.fxml to welcome-view.fxml
+
+[33mcommit 6f7d97be223e8ea34bb74ef0ce890569ac863035[m
+Author: Typhon13 <90.ahon.sazzad.09@gmail.com>
+Date:   Mon Mar 16 21:36:38 2026 +0600
+
+    Update Darkmode
+
+[33mcommit 3788bf1a99ac96da85c64f83caff9ecdafd9a639[m
+Author: Typhon13 <90.ahon.sazzad.09@gmail.com>
+Date:   Mon Mar 16 20:54:34 2026 +0600
+
+    Create Dark Mode
+
+[33mcommit 4e33e520631dea57d4be79dce8abeed111a0e655[m
+Author: Typhon13 <90.ahon.sazzad.09@gmail.com>
+Date:   Mon Mar 16 14:45:01 2026 +0600
+
+    Create Login and Home page Sync
+
+[33mcommit 24ef0530fb373d4d19c20e4f34d9f804b7ce3b90[m[33m ([m[1;32mauth[m[33m)[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Mon Mar 16 04:20:07 2026 +0600
+
+    Implement session token; save token in file on client side
+
+[33mcommit d3dfcca002c374b826235f20fc897e2154946ad9[m[33m ([m[1;32mmain[m[33m)[m
+Merge: fd97156 0144f41
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Sun Mar 15 23:52:13 2026 +0600
+
+    Merge branch 'main' into auth
+
+[33mcommit 0144f419c64c3934af69916423f3537ae13d72cf[m
+Merge: 787689b 31da188
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Sun Mar 15 23:50:11 2026 +0600
+
+    Merge messenger and home UI into main
+
+[33mcommit 31da1883d725d1900d54e09a073577ff98269786[m
+Author: Typhon13 <90.ahon.sazzad.09@gmail.com>
+Date:   Sun Mar 15 23:27:14 2026 +0600
+
+    Create Messenger UI
+
+[33mcommit fd97156caf54b2b172dadb431269f766c83092f5[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Wed Feb 25 07:19:46 2026 +0600
+
+    Handle login request and send response
+
+[33mcommit 787689ba57d7d7fa471647a5db3ed8fad1276662[m
+Merge: fe7949a e62d325
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Wed Feb 25 05:53:55 2026 +0600
+
+    Merge ui and auth into main: nagivation and saving sign up information in file
+
+[33mcommit e62d32568f2c23f88c05872234143b5a38c88e05[m
+Author: Raiyan <kazimdraiyan2006@gmail.com>
+Date:   Sun Feb 22 03:21:30 2026 +0600
+
+    Save user info in users.json in signup; Add 

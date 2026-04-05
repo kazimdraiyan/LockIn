@@ -49,6 +49,9 @@ public class MessengerController implements MainControllerAware {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         mainController.setNavBar(true, "Chats", false);
+        if (mainController.selectedChatUsername != null && !mainController.selectedChatUsername.isBlank()) {
+            openConversation(new Chat(mainController.selectedChatUsername));
+        }
     }
 
     public void openConversation(Chat chat) {

@@ -11,26 +11,28 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="16" styleClass="panel-muted" xmlns="http://javafx.com/javafx/21"
+<VBox spacing="12" styleClass="panel-muted" xmlns="http://javafx.com/javafx/21"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controllers.ProfileController">
     <padding>
-        <Insets bottom="16" left="16" right="16" top="16"/>
+        <Insets bottom="12" left="16" right="16" top="12"/>
     </padding>
 
-    <VBox alignment="TOP_CENTER" spacing="18" styleClass="feed-card profile-header-card">
+    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="feed-card profile-header-card">
         <padding>
-            <Insets bottom="28" left="32" right="32" top="30"/>
+            <Insets bottom="18" left="24" right="24" top="18"/>
         </padding>
 
-        <ProfileAvatar fx:id="profileAvatar" size="260.0" styleClass="profile-image" text="Me"/>
+        <VBox alignment="TOP_CENTER" spacing="10">
+            <ProfileAvatar fx:id="profileAvatar" size="170.0" styleClass="profile-image" text="Me"/>
+            <Button fx:id="chooseProfilePictureButton" onAction="#onChooseProfilePictureClick" styleClass="feed-action-button"
+                    text="Change profile picture"/>
+        </VBox>
 
-        <VBox alignment="TOP_CENTER" spacing="14">
+        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
             <Label fx:id="usernameLabel" styleClass="profile-name" text="Username"/>
-            <TextArea fx:id="descriptionTextArea" prefRowCount="4" promptText="Write a short description about yourself..."
+            <TextArea fx:id="descriptionTextArea" prefRowCount="3" promptText="Write a short description about yourself..."
                       styleClass="profile-description" wrapText="true"/>
             <HBox alignment="CENTER_LEFT" spacing="10">
-                <Button fx:id="chooseProfilePictureButton" onAction="#onChooseProfilePictureClick" styleClass="feed-action-button"
-                        text="Choose profile picture"/>
                 <Button fx:id="saveProfileButton" onAction="#onSaveProfileClick" styleClass="primary-button"
                         text="Save profile"/>
                 <Region HBox.hgrow="ALWAYS"/>
@@ -38,7 +40,7 @@
             </HBox>
             <Label fx:id="profileStatusLabel" styleClass="muted-text"/>
         </VBox>
-    </VBox>
+    </HBox>
 
     <VBox spacing="8">
         <Label fx:id="postsTitleLabel" styleClass="section-title" text="Your posts"/>

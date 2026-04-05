@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -20,19 +21,26 @@ import java.util.Stack;
 public class MainController {
     private final Stack<Page> history = new Stack<>();
     public String viewedProfileUsername;
+    public String selectedChatUsername;
 
     @FXML
     public Label title;
+
     @FXML
     public HBox navBar;
+
     @FXML
     public Button backButton;
+
     @FXML
     public HBox searchBar;
+
     @FXML
     private SearchBarController searchBarController;
+
     @FXML
     public ImageView themeToggleIcon;
+
     @FXML
     public ImageView settingsIcon;
     @FXML
@@ -119,6 +127,11 @@ public class MainController {
 
     public void openSettings() {
         // Placeholder until the settings page is implemented.
+    }
+
+    public void openChat(String username) throws IOException {
+        selectedChatUsername = username;
+        navigatePush("messenger-view.fxml");
     }
 
     private void loadNavBarIcons() {
