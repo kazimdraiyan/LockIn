@@ -91,7 +91,21 @@
     "senderUsername" : "raiyankazi",
     "text" : "sigma goon",
     "createdAt" : 1775321818609
-  }
-  ],
+  } ],
   "updatedAt" : 1775321833959
+}, {
+  "id" : "975a38cf-b0a5-4354-a77e-e4849ba8ac96",
+  "participants" : [ "abdullah siam", "shonyewest" ],
+  "messages" : [ {
+    "id" : "eb633e71-03af-462e-8fd9-0a1e3e1a8221",
+    "senderUsername" : "shonyewest",
+    "text" : "hello",
+    "createdAt" : 1775365996751
+  }, {
+    "id" : "3c3a5078-f8a3-4c35-9797-8c06378b6c35",
+    "senderUsername" : "abdullah siam",
+    "text" : "hello",
+    "createdAt" : 1775366004929
+  } ],
+  "updatedAt" : 1775366004929
 } ]
