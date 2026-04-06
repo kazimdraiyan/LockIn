@@ -25,6 +25,9 @@ public class ClientManager {
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+
+    private String serverHost;
+    private UdpClient udpClient;
     // TODO: Learn more about BlockingQueue and Consumer. Seems like it's Stream type thing.
     private final BlockingQueue<Response> responseQueue = new LinkedBlockingQueue<>(); // Waits for a response to be added if empty
     private final CopyOnWriteArrayList<Consumer<MessageDelivery>> messageListeners = new CopyOnWriteArrayList<>();
@@ -34,6 +37,7 @@ public class ClientManager {
 
     // Returns whether successful logging in using saved token
     public void connect(String host, int port) throws IOException {
+        serverHost = host;
         socket = new Socket(host, port);
 
         out = new ObjectOutputStream(socket.getOutputStream());
@@ -89,8 +93,29 @@ public class ClientManager {
     }
 
     public void clearAuthenticatedSession() {
+        stopUdpTransport();
         authenticatedSession = null;
         isLoggedIn = false;
+    }
+
+    private void startUdpTransport(Session session) {
+        if (serverHost == null || serverHost.isEmpty()) {
+            return;
+        }
+        stopUdpTransport();
+        String username = session.getUsername();
+        if (username == null || username.isBlank()) {
+            username = "anon";
+        }
+        udpClient = new UdpClient(serverHost, username);
+        udpClient.start();
+    }
+
+    private void stopUdpTransport() {
+        if (udpClient != null) {
+            udpClient.stop();
+            udpClient = null;
+        }
     }
 
     private void startResponseListener() {
@@ -114,6 +139,7 @@ public class ClientManager {
         if (response.getStatus() == ResponseStatus.SUCCESS && response.getData() instanceof Session session) {
             authenticatedSession = session;
             isLoggedIn = true;
+            startUdpTransport(session);
         }
 
         if (response.getStatus() == ResponseStatus.SUCCESS
