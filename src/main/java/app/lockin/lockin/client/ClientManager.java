@@ -103,11 +103,11 @@ public class ClientManager {
             return;
         }
         stopUdpTransport();
-        String username = session.getUsername();
-        if (username == null || username.isBlank()) {
-            username = "anon";
+        String token = session.getToken();
+        if (token == null || token.isBlank()) {
+            return;
         }
-        udpClient = new UdpClient(serverHost, username);
+        udpClient = new UdpClient(serverHost, session);
         udpClient.start();
     }
 

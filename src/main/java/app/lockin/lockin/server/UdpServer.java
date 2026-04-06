@@ -1,5 +1,8 @@
 package app.lockin.lockin.server;
 
+import app.lockin.lockin.server.services.AuthService;
+import app.lockin.lockin.server.services.UdpEndpointRegistry;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -10,6 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import static app.lockin.lockin.common.UdpConfig.SERVER_PORT;
 
 public final class UdpServer {
+    private final AuthService authService = new AuthService();
     private final AtomicLong nextClientId = new AtomicLong(); // TODO: Find easier alternatives to this
     private volatile DatagramSocket socket; // TODO: Change volatile
 
@@ -45,12 +49,24 @@ public final class UdpServer {
 
     private void handlePacket(InetSocketAddress remote, String text) {
         if (text.startsWith("HELLO ")) {
-            String username = text.substring(6).trim();
-            if (username.isEmpty()) {
-                username = "anon";
+            String token = text.substring(6).trim();
+            if (token.isEmpty()) {
+                return;
             }
+            String username;
+            try {
+                username = authService.usernameFromToken(token);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+            if (username == null) {
+                System.out.println("UDP HELLO rejected: invalid token from " + remote);
+                return;
+            }
+            UdpEndpointRegistry.bind(username, remote);
             long id = nextClientId.incrementAndGet();
-            System.out.println("UDP HELLO from " + username + " (" + remote + ") id=" + id);
+            System.out.println("UDP HELLO bound " + username + " (" + remote + ") id=" + id);
             send(remote, "HELLO_ACK " + id);
         } else if ("PING".equals(text)) {
             send(remote, "PONG");

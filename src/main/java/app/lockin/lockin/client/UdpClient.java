@@ -1,5 +1,7 @@
 package app.lockin.lockin.client;
 
+import app.lockin.lockin.common.models.Session;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -10,17 +12,18 @@ import static app.lockin.lockin.common.UdpConfig.SERVER_PORT;
 
 /**
  * Minimal UDP session to the server for future voice. Handshake + ping/pong only.
+ * HELLO carries the TCP session token so the server can bind this endpoint to the user.
  */
 public final class UdpClient {
     private final String serverHost;
-    private final String username;
+    private final Session session;
 
     private volatile DatagramSocket socket;
     private volatile boolean running;
 
-    public UdpClient(String serverHost, String username) {
+    public UdpClient(String serverHost, Session session) {
         this.serverHost = serverHost;
-        this.username = username;
+        this.session = session;
     }
 
     public void start() {
@@ -41,11 +44,13 @@ public final class UdpClient {
     }
 
     private void runLoop() {
+        if (session.getToken() == null || session.getToken().isBlank()) {
+            return;
+        }
         try {
             socket = new DatagramSocket();
             socket.connect(InetAddress.getByName(serverHost), SERVER_PORT);
-            String helloUser = username == null || username.isBlank() ? "anon" : username;
-            sendUtf8("HELLO " + helloUser);
+            sendUtf8("HELLO " + session.getToken());
 
             byte[] buffer = new byte[2048];
             while (running && socket != null && !socket.isClosed()) {

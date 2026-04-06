@@ -9,6 +9,7 @@ import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
 import app.lockin.lockin.server.services.AuthService;
 import app.lockin.lockin.server.services.ConnectedClientRegistry;
+import app.lockin.lockin.server.services.UdpEndpointRegistry;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ public class AuthHandler {
     public Response handleLogout(LogoutRequest request) {
         try {
             authService.removeSession(request.authenticatedSession);
+            if (request.authenticatedSession != null) {
+                UdpEndpointRegistry.unbind(request.authenticatedSession.getUsername());
+            }
             return new Response(ResponseStatus.SUCCESS, "Logout successful", null);
         } catch (IOException e) {
             System.out.println("An error occurred while trying to handle a logout request");
