@@ -9,7 +9,9 @@ import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
 import app.lockin.lockin.server.services.ConnectedClientRegistry;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 // One ClientHandler instance is created per logged-in user
@@ -64,8 +66,7 @@ public class ClientHandler implements Runnable {
         if (response.getData() != null) {
             updateAuthenticatedSession((Session) response.getData());
             System.out.println("Authentication successful: " + authenticatedSession.getUsername());
-        }
-        else {
+        } else {
             System.out.println("No session found corresponding to the given token");
         }
         return response;
@@ -154,7 +155,17 @@ public class ClientHandler implements Runnable {
             Message message = messageHandler.handleCreateMessage(request);
             String senderUsername = request.authenticatedSession.getUsername();
             String recipientUsername = request.getRecipientUsername();
-            String chatId = message.getChatId();
+            String chatId = request.getChatId();
+
+            if (Chat.COMMON_CHAT_ID.equals(chatId)) {
+                MessageDelivery delivery = new MessageDelivery(
+                        new Chat(Chat.COMMON_CHAT_ID, Chat.COMMON_CHAT_NAME, message, 0),
+                        message
+                );
+                send(new Response(ResponseStatus.SUCCESS, "Message sent successfully", delivery));
+                broadcastToAllUsers(new Response(ResponseStatus.SUCCESS, "Incoming message", delivery), this);
+                return;
+            }
 
             MessageDelivery senderDelivery = new MessageDelivery(
                     new Chat(chatId, recipientUsername, message, 0),
@@ -167,19 +178,18 @@ public class ClientHandler implements Runnable {
 
             send(new Response(ResponseStatus.SUCCESS, "Message sent successfully", senderDelivery));
 
-            Response recipientEvent = new Response(
-                    ResponseStatus.SUCCESS,
-                    "Incoming message",
-                    recipientDelivery
-            );
-            broadcastToUser(recipientUsername, recipientEvent, null);
-
             Response senderEvent = new Response(
                     ResponseStatus.SUCCESS,
                     "Incoming message",
                     senderDelivery
             );
+            Response recipientEvent = new Response(
+                    ResponseStatus.SUCCESS,
+                    "Incoming message",
+                    recipientDelivery
+            );
             broadcastToUser(senderUsername, senderEvent, this);
+            broadcastToUser(recipientUsername, recipientEvent, null);
         } catch (IOException e) {
             send(new Response(ResponseStatus.ERROR, e.getMessage(), null));
         }
@@ -187,6 +197,15 @@ public class ClientHandler implements Runnable {
 
     private void broadcastToUser(String username, Response response, ClientHandler excludedClient) {
         for (ClientHandler client : ConnectedClientRegistry.getClients(username)) {
+            if (client == excludedClient) {
+                continue;
+            }
+            client.send(response);
+        }
+    }
+
+    private void broadcastToAllUsers(Response response, ClientHandler excludedClient) {
+        for (ClientHandler client : ConnectedClientRegistry.getAllClients()) {
             if (client == excludedClient) {
                 continue;
             }

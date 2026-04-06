@@ -10,12 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
 public class MessageService {
     private static final String DATABASE_PATH = "database";
@@ -58,6 +53,20 @@ public class MessageService {
             ));
         }
 
+        // Add common chat to the list
+        JsonNode commonChatNode = findCommonChatNode(conversationsNode);
+        if (commonChatNode == null) {
+            chats.add(new Chat(Chat.COMMON_CHAT_ID, Chat.COMMON_CHAT_NAME, null, 0));
+        } else {
+            Message lastMessage = loadLastMessage(commonChatNode);
+            chats.add(new Chat(
+                    Chat.COMMON_CHAT_ID,
+                    Chat.COMMON_CHAT_NAME,
+                    lastMessage,
+                    0
+            ));
+        }
+
         chats.sort(Comparator
                 .comparingLong((Chat chat) -> chat.getLastMessage() == null ? Long.MIN_VALUE : chat.getLastMessage().getCreatedAt())
                 .reversed()
@@ -69,15 +78,27 @@ public class MessageService {
         if (username == null || username.isBlank()) {
             throw new IOException("Unauthenticated request");
         }
+
+        ensureStorageExists();
+        ArrayNode conversationsNode = loadConversationsNode();
+        // Fetch common chat conversation
+        if (Chat.COMMON_CHAT_NAME.equals(otherUsername) || Chat.COMMON_CHAT_ID.equals(otherUsername)) {
+            JsonNode conversationNode = findCommonChatNode(conversationsNode);
+            if (conversationNode == null) {
+                return new ConversationData(new Chat(Chat.COMMON_CHAT_ID, Chat.COMMON_CHAT_NAME, null, 0), new ArrayList<>());
+            }
+
+            ArrayList<Message> messages = loadMessages(conversationNode);
+            Message lastMessage = messages.isEmpty() ? null : messages.getLast();
+            return new ConversationData(new Chat(Chat.COMMON_CHAT_ID, Chat.COMMON_CHAT_NAME, lastMessage, 0), messages);
+        }
+
         if (otherUsername == null || otherUsername.isBlank()) {
             throw new IOException("Recipient is missing");
         }
         if (!userExists(otherUsername)) {
             throw new IOException("User not found");
         }
-
-        ensureStorageExists();
-        ArrayNode conversationsNode = loadConversationsNode();
         JsonNode conversationNode = findConversationNode(conversationsNode, username, otherUsername);
 
         if (conversationNode == null) {
@@ -92,6 +113,7 @@ public class MessageService {
     }
 
     public Message createMessage(
+            String chatId,
             String senderUsername,
             String recipientUsername,
             String text,
@@ -101,13 +123,13 @@ public class MessageService {
         if (senderUsername == null || senderUsername.isBlank()) {
             throw new IOException("Unauthenticated request");
         }
-        if (recipientUsername == null || recipientUsername.isBlank()) {
+        if (!Chat.COMMON_CHAT_ID.equals(chatId) && (recipientUsername == null || recipientUsername.isBlank())) {
             throw new IOException("Recipient is missing");
         }
-        if (senderUsername.equals(recipientUsername)) {
+        if (!Chat.COMMON_CHAT_ID.equals(chatId) && senderUsername.equals(recipientUsername)) {
             throw new IOException("You cannot message yourself");
         }
-        if (!userExists(recipientUsername)) {
+        if (!Chat.COMMON_CHAT_ID.equals(chatId) && !userExists(recipientUsername)) {
             throw new IOException("Recipient not found");
         }
 
@@ -118,14 +140,30 @@ public class MessageService {
 
         ensureStorageExists();
         ArrayNode conversationsNode = loadConversationsNode();
-        ObjectNode conversationNode = ensureConversationNode(conversationsNode, senderUsername, recipientUsername);
+        ObjectNode conversationNode;
+        // Add message to common chat
+        if (Chat.COMMON_CHAT_ID.equals(chatId)) {
+            JsonNode existingNode = findCommonChatNode(conversationsNode);
+            if (existingNode instanceof ObjectNode objectNode) {
+                conversationNode = objectNode;
+            } else {
+                conversationNode = mapper.createObjectNode();
+                conversationNode.put("id", Chat.COMMON_CHAT_ID);
+                conversationNode.putNull("participants");
+                conversationNode.set("messages", mapper.createArrayNode());
+                conversationNode.put("updatedAt", 0L);
+                conversationsNode.add(conversationNode);
+            }
+        } else {
+            conversationNode = ensureConversationNode(conversationsNode, senderUsername, recipientUsername);
+        }
         ArrayNode messagesNode = ensureMessagesNode(conversationNode);
 
         if (replyOf != null && !replyOf.isBlank() && !messageExists(messagesNode, replyOf)) {
             throw new IOException("Reply target was not found");
         }
 
-        String chatId = conversationNode.path("id").asText();
+        String resolvedChatId = conversationNode.path("id").asText();
         String messageId = UUID.randomUUID().toString();
         long createdAt = System.currentTimeMillis();
 
@@ -148,7 +186,7 @@ public class MessageService {
         conversationNode.put("updatedAt", createdAt);
         saveConversationsNode(conversationsNode);
 
-        return new Message(messageId, chatId, senderUsername, normalizedText, storedAttachment, createdAt, replyOf);
+        return new Message(messageId, resolvedChatId, senderUsername, normalizedText, storedAttachment, createdAt, replyOf);
     }
 
     private void ensureStorageExists() throws IOException {
@@ -196,6 +234,15 @@ public class MessageService {
             String participantTwo = participantsNode.get(1).asText();
             if ((participantOne.equals(firstUsername) && participantTwo.equals(secondUsername))
                     || (participantOne.equals(secondUsername) && participantTwo.equals(firstUsername))) {
+                return conversationNode;
+            }
+        }
+        return null;
+    }
+
+    private JsonNode findCommonChatNode(ArrayNode conversationsNode) {
+        for (JsonNode conversationNode : conversationsNode) {
+            if (conversationNode.get("id").asText().equals(Chat.COMMON_CHAT_ID)) {
                 return conversationNode;
             }
         }

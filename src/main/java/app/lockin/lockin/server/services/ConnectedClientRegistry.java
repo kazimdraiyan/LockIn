@@ -40,6 +40,14 @@ public final class ConnectedClientRegistry {
         return handlers == null ? new ArrayList<>() : new ArrayList<>(handlers);
     }
 
+    public static ArrayList<ClientHandler> getAllClients() {
+        ArrayList<ClientHandler> allClientHandlers = new ArrayList<>();
+        for (CopyOnWriteArraySet<ClientHandler> clientHandlers : CLIENTS.values()) {
+            allClientHandlers.addAll(clientHandlers);
+        }
+        return allClientHandlers;
+    }
+
     public static ArrayList<String> getConnectedUsernames() {
         ArrayList<String> usernames = new ArrayList<>(CLIENTS.keySet());
         Collections.sort(usernames, String.CASE_INSENSITIVE_ORDER);

@@ -3,16 +3,22 @@ package app.lockin.lockin.common.requests;
 import app.lockin.lockin.common.models.MessageAttachment;
 
 public class CreateMessageRequest extends Request {
+    private final String chatId;
     private final String recipientUsername; // TODO: Generalize for group chats
     private final String text;
     private final MessageAttachment attachment;
     private final String replyOf;
 
-    public CreateMessageRequest(String recipientUsername, String text, MessageAttachment attachment, String replyOf) {
+    public CreateMessageRequest(String chatId, String recipientUsername, String text, MessageAttachment attachment, String replyOf) {
+        this.chatId = chatId;
         this.recipientUsername = recipientUsername;
         this.text = text;
         this.attachment = attachment;
         this.replyOf = replyOf;
+    }
+
+    public String getChatId() {
+        return chatId;
     }
 
     public String getRecipientUsername() {

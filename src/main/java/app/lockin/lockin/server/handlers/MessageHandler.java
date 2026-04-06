@@ -51,6 +51,7 @@ public class MessageHandler {
         }
 
         return messageService.createMessage(
+                request.getChatId(),
                 request.authenticatedSession.getUsername(),
                 request.getRecipientUsername(),
                 request.getText(),

@@ -171,7 +171,7 @@ public class MessagesController {
             try {
                 MessageAttachment attachment = createAttachmentFromPath(selectedAttachmentPath);
                 Response response = MyApplication.clientManager.sendRequest(
-                        new CreateMessageRequest(currentChat.getName(), text, attachment, null) // TODO: Add reply feature
+                        new CreateMessageRequest(currentChat.getId(), currentChat.isCommonChat() ? null : currentChat.getName(), text, attachment, null) // TODO: Add reply feature
                 );
 
                 if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
