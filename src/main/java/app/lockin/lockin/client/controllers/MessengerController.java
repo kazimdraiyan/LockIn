@@ -3,7 +3,6 @@ package app.lockin.lockin.client.controllers;
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.MessageDelivery;
-import app.lockin.lockin.common.models.MessageRealtimeEvent;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
@@ -15,13 +14,13 @@ public class MessengerController implements MainControllerAware {
     @FXML private ChatsController chatsViewController;
     @FXML private MessagesController messagesViewController;
 
-    private final Consumer<MessageRealtimeEvent> messageListener = event -> Platform.runLater(() -> {
+    private final Consumer<MessageDelivery> messageListener = delivery -> Platform.runLater(() -> {
         String activeChatUsername = messagesViewController == null ? null : messagesViewController.getCurrentChatUsername();
         if (chatsViewController != null) {
-            chatsViewController.applyMessageDelivery(event.getDelivery(), activeChatUsername);
+            chatsViewController.applyMessageDelivery(delivery, activeChatUsername);
         }
         if (messagesViewController != null) {
-            messagesViewController.handleRealtimeDelivery(event.getDelivery());
+            messagesViewController.handleRealtimeDelivery(delivery);
         }
     });
 

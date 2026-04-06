@@ -1,6 +1,6 @@
 package app.lockin.lockin.client;
 
-import app.lockin.lockin.common.models.MessageRealtimeEvent;
+import app.lockin.lockin.common.models.MessageDelivery;
 import app.lockin.lockin.common.models.Session;
 import app.lockin.lockin.common.requests.LoginUsingTokenRequest;
 import app.lockin.lockin.common.requests.Request;
@@ -20,12 +20,14 @@ import java.util.function.Consumer;
 // TODO: Should I rename ServerManager and ClientManager differently because one contains main and the other does not?
 
 public class ClientManager {
+    private static final String INCOMING_MESSAGE = "Incoming message";
+
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     // TODO: Learn more about BlockingQueue and Consumer. Seems like it's Stream type thing.
     private final BlockingQueue<Response> responseQueue = new LinkedBlockingQueue<>(); // Waits for a response to be added if empty
-    private final CopyOnWriteArrayList<Consumer<MessageRealtimeEvent>> messageListeners = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<Consumer<MessageDelivery>> messageListeners = new CopyOnWriteArrayList<>();
 
     public boolean isLoggedIn = false;
     private Session authenticatedSession;
@@ -70,11 +72,11 @@ public class ClientManager {
     }
 
     // TODO: Learn more about Consumer
-    public void addMessageListener(Consumer<MessageRealtimeEvent> listener) {
+    public void addMessageListener(Consumer<MessageDelivery> listener) {
         messageListeners.add(listener);
     }
 
-    public void removeMessageListener(Consumer<MessageRealtimeEvent> listener) {
+    public void removeMessageListener(Consumer<MessageDelivery> listener) {
         messageListeners.remove(listener);
     }
 
@@ -114,9 +116,11 @@ public class ClientManager {
             isLoggedIn = true;
         }
 
-        if (response.getData() instanceof MessageRealtimeEvent event) {
-            for (Consumer<MessageRealtimeEvent> listener : messageListeners) {
-                listener.accept(event);
+        if (response.getStatus() == ResponseStatus.SUCCESS
+                && INCOMING_MESSAGE.equals(response.getMessage())
+                && response.getData() instanceof MessageDelivery delivery) {
+            for (Consumer<MessageDelivery> listener : messageListeners) {
+                listener.accept(delivery);
             }
             return;
         }

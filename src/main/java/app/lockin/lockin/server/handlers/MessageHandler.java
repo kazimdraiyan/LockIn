@@ -2,6 +2,7 @@ package app.lockin.lockin.server.handlers;
 
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.ConversationData;
+import app.lockin.lockin.common.models.Message;
 import app.lockin.lockin.common.requests.CreateMessageRequest;
 import app.lockin.lockin.common.requests.FetchMessagesRequest;
 import app.lockin.lockin.common.requests.FetchRequest;
@@ -44,7 +45,7 @@ public class MessageHandler {
         }
     }
 
-    public MessageService.MessageCreationResult handleCreateMessage(CreateMessageRequest request) throws IOException {
+    public Message handleCreateMessage(CreateMessageRequest request) throws IOException {
         if (request.authenticatedSession == null) {
             throw new IOException("Please log in before sending messages");
         }

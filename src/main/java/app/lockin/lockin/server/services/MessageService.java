@@ -1,10 +1,6 @@
 package app.lockin.lockin.server.services;
 
-import app.lockin.lockin.common.models.Chat;
-import app.lockin.lockin.common.models.ConversationData;
-import app.lockin.lockin.common.models.Message;
-import app.lockin.lockin.common.models.MessageAttachment;
-import app.lockin.lockin.common.models.MessageDelivery;
+import app.lockin.lockin.common.models.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -95,7 +91,7 @@ public class MessageService {
         return new ConversationData(chat, messages);
     }
 
-    public MessageCreationResult createMessage(
+    public Message createMessage(
             String senderUsername,
             String recipientUsername,
             String text,
@@ -152,10 +148,7 @@ public class MessageService {
         conversationNode.put("updatedAt", createdAt);
         saveConversationsNode(conversationsNode);
 
-        Message message = new Message(messageId, chatId, senderUsername, normalizedText, storedAttachment, createdAt, replyOf);
-        Chat senderChat = new Chat(chatId, recipientUsername, message, 0);
-        Chat recipientChat = new Chat(chatId, senderUsername, message, 0);
-        return new MessageCreationResult(senderUsername, recipientUsername, message, senderChat, recipientChat);
+        return new Message(messageId, chatId, senderUsername, normalizedText, storedAttachment, createdAt, replyOf);
     }
 
     private void ensureStorageExists() throws IOException {
@@ -347,45 +340,4 @@ public class MessageService {
         return fileName.replaceAll("[^a-zA-Z0-9._-]", "_");
     }
 
-    public static class MessageCreationResult {
-        private final String senderUsername;
-        private final String recipientUsername;
-        private final Message message;
-        private final Chat senderChat;
-        private final Chat recipientChat;
-
-        public MessageCreationResult(
-                String senderUsername,
-                String recipientUsername,
-                Message message,
-                Chat senderChat,
-                Chat recipientChat
-        ) {
-            this.senderUsername = senderUsername;
-            this.recipientUsername = recipientUsername;
-            this.message = message;
-            this.senderChat = senderChat;
-            this.recipientChat = recipientChat;
-        }
-
-        public String getSenderUsername() {
-            return senderUsername;
-        }
-
-        public String getRecipientUsername() {
-            return recipientUsername;
-        }
-
-        public Message getMessage() {
-            return message;
-        }
-
-        public MessageDelivery getSenderDelivery() {
-            return new MessageDelivery(senderChat, message);
-        }
-
-        public MessageDelivery getRecipientDelivery() {
-            return new MessageDelivery(recipientChat, message);
-        }
-    }
 }

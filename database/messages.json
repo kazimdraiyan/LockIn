@@ -121,8 +121,33 @@
     "senderUsername" : "shonyewest",
     "text" : "haterz",
     "createdAt" : 1775433328944
+  }, {
+    "id" : "b4364f5a-c0a0-4899-9738-0d2b52442ade",
+    "senderUsername" : "shonyewest",
+    "text" : "metro booming",
+    "createdAt" : 1775433878590
+  }, {
+    "id" : "f736af54-1571-41c9-8d73-9f83090900f7",
+    "senderUsername" : "shonyewest",
+    "text" : "marijuana",
+    "createdAt" : 1775435758876
+  }, {
+    "id" : "abe9c63f-738e-4f17-a90b-ff5d087196c3",
+    "senderUsername" : "shonyewest",
+    "text" : "skibidi",
+    "createdAt" : 1775435767220
+  }, {
+    "id" : "d42e813a-d446-4f97-8c10-bfeff2ffb9b5",
+    "senderUsername" : "raiyankazi",
+    "text" : "just us in this bitch",
+    "createdAt" : 1775435797686
+  }, {
+    "id" : "95990e38-6e46-4ed1-ad3a-d40830b6ce4c",
+    "senderUsername" : "shonyewest",
+    "text" : "clutch",
+    "createdAt" : 1775435809023
   } ],
-  "updatedAt" : 1775433328944
+  "updatedAt" : 1775435809023
 }, {
   "id" : "975a38cf-b0a5-4354-a77e-e4849ba8ac96",
   "participants" : [ "abdullah siam", "shonyewest" ],
