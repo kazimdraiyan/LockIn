@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 
 import static app.lockin.lockin.common.UdpConfig.SERVER_PORT;
 import static app.lockin.lockin.common.UdpConfig.UDP_SESSION_BIND_PREFIX;
+import static app.lockin.lockin.common.UdpConfig.UDP_VOICE_FRAME_PREFIX;
 
 // Minimal UDP session to the server for future voice.
 // First datagram carries the TCP session token so the server can bind this endpoint to the user.
@@ -42,6 +43,23 @@ public final class UdpClient {
         }
     }
 
+    public synchronized void sendVoiceFrame(String callId, byte[] frame) throws IOException {
+        if (!running || socket == null || socket.isClosed()) {
+            throw new IOException("UDP client is not running");
+        }
+        if (callId == null || callId.isBlank()) {
+            throw new IOException("Call id required");
+        }
+        if (frame == null || frame.length == 0) {
+            return;
+        }
+        byte[] header = (UDP_VOICE_FRAME_PREFIX + callId + " ").getBytes(StandardCharsets.UTF_8);
+        byte[] packetData = new byte[header.length + frame.length];
+        System.arraycopy(header, 0, packetData, 0, header.length);
+        System.arraycopy(frame, 0, packetData, header.length, frame.length);
+        socket.send(new DatagramPacket(packetData, packetData.length));
+    }
+
     private void runLoop() {
         if (session.getToken() == null || session.getToken().isBlank()) {
             return;
@@ -57,13 +75,6 @@ public final class UdpClient {
             while (running && socket != null && !socket.isClosed()) {
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 socket.receive(packet);
-                String text = new String(packet.getData(), 0, packet.getLength(), StandardCharsets.UTF_8).trim();
-                if (text.startsWith("HELLO_ACK")) {
-                    System.out.println("UDP " + text);
-                    sendUtf8("PING");
-                } else if ("PONG".equals(text)) {
-                    System.out.println("UDP PONG");
-                }
             }
         } catch (IOException e) {
             if (running) {

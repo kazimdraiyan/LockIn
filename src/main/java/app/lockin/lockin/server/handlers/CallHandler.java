@@ -121,4 +121,21 @@ public final class CallHandler {
         }
         return new Response(ResponseStatus.SUCCESS, "Call ended", null);
     }
+
+    public String peerInActiveCall(String callId, String username) {
+        if (callId == null || callId.isBlank() || username == null || username.isBlank()) {
+            return null;
+        }
+        CallSignal active = ACTIVE_CALLS.get(callId);
+        if (active == null) {
+            return null;
+        }
+        if (username.equals(active.getCallerUsername())) {
+            return active.getCalleeUsername();
+        }
+        if (username.equals(active.getCalleeUsername())) {
+            return active.getCallerUsername();
+        }
+        return null;
+    }
 }

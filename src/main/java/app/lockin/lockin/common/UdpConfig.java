@@ -6,6 +6,8 @@ public final class UdpConfig {
 
     // First UDP datagram from client: BIND + session token. Binds socket to user associated with the token
     public static final String UDP_SESSION_BIND_PREFIX = "BIND ";
+    // Voice relay packet header: VOICE + callId + raw frame bytes
+    public static final String UDP_VOICE_FRAME_PREFIX = "VOICE ";
 
     private UdpConfig() {
     }

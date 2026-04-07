@@ -13,13 +13,14 @@ import java.net.Socket;
 public class ServerManager {
     private ServerSocket serverSocket;
 
-    private AuthHandler authHandler = new AuthHandler();
-    private PostHandler postHandler = new PostHandler();
-    private MessageHandler messageHandler = new MessageHandler();
-    private CallHandler callHandler = new CallHandler();
+    private final AuthHandler authHandler = new AuthHandler();
+    private final PostHandler postHandler = new PostHandler();
+    private final MessageHandler messageHandler = new MessageHandler();
+    private final CallHandler callHandler;
 
-    public ServerManager(ServerSocket serverSocket) {
+    public ServerManager(ServerSocket serverSocket, CallHandler callHandler) {
         this.serverSocket = serverSocket;
+        this.callHandler = callHandler;
     }
 
     public void startServer() {
@@ -43,9 +44,10 @@ public class ServerManager {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Server main is running");
-        new UdpServer().start();
+        CallHandler callHandler = new CallHandler();
+        new UdpServer(callHandler).start();
         ServerSocket serverSocket = new ServerSocket(5000);
-        ServerManager serverManager = new ServerManager(serverSocket);
+        ServerManager serverManager = new ServerManager(serverSocket, callHandler);
         serverManager.startServer();
     }
 }

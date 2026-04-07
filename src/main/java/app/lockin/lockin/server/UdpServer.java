@@ -1,5 +1,6 @@
 package app.lockin.lockin.server;
 
+import app.lockin.lockin.server.handlers.CallHandler;
 import app.lockin.lockin.server.services.AuthService;
 import app.lockin.lockin.server.services.UdpEndpointRegistry;
 
@@ -8,15 +9,19 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static app.lockin.lockin.common.UdpConfig.SERVER_PORT;
 import static app.lockin.lockin.common.UdpConfig.UDP_SESSION_BIND_PREFIX;
+import static app.lockin.lockin.common.UdpConfig.UDP_VOICE_FRAME_PREFIX;
 
 public final class UdpServer {
     private final AuthService authService = new AuthService();
-    private final AtomicLong nextClientId = new AtomicLong(); // TODO: Find easier alternatives to this
+    private final CallHandler callHandler;
     private volatile DatagramSocket socket; // TODO: Change volatile
+
+    public UdpServer(CallHandler callHandler) {
+        this.callHandler = callHandler;
+    }
 
     public void start() {
         try {
@@ -37,8 +42,7 @@ public final class UdpServer {
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 socket.receive(packet);
                 InetSocketAddress remote = (InetSocketAddress) packet.getSocketAddress();
-                String text = new String(packet.getData(), 0, packet.getLength(), StandardCharsets.UTF_8).trim();
-                handlePacket(remote, text);
+                handlePacket(remote, packet.getData(), packet.getLength());
             } catch (IOException e) {
                 if (socket != null && !socket.isClosed()) {
                     e.printStackTrace();
@@ -48,8 +52,8 @@ public final class UdpServer {
         }
     }
 
-    private void handlePacket(InetSocketAddress remote, String text) {
-        // Handle authentication using session token
+    private void handlePacket(InetSocketAddress remote, byte[] data, int length) {
+        String text = new String(data, 0, length, StandardCharsets.UTF_8);
         if (text.startsWith(UDP_SESSION_BIND_PREFIX)) {
             String token = text.substring(UDP_SESSION_BIND_PREFIX.length()).trim();
             if (token.isEmpty()) {
@@ -67,18 +71,36 @@ public final class UdpServer {
                 return;
             }
             UdpEndpointRegistry.bind(username, remote);
-            long id = nextClientId.incrementAndGet();
-            System.out.println("UDP session bound " + username + " (" + remote + ") id=" + id);
-            send(remote, "HELLO_ACK " + id);
-        } else if ("PING".equals(text)) {
-            send(remote, "PONG");
+            return;
+        }
+
+        if (text.startsWith(UDP_VOICE_FRAME_PREFIX)) {
+            int callIdStart = UDP_VOICE_FRAME_PREFIX.length();
+            int callIdEnd = text.indexOf(' ', callIdStart);
+            if (callIdEnd <= callIdStart) {
+                return;
+            }
+            String callId = text.substring(callIdStart, callIdEnd);
+            String senderUsername = UdpEndpointRegistry.usernameAt(remote);
+            if (senderUsername == null) {
+                return;
+            }
+            String peerUsername = callHandler.peerInActiveCall(callId, senderUsername);
+            if (peerUsername == null) {
+                return;
+            }
+            InetSocketAddress peerEndpoint = UdpEndpointRegistry.endpointFor(peerUsername);
+            if (peerEndpoint == null) {
+                return;
+            }
+            forward(peerEndpoint, data, length);
         }
     }
 
-    private void send(InetSocketAddress remote, String payload) {
+    // TODO: Rename payload
+    private void forward(InetSocketAddress remote, byte[] payload, int length) {
         try {
-            byte[] data = payload.getBytes(StandardCharsets.UTF_8);
-            socket.send(new DatagramPacket(data, data.length, remote));
+            socket.send(new DatagramPacket(payload, length, remote));
         } catch (IOException e) {
             e.printStackTrace();
         }
