@@ -66,6 +66,7 @@ public class MessagesController {
     private Chat currentChat;
     private Path selectedAttachmentPath;
     private String pendingIncomingCallId;
+    private String outgoingCallId;
     private boolean outgoingCallRinging;
 
     @FXML
@@ -88,6 +89,7 @@ public class MessagesController {
         currentChat = chat;
         selectedAttachmentPath = null;
         pendingIncomingCallId = null;
+        outgoingCallId = null;
         outgoingCallRinging = false;
         updateAttachmentIndicator();
         messageInputField.clear();
@@ -165,6 +167,7 @@ public class MessagesController {
         }
 
         if (signal.getType() == CallSignalType.RINGING) {
+            outgoingCallId = signal.getCallId();
             outgoingCallRinging = true;
             callStatusLabel.setText("Ringing...");
             callButton.setText("Cancel Call");
@@ -180,6 +183,17 @@ public class MessagesController {
             callButton.setText("Call");
             rejectCallButton.setVisible(false);
             rejectCallButton.setManaged(false);
+            return;
+        }
+
+        if (signal.getType() == CallSignalType.ENDED) {
+            pendingIncomingCallId = null;
+            outgoingCallId = null;
+            outgoingCallRinging = false;
+            callStatusLabel.setText("Call ended");
+            callButton.setText("Call");
+            rejectCallButton.setVisible(false);
+            rejectCallButton.setManaged(false);
         }
     }
 
@@ -189,9 +203,27 @@ public class MessagesController {
             return;
         }
         if (outgoingCallRinging && pendingIncomingCallId == null) {
-            outgoingCallRinging = false;
-            callStatusLabel.setText("Call canceled");
-            callButton.setText("Call");
+            String cancelCallId = outgoingCallId;
+            if (cancelCallId == null || cancelCallId.isBlank()) {
+                outgoingCallRinging = false;
+                callStatusLabel.setText("Call canceled");
+                callButton.setText("Call");
+                return;
+            }
+            callStatusLabel.setText("Canceling...");
+            new Thread(() -> {
+                try {
+                    Response response = MyApplication.clientManager.endCall(cancelCallId);
+                    Platform.runLater(() -> {
+                        outgoingCallRinging = false;
+                        outgoingCallId = null;
+                        callButton.setText("Call");
+                        callStatusLabel.setText(response.getStatus() == ResponseStatus.SUCCESS ? "Call canceled" : response.getMessage());
+                    });
+                } catch (IOException e) {
+                    Platform.runLater(() -> callStatusLabel.setText("Cancel failed"));
+                }
+            }).start();
             return;
         }
         String callId = pendingIncomingCallId;
@@ -213,6 +245,7 @@ public class MessagesController {
                     }
                     if (callId != null) {
                         pendingIncomingCallId = null;
+                        outgoingCallId = null;
                         outgoingCallRinging = false;
                         callButton.setText("Call");
                         rejectCallButton.setVisible(false);
@@ -237,6 +270,7 @@ public class MessagesController {
                 Response response = MyApplication.clientManager.answerCall(callId, false);
                 Platform.runLater(() -> {
                     pendingIncomingCallId = null;
+                    outgoingCallId = null;
                     outgoingCallRinging = false;
                     callButton.setText("Call");
                     rejectCallButton.setVisible(false);
@@ -519,6 +553,7 @@ public class MessagesController {
         chatNameLabel.setText(currentChat.getName());
         callStatusLabel.setText("");
         callButton.setText("Call");
+        outgoingCallId = null;
         outgoingCallRinging = false;
         boolean canCall = !currentChat.isCommonChat();
         callButton.setVisible(canCall);

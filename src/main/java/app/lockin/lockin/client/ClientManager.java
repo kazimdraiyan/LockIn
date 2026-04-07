@@ -4,6 +4,7 @@ import app.lockin.lockin.common.models.CallSignal;
 import app.lockin.lockin.common.models.MessageDelivery;
 import app.lockin.lockin.common.models.Session;
 import app.lockin.lockin.common.requests.AnswerCallRequest;
+import app.lockin.lockin.common.requests.EndCallRequest;
 import app.lockin.lockin.common.requests.LoginUsingTokenRequest;
 import app.lockin.lockin.common.requests.Request;
 import app.lockin.lockin.common.requests.StartCallRequest;
@@ -76,6 +77,10 @@ public class ClientManager {
 
     public Response answerCall(String callId, boolean accept) throws IOException {
         return sendRequest(new AnswerCallRequest(callId, accept));
+    }
+
+    public Response endCall(String callId) throws IOException {
+        return sendRequest(new EndCallRequest(callId));
     }
 
     public Response receive() {

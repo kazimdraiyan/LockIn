@@ -131,7 +131,7 @@ public class ClientHandler implements Runnable {
                 response = callHandler.handleAnswerCall((AnswerCallRequest) request);
                 break;
             case END_CALL:
-                response = new Response(ResponseStatus.ERROR, "End call is not implemented yet", null); // TODO: Implement
+                response = callHandler.handleEndCall((EndCallRequest) request);
                 break;
         }
         if (response != null) {

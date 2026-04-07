@@ -225,6 +225,11 @@ public class MainController {
         }
         if (signal.getType() == CallSignalType.ANSWERED && activeIncomingCallId != null
                 && activeIncomingCallId.equals(signal.getCallId())) {
+            hideIncomingCallBar(); // TODO: Show outgoing and ongoing call controls too
+            return;
+        }
+        if (signal.getType() == CallSignalType.ENDED && activeIncomingCallId != null
+                && activeIncomingCallId.equals(signal.getCallId())) {
             hideIncomingCallBar();
         }
     }
