@@ -526,12 +526,6 @@ public class MessagesController {
         sendButton.setDisable(!enabled);
     }
 
-//    private void setComposerBusy(boolean busy) {
-//        messageInputField.setDisable(busy || currentChat == null);
-//        attachFileBtn.setDisable(busy || currentChat == null);
-//        sendButton.setDisable(busy || currentChat == null);
-//    }
-
     // TODO: Add icons
     private void updateAttachmentIndicator() {
         attachFileBtn.setText(selectedAttachmentPath == null ? "+" : "1");

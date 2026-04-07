@@ -1,6 +1,7 @@
 package app.lockin.lockin.client;
 
 import app.lockin.lockin.common.models.CallSignal;
+import app.lockin.lockin.common.models.CallSignalType;
 import app.lockin.lockin.common.models.MessageDelivery;
 import app.lockin.lockin.common.models.Session;
 import app.lockin.lockin.common.requests.AnswerCallRequest;
@@ -181,7 +182,9 @@ public class ClientManager {
             for (Consumer<CallSignal> listener : callSignalListeners) {
                 listener.accept(signal);
             }
-            return;
+            if (signal.getType() != CallSignalType.RINGING) {
+                return;
+            }
         }
 
         responseQueue.offer(response);
