@@ -17,41 +17,43 @@
         <Insets bottom="12" left="16" right="16" top="12"/>
     </padding>
 
-    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="feed-card profile-header-card">
-        <padding>
-            <Insets bottom="18" left="24" right="24" top="18"/>
-        </padding>
-
-        <VBox alignment="TOP_CENTER" spacing="10">
-            <ProfileAvatar fx:id="profileAvatar" size="170.0" styleClass="profile-image" text="Me"/>
-            <Button fx:id="chooseProfilePictureButton" onAction="#onChooseProfilePictureClick" styleClass="feed-action-button"
-                    text="Change profile picture"/>
-        </VBox>
-
-        <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
-            <Label fx:id="usernameLabel" styleClass="profile-name" text="Username"/>
-            <TextArea fx:id="descriptionTextArea" prefRowCount="3" promptText="Write a short description about yourself..."
-                      styleClass="profile-description" wrapText="true"/>
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <Button fx:id="saveProfileButton" onAction="#onSaveProfileClick" styleClass="primary-button"
-                        text="Save profile"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Label fx:id="profilePictureLabel" styleClass="muted-text" text="Using default account image"/>
-            </HBox>
-            <Label fx:id="profileStatusLabel" styleClass="muted-text"/>
-        </VBox>
-    </HBox>
-
-    <VBox spacing="8">
-        <Label fx:id="postsTitleLabel" styleClass="section-title" text="Your posts"/>
-        <Separator/>
-    </VBox>
-
     <ScrollPane fx:id="postsScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS">
-        <VBox fx:id="postsContainer" spacing="18">
+        <VBox spacing="12">
             <padding>
                 <Insets bottom="18" top="4"/>
             </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="20" styleClass="feed-card profile-header-card">
+                <padding>
+                    <Insets bottom="18" left="24" right="24" top="18"/>
+                </padding>
+
+                <VBox alignment="TOP_CENTER" spacing="10">
+                    <ProfileAvatar fx:id="profileAvatar" size="170.0" styleClass="profile-image" text="Me"/>
+                    <Button fx:id="chooseProfilePictureButton" onAction="#onChooseProfilePictureClick" styleClass="feed-action-button"
+                            text="Change profile picture"/>
+                </VBox>
+
+                <VBox alignment="CENTER_LEFT" spacing="10" HBox.hgrow="ALWAYS">
+                    <Label fx:id="usernameLabel" styleClass="profile-name" text="Username"/>
+                    <TextArea fx:id="descriptionTextArea" prefRowCount="3" promptText="Write a short description about yourself..."
+                              styleClass="profile-description" wrapText="true"/>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Button fx:id="saveProfileButton" onAction="#onSaveProfileClick" styleClass="primary-button"
+                                text="Save profile"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="profilePictureLabel" styleClass="muted-text" text="Using default account image"/>
+                    </HBox>
+                    <Label fx:id="profileStatusLabel" styleClass="muted-text"/>
+                </VBox>
+            </HBox>
+
+            <VBox spacing="8">
+                <Label fx:id="postsTitleLabel" styleClass="section-title" text="Your posts"/>
+                <Separator/>
+            </VBox>
+
+            <VBox fx:id="postsContainer" spacing="18"/>
         </VBox>
     </ScrollPane>
 </VBox>
