@@ -64,7 +64,10 @@ public final class CallHandler {
         for (ClientHandler client : ConnectedClientRegistry.getClients(pending.getCallerUsername())) {
             client.send(callerNotification);
         }
-        // TODO: Also notify the other devices (ClientHandlers) of the callee to stop ringing
+        Response calleeNotification = new Response(ResponseStatus.SUCCESS, "Call answered", answered);
+        for (ClientHandler client : ConnectedClientRegistry.getClients(pending.getCalleeUsername())) {
+            client.send(calleeNotification);
+        }
 
         String message = request.isAccept() ? "Call accepted" : "Call rejected";
         return new Response(ResponseStatus.SUCCESS, message, null); // Callee gets this response after answering the call

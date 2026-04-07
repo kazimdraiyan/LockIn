@@ -1,11 +1,12 @@
 package app.lockin.lockin.client;
 
 import app.lockin.lockin.common.models.CallSignal;
-import app.lockin.lockin.common.models.CallSignalType;
 import app.lockin.lockin.common.models.MessageDelivery;
 import app.lockin.lockin.common.models.Session;
+import app.lockin.lockin.common.requests.AnswerCallRequest;
 import app.lockin.lockin.common.requests.LoginUsingTokenRequest;
 import app.lockin.lockin.common.requests.Request;
+import app.lockin.lockin.common.requests.StartCallRequest;
 import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
 
@@ -67,6 +68,14 @@ public class ClientManager {
         out.writeObject(request);
         out.flush(); // TODO: Learn more
         return receive();
+    }
+
+    public Response startCall(String calleeUsername) throws IOException {
+        return sendRequest(new StartCallRequest(calleeUsername));
+    }
+
+    public Response answerCall(String callId, boolean accept) throws IOException {
+        return sendRequest(new AnswerCallRequest(callId, accept));
     }
 
     public Response receive() {
@@ -163,8 +172,7 @@ public class ClientManager {
         }
 
         if (response.getStatus() == ResponseStatus.SUCCESS
-                && response.getData() instanceof CallSignal signal
-                && (signal.getType() == CallSignalType.INCOMING || signal.getType() == CallSignalType.ANSWERED)) {
+                && response.getData() instanceof CallSignal signal) {
             for (Consumer<CallSignal> listener : callSignalListeners) {
                 listener.accept(signal);
             }
