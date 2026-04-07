@@ -1,12 +1,18 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.ConversationData;
 import app.lockin.lockin.common.models.Message;
 import app.lockin.lockin.common.models.MessageAttachment;
 import app.lockin.lockin.common.models.MessageDelivery;
+import app.lockin.lockin.common.models.PostAttachment;
+import app.lockin.lockin.common.models.UserPosts;
+import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.CreateMessageRequest;
+import app.lockin.lockin.common.requests.FetchRequest;
+import app.lockin.lockin.common.requests.FetchType;
 import app.lockin.lockin.common.requests.FetchMessagesRequest;
 import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
@@ -36,6 +42,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -57,6 +64,7 @@ public class MessagesController {
     private MessengerController messengerController;
     private Chat currentChat;
     private Path selectedAttachmentPath;
+    private final HashMap<String, Image> senderProfileImages = new HashMap<>();
 
     @FXML
     public void initialize() {
@@ -90,6 +98,12 @@ public class MessagesController {
         renderPlaceholder("Loading messages...");
         new Thread(() -> {
             try {
+                if (chat.isCommonChat()) {
+                    loadCommonChatProfileImages();
+                } else {
+                    senderProfileImages.clear();
+                }
+
                 Response response = MyApplication.clientManager.sendRequest(new FetchMessagesRequest(targetUsername));
                 if (response == null || response.getStatus() != ResponseStatus.SUCCESS) {
                     String errorMessage = response == null ? "Could not load messages." : response.getMessage();
@@ -232,16 +246,17 @@ public class MessagesController {
 
     // TODO: Learn the difference between VBox and HBox
     private VBox buildMessageNode(Message message) {
-        boolean outgoing = isOutgoing(message);
+        boolean commonChat = isCommonConversation();
+        boolean outgoing = !commonChat && isOutgoing(message);
 
         VBox wrapper = new VBox(4);
         wrapper.setFillWidth(true);
 
         HBox row = new HBox();
-        row.setAlignment(outgoing ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+        row.setAlignment(commonChat ? Pos.TOP_LEFT : (outgoing ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT));
 
         VBox bubbleBox = new VBox(6);
-        bubbleBox.setAlignment(outgoing ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
+        bubbleBox.setAlignment(commonChat ? Pos.CENTER_LEFT : (outgoing ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT));
         bubbleBox.setMaxWidth(420);
 
         if (message.getText() != null && !message.getText().isBlank()) {
@@ -259,7 +274,21 @@ public class MessagesController {
         timeLabel.getStyleClass().add("message-meta");
         bubbleBox.getChildren().add(timeLabel);
 
-        row.getChildren().add(bubbleBox);
+        if (commonChat) {
+            ProfileAvatar senderAvatar = createSenderAvatar(message.getSenderUsername());
+            Label senderLabel = new Label(message.getSenderUsername());
+            senderLabel.getStyleClass().add("text-strong");
+
+            VBox contentBox = new VBox(4);
+            contentBox.setAlignment(Pos.CENTER_LEFT);
+            contentBox.getChildren().addAll(senderLabel, bubbleBox);
+
+            row.setSpacing(8);
+            row.getChildren().addAll(senderAvatar, contentBox);
+        } else {
+            row.getChildren().add(bubbleBox);
+        }
+
         wrapper.getChildren().add(row);
         return wrapper;
     }
@@ -388,6 +417,80 @@ public class MessagesController {
 
     private boolean isCurrentConversation(String username) {
         return currentChat != null && currentChat.getName().equals(username);
+    }
+
+    private boolean isCommonConversation() {
+        return currentChat != null && currentChat.isCommonChat();
+    }
+
+    private ProfileAvatar createSenderAvatar(String username) {
+        ProfileAvatar avatar = new ProfileAvatar();
+        avatar.setSize(30);
+        avatar.setText(extractInitial(username));
+
+        Image image = senderProfileImages.get(username);
+        if (image != null) {
+            avatar.setImage(image);
+        }
+        return avatar;
+    }
+
+    private String extractInitial(String username) {
+        if (username == null || username.isBlank()) {
+            return "?";
+        }
+        return String.valueOf(username.trim().charAt(0)).toUpperCase(Locale.ENGLISH);
+    }
+
+    private void loadCommonChatProfileImages() {
+        senderProfileImages.clear();
+        loadOwnProfileImage();
+        loadOtherUsersProfileImages();
+    }
+
+    private void loadOwnProfileImage() {
+        try {
+            Response response = MyApplication.clientManager.sendRequest(new FetchRequest(FetchType.PROFILE));
+            if (response != null && response.getStatus() == ResponseStatus.SUCCESS && response.getData() instanceof UserPosts pageData) {
+                UserProfile profile = pageData.getProfile();
+                if (profile != null) {
+                    Image image = toImage(profile.getProfilePicture());
+                    if (image != null) {
+                        senderProfileImages.put(profile.getUsername(), image);
+                    }
+                }
+            }
+        } catch (IOException ignored) {
+        }
+    }
+
+    private void loadOtherUsersProfileImages() {
+        try {
+            Response response = MyApplication.clientManager.sendRequest(new FetchRequest(FetchType.USER_SEARCH, ""));
+            if (response == null || response.getStatus() != ResponseStatus.SUCCESS) {
+                return;
+            }
+
+            @SuppressWarnings("unchecked")
+            java.util.ArrayList<UserProfile> users = (java.util.ArrayList<UserProfile>) response.getData();
+            for (UserProfile user : users) {
+                if (user == null) {
+                    continue;
+                }
+                Image image = toImage(user.getProfilePicture());
+                if (image != null) {
+                    senderProfileImages.put(user.getUsername(), image);
+                }
+            }
+        } catch (IOException ignored) {
+        }
+    }
+
+    private Image toImage(PostAttachment profilePicture) {
+        if (profilePicture == null || profilePicture.getData().length == 0) {
+            return null;
+        }
+        return new Image(new ByteArrayInputStream(profilePicture.getData()));
     }
 
     private boolean isOutgoing(Message message) {
