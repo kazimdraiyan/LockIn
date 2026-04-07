@@ -123,6 +123,7 @@ public class AuthService {
             throw new IOException("Current password is incorrect");
         }
 
+        // TODO: After changing password, revoke all previous sessions
         userNode.put("password", newPassword == null ? "" : newPassword);
         saveDatabase("users.json", usersDatabase);
     }
