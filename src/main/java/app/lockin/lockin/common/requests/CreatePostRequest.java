@@ -1,12 +1,12 @@
 package app.lockin.lockin.common.requests;
 
-import app.lockin.lockin.common.models.PostAttachment;
+import app.lockin.lockin.common.models.Attachment;
 
 public class CreatePostRequest extends Request {
     private final String textContent;
-    private final PostAttachment attachment;
+    private final Attachment attachment;
 
-    public CreatePostRequest(String textContent, PostAttachment attachment) {
+    public CreatePostRequest(String textContent, Attachment attachment) {
         this.textContent = textContent;
         this.attachment = attachment;
     }
@@ -15,7 +15,7 @@ public class CreatePostRequest extends Request {
         return textContent;
     }
 
-    public PostAttachment getAttachment() {
+    public Attachment getAttachment() {
         return attachment;
     }
 

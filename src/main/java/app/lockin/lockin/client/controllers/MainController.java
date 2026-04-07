@@ -62,6 +62,10 @@ public class MainController {
     @FXML
     public Button callStatusSecondaryButton;
     @FXML
+    public Button refreshButton;
+    @FXML
+    public ImageView refreshIcon;
+    @FXML
     private BorderPane rootPane;
 
     private final Consumer<CallSignal> callSignalListener = signal -> Platform.runLater(this::refreshCallStatusBar);
@@ -87,6 +91,11 @@ public class MainController {
         title.setText(titleString);
         searchBar.setVisible(showSearchBar);
         searchBar.setManaged(showSearchBar);
+    }
+
+    public void setRefreshButtonVisible(boolean visible) {
+        refreshButton.setVisible(visible);
+        refreshButton.setManaged(visible);
     }
 
     public void openProfile(String username) throws IOException {
@@ -146,7 +155,11 @@ public class MainController {
     }
 
     public void openSettings() {
-        // Placeholder until the settings page is implemented.
+        try {
+            navigatePush("settings-view.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void openChat(String username) throws IOException {
@@ -191,6 +204,13 @@ public class MainController {
         }, "lockin-nav-call-secondary").start();
     }
 
+    public void refreshPage() throws IOException {
+        if (!history.isEmpty()) {
+            history.pop();
+            navigatePush("home-view.fxml");
+        }
+    }
+
     private void loadNavBarIcons() {
         themeToggleIcon.setImage(new Image(
                 MyApplication.getIcon(ThemeManager.isDarkMode() ? "light_mode.png" : "dark_mode.png").toExternalForm()
@@ -200,6 +220,9 @@ public class MainController {
         ));
         backIcon.setImage(new Image(
                 MyApplication.getIcon(ThemeManager.isDarkMode() ? "back-white.png" : "back.png").toExternalForm()
+        ));
+        refreshIcon.setImage(new Image(
+                MyApplication.getIcon(ThemeManager.isDarkMode() ? "refresh-white.png" : "refresh.png").toExternalForm()
         ));
     }
 

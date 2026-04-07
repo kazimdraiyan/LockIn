@@ -14,24 +14,24 @@
             prefHeight="720" prefWidth="1280">
         <HBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
 
-            <!-- ================= LEFT SIDE (BRANDING) ================= -->
+
             <VBox alignment="CENTER" prefWidth="480" spacing="20" styleClass="auth-brand-panel">
                 <padding>
                     <Insets bottom="40" left="50" right="50" top="40" />
                 </padding>
 
-                <!-- APP NAME -->
+
                 <Label styleClass="auth-brand-title" text="LockIn">
                     <font>
                         <Font size="34" />
                     </font>
                 </Label>
 
-                <!-- TAGLINE -->
+
                 <Label alignment="CENTER" styleClass="auth-brand-subtitle" text="Focus. Secure. Achieve." wrapText="true" />
             </VBox>
 
-            <!-- ================= RIGHT SIDE (HOME CARD) ================= -->
+
             <StackPane alignment="CENTER" styleClass="right-panel" HBox.hgrow="ALWAYS">
 
                 <VBox maxHeight="-Infinity" maxWidth="700" prefWidth="700" spacing="16" styleClass="card">
@@ -39,7 +39,7 @@
                         <Insets bottom="40" left="40" right="40" top="40" />
                     </padding>
 
-                    <!-- HEADING -->
+
                     <Label styleClass="section-title" text="Welcome Back">
                         <font>
                             <Font size="26" />
@@ -48,16 +48,16 @@
 
                     <Label styleClass="card-subtitle" text="Login to your account or create a new one to get started." wrapText="true" />
 
-                    <!-- DIVIDER -->
+
                     <StackPane maxWidth="Infinity" prefHeight="1" styleClass="divider" />
 
-                    <!-- LOGIN BUTTON -->
+
                     <VBox spacing="6">
                         <Label styleClass="card-label" text="Already have an account?" />
                         <Button fx:id="loginButton" maxWidth="Infinity" onAction="#onLoginButtonClick" prefHeight="42" styleClass="primary-button" text="Login" />
                     </VBox>
 
-                    <!-- SIGN UP BUTTON -->
+
                     <VBox spacing="6">
                         <Label styleClass="card-label" text="New to LockIn?" />
                         <Button fx:id="signUpButton" maxWidth="Infinity" onAction="#onSignUpButtonClick" prefHeight="42" styleClass="primary-button" text="Create Account" />

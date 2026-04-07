@@ -9,14 +9,14 @@
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.controllers.ChatsController">
     <VBox styleClass="left-panel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
           AnchorPane.topAnchor="0.0">
-        <!-- Search -->
+
         <fx:include fx:id="searchBar" source="search-bar.fxml">
             <VBox.margin>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
             </VBox.margin>
         </fx:include>
 
-        <!-- Chat List -->
+
         <ListView fx:id="chatListView" styleClass="chat-list-view" VBox.vgrow="ALWAYS"/>
     </VBox>
 </AnchorPane>

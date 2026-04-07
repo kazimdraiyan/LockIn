@@ -124,6 +124,9 @@ public class ClientHandler implements Runnable {
             case DELETE_POST:
                 response = postHandler.handleDeletePost((DeletePostRequest) request);
                 break;
+            case CHANGE_PASSWORD:
+                response = authHandler.handleChangePassword((ChangePasswordRequest) request);
+                break;
             case START_CALL:
                 response = callHandler.handleStartCall((StartCallRequest) request);
                 break;

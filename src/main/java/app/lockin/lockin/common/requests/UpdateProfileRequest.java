@@ -1,12 +1,12 @@
 package app.lockin.lockin.common.requests;
 
-import app.lockin.lockin.common.models.PostAttachment;
+import app.lockin.lockin.common.models.Attachment;
 
 public class UpdateProfileRequest extends Request {
     private final String description;
-    private final PostAttachment profilePicture;
+    private final Attachment profilePicture;
 
-    public UpdateProfileRequest(String description, PostAttachment profilePicture) {
+    public UpdateProfileRequest(String description, Attachment profilePicture) {
         this.description = description == null ? "" : description.trim();
         this.profilePicture = profilePicture;
     }
@@ -15,7 +15,7 @@ public class UpdateProfileRequest extends Request {
         return description;
     }
 
-    public PostAttachment getProfilePicture() {
+    public Attachment getProfilePicture() {
         return profilePicture;
     }
 

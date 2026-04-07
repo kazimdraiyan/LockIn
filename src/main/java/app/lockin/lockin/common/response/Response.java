@@ -2,8 +2,7 @@ package app.lockin.lockin.common.response;
 
 import java.io.Serializable;
 
-// Response must also be serializable, because it also travels via sockets
-// Sent by Service
+
 public class Response implements Serializable {
     private ResponseStatus status; // enums are automatically serializable
     private String message; // Human-readable summary of the response
@@ -15,7 +14,7 @@ public class Response implements Serializable {
         this.data = data;
     }
 
-    // TODO: Add getters
+
     public String getMessage() {
         return message;
     }

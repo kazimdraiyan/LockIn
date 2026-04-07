@@ -1,15 +1,15 @@
 package app.lockin.lockin.common.requests;
 
-import app.lockin.lockin.common.models.MessageAttachment;
+import app.lockin.lockin.common.models.Attachment;
 
 public class CreateMessageRequest extends Request {
     private final String chatId;
     private final String recipientUsername; // TODO: Generalize for group chats
     private final String text;
-    private final MessageAttachment attachment;
+    private final Attachment attachment;
     private final String replyOf;
 
-    public CreateMessageRequest(String chatId, String recipientUsername, String text, MessageAttachment attachment, String replyOf) {
+    public CreateMessageRequest(String chatId, String recipientUsername, String text, Attachment attachment, String replyOf) {
         this.chatId = chatId;
         this.recipientUsername = recipientUsername;
         this.text = text;
@@ -29,7 +29,7 @@ public class CreateMessageRequest extends Request {
         return text;
     }
 
-    public MessageAttachment getAttachment() {
+    public Attachment getAttachment() {
         return attachment;
     }
 

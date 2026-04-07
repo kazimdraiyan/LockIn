@@ -40,6 +40,7 @@ public class SearchResultsController implements MainControllerAware {
         this.mainController = mainController;
         query = mainController.getSearchQuery();
         mainController.setNavBar(true, "Search", true);
+        mainController.setRefreshButtonVisible(false);
         queryLabel.setText(query == null || query.isBlank() ? "All users" : "Results for \"" + query + "\"");
         loadResults();
     }

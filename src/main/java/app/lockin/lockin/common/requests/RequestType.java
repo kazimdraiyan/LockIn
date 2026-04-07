@@ -15,4 +15,5 @@ public enum RequestType {
     START_CALL,
     ANSWER_CALL,
     END_CALL,
+    CHANGE_PASSWORD,
 }

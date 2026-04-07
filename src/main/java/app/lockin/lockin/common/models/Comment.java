@@ -7,10 +7,10 @@ public class Comment implements Serializable {
     private final String postId;
     private final String authorUsername;
     private final String textContent;
-    private final PostAttachment attachment;
+    private final Attachment attachment;
     private final long createdAt;
 
-    public Comment(String id, String postId, String authorUsername, String textContent, PostAttachment attachment, long createdAt) {
+    public Comment(String id, String postId, String authorUsername, String textContent, Attachment attachment, long createdAt) {
         this.id = id;
         this.postId = postId;
         this.authorUsername = authorUsername;
@@ -35,7 +35,7 @@ public class Comment implements Serializable {
         return textContent;
     }
 
-    public PostAttachment getAttachment() {
+    public Attachment getAttachment() {
         return attachment;
     }
 

@@ -23,13 +23,6 @@
                     <Insets bottom="12" left="12" right="8" top="12"/>
                 </padding>
 
-                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" styleClass="nav-item nav-item-active">
-                    <ImageView preserveRatio="true">
-                        <Image url="@../icon/home.png"/>
-                    </ImageView>
-                    <Label styleClass="text-strong" text="Home"/>
-                </HBox>
-
                 <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" onMouseClicked="#onChatsButtonClick" styleClass="nav-item">
                     <ImageView preserveRatio="true">
                         <Image url="@../icon/chat.png"/>
@@ -42,19 +35,6 @@
                     <Label fx:id="profileNavLabel" styleClass="text-strong" text="Profile"/>
                 </HBox>
 
-                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" styleClass="nav-item">
-                    <ImageView preserveRatio="true">
-                        <Image url="@../icon/bookmark.png"/>
-                    </ImageView>
-                    <Label styleClass="text-strong" text="Saved"/>
-                </HBox>
-
-                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" styleClass="nav-item" onMouseClicked="#logout">
-                    <ImageView preserveRatio="true">
-                        <Image url="@../icon/logout.png"/>
-                    </ImageView>
-                    <Label styleClass="text-strong" text="Logout"/>
-                </HBox>
             </VBox>
 
             <VBox spacing="12" HBox.hgrow="ALWAYS">

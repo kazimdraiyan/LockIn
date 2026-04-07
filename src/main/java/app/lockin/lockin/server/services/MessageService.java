@@ -117,7 +117,7 @@ public class MessageService {
             String senderUsername,
             String recipientUsername,
             String text,
-            MessageAttachment attachment,
+            Attachment attachment,
             String replyOf
     ) throws IOException {
         if (senderUsername == null || senderUsername.isBlank()) {
@@ -176,7 +176,7 @@ public class MessageService {
             messageNode.put("replyOf", replyOf);
         }
 
-        MessageAttachment storedAttachment = null;
+        Attachment storedAttachment = null;
         if (attachment != null) {
             storedAttachment = validateAttachment(attachment);
             messageNode.set("attachment", storeAttachment(messageId, storedAttachment));
@@ -318,21 +318,21 @@ public class MessageService {
         return messages.isEmpty() ? null : messages.getLast();
     }
 
-    private MessageAttachment loadAttachment(JsonNode attachmentNode) throws IOException {
+    private Attachment loadAttachment(JsonNode attachmentNode) throws IOException {
         if (attachmentNode == null || attachmentNode.isNull()) {
             return null;
         }
 
         Path filePath = UPLOADS_PATH.resolve(attachmentNode.path("storedFileName").asText());
         byte[] data = Files.exists(filePath) ? Files.readAllBytes(filePath) : new byte[0];
-        return new MessageAttachment(
+        return new Attachment(
                 attachmentNode.path("originalFileName").asText(),
                 attachmentNode.path("mimeType").asText("application/octet-stream"),
                 data
         );
     }
 
-    private ObjectNode storeAttachment(String ownerId, MessageAttachment attachment) throws IOException {
+    private ObjectNode storeAttachment(String ownerId, Attachment attachment) throws IOException {
         String storedFileName = ownerId + "_" + sanitizeFileName(attachment.getOriginalFileName());
         Path storedPath = UPLOADS_PATH.resolve(storedFileName);
         Files.write(storedPath, attachment.getData());
@@ -344,7 +344,7 @@ public class MessageService {
         return attachmentNode;
     }
 
-    private MessageAttachment validateAttachment(MessageAttachment attachment) throws IOException {
+    private Attachment validateAttachment(Attachment attachment) throws IOException {
         if (attachment.getOriginalFileName() == null || attachment.getOriginalFileName().isBlank()) {
             throw new IOException("Attachment name is missing");
         }
@@ -356,7 +356,7 @@ public class MessageService {
         }
 
         String mimeType = normalizeMimeType(attachment.getMimeType(), attachment.getOriginalFileName());
-        return new MessageAttachment(attachment.getOriginalFileName(), mimeType, attachment.getData());
+        return new Attachment(attachment.getOriginalFileName(), mimeType, attachment.getData());
     }
 
     private String normalizeMimeType(String mimeType, String fileName) {

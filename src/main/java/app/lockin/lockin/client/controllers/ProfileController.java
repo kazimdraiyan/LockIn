@@ -4,7 +4,7 @@ import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
-import app.lockin.lockin.common.models.PostAttachment;
+import app.lockin.lockin.common.models.Attachment;
 import app.lockin.lockin.common.models.UserPosts;
 import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.DeletePostRequest;
@@ -60,7 +60,7 @@ public class ProfileController implements MainControllerAware {
 
     private MainController mainController;
     private Path selectedProfileImagePath;
-    private PostAttachment currentProfilePicture;
+    private Attachment currentProfilePicture;
     private String viewedUsername;
     private boolean ownProfile;
 
@@ -70,6 +70,7 @@ public class ProfileController implements MainControllerAware {
         viewedUsername = mainController.viewedProfileUsername;
         ownProfile = viewedUsername == null || viewedUsername.isBlank();
         mainController.setNavBar(true, ownProfile ? "Profile" : viewedUsername, true);
+        mainController.setRefreshButtonVisible(false);
         loadProfile();
     }
 
@@ -98,7 +99,7 @@ public class ProfileController implements MainControllerAware {
         setProfileBusy(true, "Saving profile...");
         new Thread(() -> {
             try {
-                PostAttachment profilePicture = currentProfilePicture;
+                Attachment profilePicture = currentProfilePicture;
                 if (selectedProfileImagePath != null) {
                     profilePicture = createProfilePictureAttachment(selectedProfileImagePath);
                 }
@@ -311,7 +312,7 @@ public class ProfileController implements MainControllerAware {
         return card;
     }
 
-    private VBox buildAttachmentNode(PostAttachment attachment) {
+    private VBox buildAttachmentNode(Attachment attachment) {
         VBox attachmentBox = new VBox(10);
 
         if (attachment.getMimeType() != null && attachment.getMimeType().startsWith("image/")) {
@@ -370,7 +371,7 @@ public class ProfileController implements MainControllerAware {
         }
     }
 
-    private void renderProfileImage(PostAttachment profilePicture) {
+    private void renderProfileImage(Attachment profilePicture) {
         if (profilePicture == null || profilePicture.getData().length == 0) {
             profileAvatar.setImage(new Image(MyApplication.getIcon("account.png").toExternalForm()));
             return;
@@ -387,7 +388,7 @@ public class ProfileController implements MainControllerAware {
         }
     }
 
-    private PostAttachment createProfilePictureAttachment(Path path) throws IOException {
+    private Attachment createProfilePictureAttachment(Path path) throws IOException {
         if (path == null || !Files.exists(path)) {
             throw new IOException("Selected image no longer exists.");
         }
@@ -408,7 +409,7 @@ public class ProfileController implements MainControllerAware {
                 mimeType = "image/jpeg";
             }
         }
-        return new PostAttachment(path.getFileName().toString(), mimeType, Files.readAllBytes(path));
+        return new Attachment(path.getFileName().toString(), mimeType, Files.readAllBytes(path));
     }
 
     private void setProfileBusy(boolean busy, String message) {

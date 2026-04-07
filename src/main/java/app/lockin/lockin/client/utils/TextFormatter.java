@@ -1,7 +1,5 @@
 package app.lockin.lockin.client.utils;
 
-import app.lockin.lockin.common.models.MessageAttachment;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;

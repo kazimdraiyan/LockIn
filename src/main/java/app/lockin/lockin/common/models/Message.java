@@ -7,7 +7,7 @@ public class Message implements Serializable {
     private final String chatId;
     private final String senderUsername;
     private final String text;
-    private final MessageAttachment attachment;
+    private final Attachment attachment;
     private final long createdAt;
     private final String replyOf;
 
@@ -16,7 +16,7 @@ public class Message implements Serializable {
             String chatId,
             String senderUsername,
             String text,
-            MessageAttachment attachment,
+            Attachment attachment,
             long createdAt,
             String replyOf
     ) {
@@ -45,7 +45,7 @@ public class Message implements Serializable {
         return text;
     }
 
-    public MessageAttachment getAttachment() {
+    public Attachment getAttachment() {
         return attachment;
     }
 
