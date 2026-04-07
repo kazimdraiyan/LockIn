@@ -141,4 +141,20 @@ public class AuthHandler {
             return new Response(ResponseStatus.ERROR, e.getMessage(), null);
         }
     }
+
+    public Response handleChangePassword(ChangePasswordRequest request) {
+        if (request.authenticatedSession == null) {
+            return new Response(ResponseStatus.ERROR, "Please log in before changing password", null);
+        }
+        try {
+            authService.changePassword(
+                    request.authenticatedSession.getUsername(),
+                    request.getOldPassword(),
+                    request.getNewPassword()
+            );
+            return new Response(ResponseStatus.SUCCESS, "Password changed successfully", null);
+        } catch (IOException e) {
+            return new Response(ResponseStatus.ERROR, e.getMessage(), null);
+        }
+    }
 }

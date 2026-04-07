@@ -70,6 +70,7 @@ public class ProfileController implements MainControllerAware {
         viewedUsername = mainController.viewedProfileUsername;
         ownProfile = viewedUsername == null || viewedUsername.isBlank();
         mainController.setNavBar(true, ownProfile ? "Profile" : viewedUsername, true);
+        mainController.setRefreshButtonVisible(false);
         loadProfile();
     }
 

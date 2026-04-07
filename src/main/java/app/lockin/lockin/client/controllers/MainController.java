@@ -46,6 +46,10 @@ public class MainController {
     @FXML
     public ImageView backIcon;
     @FXML
+    public Button refreshButton;
+    @FXML
+    public ImageView refreshIcon;
+    @FXML
     private BorderPane rootPane;
 
     @FXML
@@ -67,6 +71,11 @@ public class MainController {
         title.setText(titleString);
         searchBar.setVisible(showSearchBar);
         searchBar.setManaged(showSearchBar);
+    }
+
+    public void setRefreshButtonVisible(boolean visible) {
+        refreshButton.setVisible(visible);
+        refreshButton.setManaged(visible);
     }
 
     public void openProfile(String username) throws IOException {
@@ -126,12 +135,23 @@ public class MainController {
     }
 
     public void openSettings() {
-        // Placeholder until the settings page is implemented.
+        try {
+            navigatePush("settings-view.fxml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void openChat(String username) throws IOException {
         selectedChatUsername = username;
         navigatePush("messenger-view.fxml");
+    }
+
+    public void refreshPage() throws IOException {
+        if (!history.isEmpty()) {
+            history.pop();
+            navigatePush("home-view.fxml");
+        }
     }
 
     private void loadNavBarIcons() {
@@ -143,6 +163,9 @@ public class MainController {
         ));
         backIcon.setImage(new Image(
                 MyApplication.getIcon(ThemeManager.isDarkMode() ? "back-white.png" : "back.png").toExternalForm()
+        ));
+        refreshIcon.setImage(new Image(
+                MyApplication.getIcon(ThemeManager.isDarkMode() ? "refresh-white.png" : "refresh.png").toExternalForm()
         ));
     }
 

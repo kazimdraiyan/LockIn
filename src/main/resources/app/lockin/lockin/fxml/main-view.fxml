@@ -53,6 +53,14 @@
 
             <!-- Trailing icons -->
             <HBox alignment="CENTER" spacing="8">
+                <Button fx:id="refreshButton" onAction="#refreshPage" prefHeight="40" prefWidth="40"
+                        styleClass="surface-icon-button" visible="false" managed="false">
+                    <graphic>
+                        <ImageView fx:id="refreshIcon"
+                                   preserveRatio="true">
+                        </ImageView>
+                    </graphic>
+                </Button>
                 <Button onAction="#openSettings" prefHeight="40" prefWidth="40"
                         styleClass="surface-icon-button">
                     <graphic>

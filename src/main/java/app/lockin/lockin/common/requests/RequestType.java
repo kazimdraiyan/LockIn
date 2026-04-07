@@ -12,4 +12,5 @@ public enum RequestType {
     CREATE_MESSAGE,
     UPDATE_PROFILE,
     DELETE_POST,
+    CHANGE_PASSWORD,
 }

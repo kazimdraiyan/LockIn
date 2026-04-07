@@ -276,7 +276,7 @@
 .input-field {
     -fx-background-color: -color-surface-alt;
     -fx-background-radius: 8;
-    -fx-text-fill: -color-text;
+    -fx-text-fill: -color-text-strong;
     -fx-prompt-text-fill: -color-text-muted;
     -fx-padding: 8 12 8 12;
     -fx-border-color: -color-border;
@@ -284,9 +284,26 @@
     -fx-border-width: 1;
 }
 
+.input-field .text {
+    -fx-fill: -color-text-strong;
+}
+
+.input-field:focused .text {
+    -fx-fill: -color-text-strong;
+}
+
 .error-label {
     -fx-text-fill: #d96459;
     -fx-font-size: 13;
+}
+
+.text-area {
+    -fx-text-fill: -color-text-strong;
+    -fx-control-inner-background: -color-surface-alt;
+}
+
+.text-area .text {
+    -fx-fill: -color-text-strong;
 }
 
 .input-field:focused,

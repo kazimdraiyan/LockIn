@@ -22,6 +22,7 @@ public class LoginController implements MainControllerAware {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         mainController.setNavBar(true, "Login", false);
+        mainController.setRefreshButtonVisible(false);
     }
 
     @FXML

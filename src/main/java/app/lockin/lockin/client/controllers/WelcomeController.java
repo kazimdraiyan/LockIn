@@ -11,6 +11,7 @@ public class WelcomeController implements MainControllerAware {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         mainController.setNavBar(true, "Welcome to LockIn", false);
+        mainController.setRefreshButtonVisible(false);
     }
 
     @FXML

@@ -48,13 +48,6 @@
                     </ImageView>
                     <Label styleClass="text-strong" text="Saved"/>
                 </HBox>
-
-                <HBox alignment="CENTER_LEFT" prefHeight="48" spacing="12" styleClass="nav-item" onMouseClicked="#logout">
-                    <ImageView preserveRatio="true">
-                        <Image url="@../icon/logout.png"/>
-                    </ImageView>
-                    <Label styleClass="text-strong" text="Logout"/>
-                </HBox>
             </VBox>
 
             <VBox spacing="12" HBox.hgrow="ALWAYS">

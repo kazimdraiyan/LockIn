@@ -111,6 +111,22 @@ public class AuthService {
         return addSession(username);
     }
 
+    public void changePassword(String username, String oldPassword, String newPassword) throws IOException {
+        ObjectNode usersDatabase = loadDatabase("users.json");
+        if (!usersDatabase.has(username)) {
+            throw new IOException("User not found");
+        }
+
+        ObjectNode userNode = (ObjectNode) usersDatabase.get(username);
+        String savedPassword = userNode.path("password").asText("");
+        if (!savedPassword.equals(oldPassword == null ? "" : oldPassword)) {
+            throw new IOException("Current password is incorrect");
+        }
+
+        userNode.put("password", newPassword == null ? "" : newPassword);
+        saveDatabase("users.json", usersDatabase);
+    }
+
     public String usernameFromToken(String token) throws IOException {
         ObjectNode sessionsDatabase = loadDatabase("sessions.json");
 

@@ -27,6 +27,7 @@ public class SignUpController implements MainControllerAware {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         mainController.setNavBar(true, "Create an Account", false);
+        mainController.setRefreshButtonVisible(false);
     }
 
     @FXML

@@ -68,6 +68,7 @@ public class HomeController implements MainControllerAware {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         mainController.setNavBar(true, "LockIn", true);
+        mainController.setRefreshButtonVisible(true);
         profileNavLabel.setText(MyApplication.clientManager.getAuthenticatedUsername());
         loadSidebarProfileImage();
         loadPosts();
@@ -135,28 +136,6 @@ public class HomeController implements MainControllerAware {
             e.printStackTrace();
             composerStatusLabel.setText("Could not open profile page.");
         }
-    }
-
-    public void logout(MouseEvent mouseEvent) {
-        new Thread(() -> {
-            try {
-                LogoutRequest request = new LogoutRequest();
-                Response response = sendRequest(request);
-                if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
-                    MyApplication.clientManager.clearAuthenticatedSession(); // TODO: Double check this
-                    MyApplication.deleteToken();
-                    Platform.runLater(() -> {
-                        try {
-                            mainController.navigateReplacingRoot("welcome-view.fxml");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
     }
 
     private void loadPosts() {
