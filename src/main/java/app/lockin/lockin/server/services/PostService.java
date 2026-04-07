@@ -2,7 +2,7 @@ package app.lockin.lockin.server.services;
 
 import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
-import app.lockin.lockin.common.models.PostAttachment;
+import app.lockin.lockin.common.models.Attachment;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -32,7 +32,7 @@ public class PostService {
         }
     }
 
-    public Post createPost(String username, String textContent, PostAttachment attachment) throws IOException {
+    public Post createPost(String username, String textContent, Attachment attachment) throws IOException {
         if (username == null || username.isBlank()) {
             throw new IOException("Unauthenticated request");
         }
@@ -55,7 +55,7 @@ public class PostService {
         postNode.put("createdAt", createdAt);
         postNode.set("comments", mapper.createArrayNode());
 
-        PostAttachment storedAttachment = null;
+        Attachment storedAttachment = null;
         if (attachment != null) {
             storedAttachment = validateAttachment(attachment);
             ObjectNode attachmentNode = storeAttachment(postId, storedAttachment);
@@ -75,7 +75,7 @@ public class PostService {
         ArrayNode postsNode = loadPostsNode();
 
         for (JsonNode postNode : postsNode) {
-            PostAttachment attachment = loadAttachment(postNode.get("attachment"));
+            Attachment attachment = loadAttachment(postNode.get("attachment"));
             ArrayList<Comment> comments = loadComments(postNode.get("comments"), postNode.path("id").asText());
 
             posts.add(new Post(
@@ -148,7 +148,7 @@ public class PostService {
         mapper.writerWithDefaultPrettyPrinter().writeValue(new File(POSTS_PATH.toString()), posts);
     }
 
-    public Comment createComment(String username, String postId, String textContent, PostAttachment attachment) throws IOException {
+    public Comment createComment(String username, String postId, String textContent, Attachment attachment) throws IOException {
         String normalizedText = textContent == null ? "" : textContent.trim();
         if (normalizedText.isEmpty() && attachment == null) {
             throw new IOException("Comment must contain text or an attachment");
@@ -173,7 +173,7 @@ public class PostService {
             commentNode.put("textContent", normalizedText);
             commentNode.put("createdAt", createdAt);
 
-            PostAttachment storedAttachment = null;
+            Attachment storedAttachment = null;
             if (attachment != null) {
                 storedAttachment = validateAttachment(attachment);
                 ObjectNode attachmentNode = storeAttachment(commentId, storedAttachment);
@@ -222,14 +222,14 @@ public class PostService {
     }
 
 
-    private PostAttachment loadAttachment(JsonNode attachmentNode) throws IOException {
+    private Attachment loadAttachment(JsonNode attachmentNode) throws IOException {
         if (attachmentNode == null || attachmentNode.isNull()) {
             return null;
         }
 
         Path filePath = UPLOADS_PATH.resolve(attachmentNode.get("storedFileName").asText());
         byte[] data = Files.exists(filePath) ? Files.readAllBytes(filePath) : new byte[0];
-        return new PostAttachment(
+        return new Attachment(
                 attachmentNode.get("originalFileName").asText(),
                 attachmentNode.get("mimeType").asText(),
                 data
@@ -244,7 +244,7 @@ public class PostService {
         Files.deleteIfExists(filePath);
     }
 
-    private ObjectNode storeAttachment(String postId, PostAttachment attachment) throws IOException {
+    private ObjectNode storeAttachment(String postId, Attachment attachment) throws IOException {
         String storedFileName = postId + "_" + sanitizeFileName(attachment.getOriginalFileName());
         Path storedPath = UPLOADS_PATH.resolve(storedFileName);
         Files.write(storedPath, attachment.getData());
@@ -256,7 +256,7 @@ public class PostService {
         return attachmentNode;
     }
 
-    private PostAttachment validateAttachment(PostAttachment attachment) throws IOException {
+    private Attachment validateAttachment(Attachment attachment) throws IOException {
         if (attachment.getOriginalFileName() == null || attachment.getOriginalFileName().isBlank()) {
             throw new IOException("Attachment name is missing");
         }
@@ -272,7 +272,7 @@ public class PostService {
             throw new IOException("Unsupported file type");
         }
 
-        return new PostAttachment(attachment.getOriginalFileName(), mimeType, attachment.getData());
+        return new Attachment(attachment.getOriginalFileName(), mimeType, attachment.getData());
     }
 
     private String normalizeMimeType(String mimeType, String fileName) {

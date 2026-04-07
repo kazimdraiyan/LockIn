@@ -1,13 +1,13 @@
 package app.lockin.lockin.common.requests;
 
-import app.lockin.lockin.common.models.PostAttachment;
+import app.lockin.lockin.common.models.Attachment;
 
 public class CreateCommentRequest extends Request {
     private final String postId;
     private final String textContent;
-    private final PostAttachment attachment;
+    private final Attachment attachment;
 
-    public CreateCommentRequest(String postId, String textContent, PostAttachment attachment) {
+    public CreateCommentRequest(String postId, String textContent, Attachment attachment) {
         this.postId = postId;
         this.textContent = textContent;
         this.attachment = attachment;
@@ -21,7 +21,7 @@ public class CreateCommentRequest extends Request {
         return textContent;
     }
 
-    public PostAttachment getAttachment() {
+    public Attachment getAttachment() {
         return attachment;
     }
 

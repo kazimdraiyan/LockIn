@@ -16,25 +16,25 @@
 
     <HBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
 
-        <!-- LEFT BRANDING AREA -->
+
         <VBox alignment="CENTER" prefWidth="480" spacing="20" styleClass="auth-brand-panel">
 
             <padding>
                 <Insets bottom="40" left="50" right="50" top="40" />
             </padding>
 
-            <!-- APP NAME -->
+
             <Label styleClass="auth-brand-title" text="LockIn">
                 <font>
                     <Font size="34" />
                 </font>
             </Label>
 
-            <!-- TAGLINE -->
+
             <Label alignment="CENTER" styleClass="auth-brand-subtitle" text="Secure your workflow. Start today." wrapText="true" />
         </VBox>
 
-        <!-- RIGHT SIGNUP CARD -->
+
         <StackPane styleClass="right-panel" HBox.hgrow="ALWAYS">
 
             <VBox maxHeight="-Infinity" maxWidth="700" prefWidth="700" spacing="14" styleClass="card">
@@ -51,29 +51,29 @@
 
                 <Label styleClass="card-subtitle" text="Create your account to get started" />
 
-                <!-- Username -->
+
                 <VBox spacing="5">
                     <Label styleClass="card-subtitle" text="Username" />
                     <TextField fx:id="usernameField" prefHeight="40" promptText="Enter your username" styleClass="input-field" />
                 </VBox>
 
-                <!-- Password -->
+
                 <VBox spacing="5">
                     <Label styleClass="card-subtitle" text="Password" />
                     <PasswordField fx:id="passwordField" prefHeight="40" promptText="Enter password" styleClass="input-field" />
                 </VBox>
 
-                <!-- Confirm Password -->
+
                 <VBox spacing="5">
                     <Label styleClass="card-subtitle" text="Confirm Password" />
                     <PasswordField fx:id="confirmPasswordField" prefHeight="40" promptText="Confirm password" styleClass="input-field" />
                 </VBox>
             <Label fx:id="errorLabel" prefHeight="17.0" prefWidth="697.0" styleClass="error-label" text="Label" visible="false" wrapText="true" />
 
-                <!-- Sign Up Button -->
+
                 <Button fx:id="signUpButton" maxWidth="Infinity" onAction="#signUp" prefHeight="42" styleClass="primary-button" text="Sign Up" />
 
-                <!-- Footer -->
+
                 <HBox alignment="CENTER" spacing="6">
                     <Label styleClass="card-subtitle" text="Already have an account?" />
                     <Hyperlink onAction="#onSignInLinkClick" styleClass="link-button" text="Login" />

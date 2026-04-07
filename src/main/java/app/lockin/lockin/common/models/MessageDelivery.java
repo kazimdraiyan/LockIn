@@ -2,7 +2,6 @@ package app.lockin.lockin.common.models;
 
 import java.io.Serializable;
 
-// Serves as the Response data of a FetchMessageRequest
 public class MessageDelivery implements Serializable {
     private final Chat chat;
     private final Message message;

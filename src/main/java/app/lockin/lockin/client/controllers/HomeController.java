@@ -7,7 +7,7 @@ import app.lockin.lockin.client.models.ChatListItem;
 import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.Post;
-import app.lockin.lockin.common.models.PostAttachment;
+import app.lockin.lockin.common.models.Attachment;
 import app.lockin.lockin.common.models.UserPosts;
 import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.*;
@@ -62,7 +62,7 @@ public class HomeController implements MainControllerAware {
 
     private MainController mainController;
     private Path selectedFilePath;
-    private final Map<String, PostAttachment> profilePicturesByUsername = new HashMap<>();
+    private final Map<String, Attachment> profilePicturesByUsername = new HashMap<>();
 
     @Override
     public void setMainController(MainController mainController) {
@@ -98,7 +98,7 @@ public class HomeController implements MainControllerAware {
         setComposerBusy(true, "Posting...");
         new Thread(() -> {
             try {
-                PostAttachment attachment = createAttachmentFromSelection();
+                Attachment attachment = createAttachmentFromSelection();
                 CreatePostRequest request = new CreatePostRequest(textContent, attachment);
                 Response response = sendRequest(request);
 
@@ -160,7 +160,7 @@ public class HomeController implements MainControllerAware {
 
     private void loadProfilePictures(List<Post> posts) {
         Set<String> usernames = collectAuthorUsernames(posts);
-        Map<String, PostAttachment> loadedPictures = new HashMap<>();
+        Map<String, Attachment> loadedPictures = new HashMap<>();
 
         try {
             Response response = sendRequest(new FetchRequest(FetchType.PROFILE));
@@ -225,7 +225,7 @@ public class HomeController implements MainControllerAware {
         }).start();
     }
 
-    private PostAttachment createAttachmentFromSelection() throws IOException {
+    private Attachment createAttachmentFromSelection() throws IOException {
         return createAttachmentFromPath(selectedFilePath);
     }
 
@@ -444,7 +444,7 @@ public class HomeController implements MainControllerAware {
         return composer;
     }
 
-    private VBox buildAttachmentNode(PostAttachment attachment) {
+    private VBox buildAttachmentNode(Attachment attachment) {
         VBox attachmentBox = new VBox(10);
 
         if (attachment.getMimeType() != null && attachment.getMimeType().startsWith("image/")) {
@@ -465,7 +465,7 @@ public class HomeController implements MainControllerAware {
         return attachmentBox;
     }
 
-    private HBox buildFilePreview(PostAttachment attachment) {
+    private HBox buildFilePreview(Attachment attachment) {
         HBox preview = new HBox(14);
         preview.setAlignment(Pos.CENTER_LEFT);
         preview.setPadding(new Insets(14));
@@ -492,7 +492,7 @@ public class HomeController implements MainControllerAware {
         return preview;
     }
 
-    private ProfileAvatar createAvatar(String username, double size, PostAttachment profilePicture) {
+    private ProfileAvatar createAvatar(String username, double size, Attachment profilePicture) {
         ProfileAvatar avatar = new ProfileAvatar();
         avatar.setSize(size);
         avatar.setText(extractInitials(username));
@@ -502,12 +502,12 @@ public class HomeController implements MainControllerAware {
         return avatar;
     }
 
-    private void renderSidebarProfileImage(PostAttachment profilePicture) {
+    private void renderSidebarProfileImage(Attachment profilePicture) {
         applyOwnProfileImage(profileNavAvatar, profilePicture);
         applyOwnProfileImage(composerAvatar, profilePicture);
     }
 
-    private void applyOwnProfileImage(ProfileAvatar avatar, PostAttachment profilePicture) {
+    private void applyOwnProfileImage(ProfileAvatar avatar, Attachment profilePicture) {
         avatar.setText("ME");
         if (profilePicture == null || profilePicture.getData().length == 0) {
             avatar.setImage(new Image(MyApplication.getIcon("account.png").toExternalForm()));
@@ -516,7 +516,7 @@ public class HomeController implements MainControllerAware {
         avatar.setImage(new Image(new ByteArrayInputStream(profilePicture.getData())));
     }
 
-    private void downloadAttachment(PostAttachment attachment) {
+    private void downloadAttachment(Attachment attachment) {
         try {
             Path downloadsDir = Path.of(System.getProperty("user.home"), "Downloads", "LockIn");
             Files.createDirectories(downloadsDir);
@@ -616,7 +616,7 @@ public class HomeController implements MainControllerAware {
         setCommentComposerBusy(chooseFileButton, commentButton, commentStatusLabel, true, "Commenting...");
         new Thread(() -> {
             try {
-                PostAttachment attachment = createAttachmentFromPath(selectedCommentFilePath[0]);
+                Attachment attachment = createAttachmentFromPath(selectedCommentFilePath[0]);
                 Response response = sendRequest(new CreateCommentRequest(postId, textContent, attachment));
 
                 if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
@@ -657,7 +657,7 @@ public class HomeController implements MainControllerAware {
         return trimmed.substring(0, Math.min(2, trimmed.length())).toUpperCase(Locale.ENGLISH);
     }
 
-    private String readableFileType(PostAttachment attachment) {
+    private String readableFileType(Attachment attachment) {
         return switch (attachment.getMimeType()) {
             case "image/jpeg" -> "JPEG Image";
             case "image/gif" -> "GIF Image";
@@ -667,7 +667,7 @@ public class HomeController implements MainControllerAware {
         };
     }
 
-    private String fileBadgeText(PostAttachment attachment) {
+    private String fileBadgeText(Attachment attachment) {
         return switch (attachment.getMimeType()) {
             case "image/jpeg" -> "JPG";
             case "image/gif" -> "GIF";
@@ -687,7 +687,7 @@ public class HomeController implements MainControllerAware {
         return String.format(Locale.ENGLISH, "%.1f MB", sizeBytes / (1024.0 * 1024.0));
     }
 
-    private String extractTextPreview(PostAttachment attachment) {
+    private String extractTextPreview(Attachment attachment) {
         String text = new String(attachment.getData(), StandardCharsets.UTF_8).trim();
         if (text.length() > 240) {
             return text.substring(0, 240) + "...";
@@ -695,7 +695,7 @@ public class HomeController implements MainControllerAware {
         return text.isBlank() ? "(Empty text file)" : text;
     }
 
-    private PostAttachment createAttachmentFromPath(Path filePath) throws IOException {
+    private Attachment createAttachmentFromPath(Path filePath) throws IOException {
         if (filePath == null) {
             return null;
         }
@@ -712,6 +712,6 @@ public class HomeController implements MainControllerAware {
         String mimeType = Files.probeContentType(filePath);
         String fileName = filePath.getFileName().toString();
         byte[] data = Files.readAllBytes(filePath);
-        return new PostAttachment(fileName, mimeType, data);
+        return new Attachment(fileName, mimeType, data);
     }
 }

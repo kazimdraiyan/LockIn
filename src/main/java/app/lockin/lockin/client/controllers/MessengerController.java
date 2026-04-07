@@ -59,7 +59,7 @@ public class MessengerController implements MainControllerAware {
         messagesViewController.openConversation(chat);
     }
 
-    // Update chat list after sending a message
+
     public void onLocalMessage(MessageDelivery delivery) {
         chatsViewController.applyMessageDelivery(delivery, messagesViewController.getCurrentChatUsername());
     }

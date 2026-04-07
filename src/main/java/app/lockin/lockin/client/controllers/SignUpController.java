@@ -97,7 +97,7 @@ public class SignUpController implements MainControllerAware {
                     });
                 } else {
                     showError("Login failed: " + response.getMessage());
-                    // TODO: Show error on GUI using Platform.runLater as well
+
                     System.out.println("Sign up failed: " + response.getMessage());
                 }
 

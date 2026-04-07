@@ -8,11 +8,11 @@ public class Post implements Serializable {
     private final String id;
     private final String authorUsername;
     private final String textContent;
-    private final PostAttachment attachment;
+    private final Attachment attachment;
     private final long createdAt;
     private final ArrayList<Comment> comments;
 
-    public Post(String id, String authorUsername, String textContent, PostAttachment attachment, long createdAt, List<Comment> comments) {
+    public Post(String id, String authorUsername, String textContent, Attachment attachment, long createdAt, List<Comment> comments) {
         this.id = id;
         this.authorUsername = authorUsername;
         this.textContent = textContent;
@@ -33,7 +33,7 @@ public class Post implements Serializable {
         return textContent;
     }
 
-    public PostAttachment getAttachment() {
+    public Attachment getAttachment() {
         return attachment;
     }
 

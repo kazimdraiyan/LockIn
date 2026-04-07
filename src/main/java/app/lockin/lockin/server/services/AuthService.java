@@ -1,7 +1,7 @@
 package app.lockin.lockin.server.services;
 
 import app.lockin.lockin.common.models.Chat;
-import app.lockin.lockin.common.models.PostAttachment;
+import app.lockin.lockin.common.models.Attachment;
 import app.lockin.lockin.common.models.Session;
 import app.lockin.lockin.common.models.UserProfile;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -185,7 +185,7 @@ public class AuthService {
         return matches;
     }
 
-    public UserProfile updateProfile(String username, String description, PostAttachment profilePicture) throws IOException {
+    public UserProfile updateProfile(String username, String description, Attachment profilePicture) throws IOException {
         ObjectNode usersDatabase = loadDatabase("users.json");
         if (!usersDatabase.has(username)) {
             throw new IOException("User not found");
@@ -206,7 +206,7 @@ public class AuthService {
         return new UserProfile(username, userNode.path("description").asText(""), loadAttachment(userNode.get("profilePicture")));
     }
 
-    private void validateProfilePicture(PostAttachment profilePicture) throws IOException {
+    private void validateProfilePicture(Attachment profilePicture) throws IOException {
         String mimeType = profilePicture.getMimeType();
         if (!"image/jpeg".equals(mimeType) && !"image/png".equals(mimeType) && !"image/gif".equals(mimeType)) {
             throw new IOException("Profile picture must be JPG, PNG, or GIF");
@@ -219,7 +219,7 @@ public class AuthService {
         }
     }
 
-    private ObjectNode storeAttachment(String attachmentId, PostAttachment attachment) throws IOException {
+    private ObjectNode storeAttachment(String attachmentId, Attachment attachment) throws IOException {
         Path storedPath = PROFILE_IMAGES_PATH.resolve(attachmentId);
         Files.write(storedPath, attachment.getData());
 
@@ -230,13 +230,13 @@ public class AuthService {
         return attachmentNode;
     }
 
-    private PostAttachment loadAttachment(com.fasterxml.jackson.databind.JsonNode attachmentNode) throws IOException {
+    private Attachment loadAttachment(com.fasterxml.jackson.databind.JsonNode attachmentNode) throws IOException {
         if (attachmentNode == null || attachmentNode.isNull()) {
             return null;
         }
         Path filePath = PROFILE_IMAGES_PATH.resolve(attachmentNode.get("storedFileName").asText());
         byte[] data = Files.exists(filePath) ? Files.readAllBytes(filePath) : new byte[0];
-        return new PostAttachment(
+        return new Attachment(
                 attachmentNode.path("originalFileName").asText("profile-picture"),
                 attachmentNode.path("mimeType").asText("image/png"),
                 data

@@ -216,8 +216,18 @@
     "senderUsername" : "shonyewest",
     "text" : "meowl",
     "createdAt" : 1775438299432
+  }, {
+    "id" : "abe4f63c-5ba7-43db-bf7f-1d594aa7f8ce",
+    "senderUsername" : "shonyewest",
+    "text" : "",
+    "createdAt" : 1775585531619,
+    "attachment" : {
+      "originalFileName" : "UG Revised Academic Calendar of July 2025 .pdf",
+      "mimeType" : "application/pdf",
+      "storedFileName" : "abe4f63c-5ba7-43db-bf7f-1d594aa7f8ce_UG_Revised_Academic_Calendar_of_July_2025_.pdf"
+    }
   } ],
-  "updatedAt" : 1775438299432
+  "updatedAt" : 1775585531619
 }, {
   "id" : "a2fd0153-48ed-46d8-82de-a67d2dbcae68",
   "participants" : [ "gaekra", "raiyankazi" ],

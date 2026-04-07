@@ -7,14 +7,14 @@
 <?import javafx.scene.layout.*?>
 <BorderPane fx:id="rootPane" styleClass="screen-root" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="app.lockin.lockin.client.controllers.MainController">
-    <!-- Nav bar -->
+
     <top>
         <HBox fx:id="navBar" alignment="CENTER_LEFT" prefHeight="60" prefWidth="749.0" styleClass="nav-bar">
             <padding>
                 <Insets left="16" right="16"/>
             </padding>
 
-            <!-- Leading icons -->
+
             <HBox alignment="CENTER" spacing="8">
                 <Button fx:id="backButton"
                         onAction="#navigatePop"
@@ -32,26 +32,26 @@
                 </Button>
             </HBox>
 
-            <!-- Spacer -->
+
             <Region prefWidth="16.0"/>
 
-            <!-- Page title -->
-            <!-- TODO: Add custom page title management -->
+
+
             <HBox alignment="CENTER_LEFT" prefHeight="60">
                 <Label fx:id="title" styleClass="title-text title-large"
                        text="LockIn"/>
             </HBox>
 
-            <!-- Spacer -->
+
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- Search bar -->
+
             <fx:include fx:id="searchBar" source="search-bar.fxml" />
 
-            <!-- Spacer -->
+
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- Trailing icons -->
+
             <HBox alignment="CENTER" spacing="8">
                 <Button fx:id="refreshButton" onAction="#refreshPage" prefHeight="40" prefWidth="40"
                         styleClass="surface-icon-button" visible="false" managed="false">
@@ -81,5 +81,5 @@
         </HBox>
     </top>
 
-    <!-- Placeholder for pages -->
+
 </BorderPane>

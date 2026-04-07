@@ -5,9 +5,8 @@ import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.ConversationData;
 import app.lockin.lockin.common.models.Message;
-import app.lockin.lockin.common.models.MessageAttachment;
+import app.lockin.lockin.common.models.Attachment;
 import app.lockin.lockin.common.models.MessageDelivery;
-import app.lockin.lockin.common.models.PostAttachment;
 import app.lockin.lockin.common.models.UserPosts;
 import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.CreateMessageRequest;
@@ -183,7 +182,7 @@ public class MessagesController {
         setComposerEnabled(false);
         new Thread(() -> {
             try {
-                MessageAttachment attachment = createAttachmentFromPath(selectedAttachmentPath);
+                Attachment attachment = createAttachmentFromPath(selectedAttachmentPath);
                 Response response = MyApplication.clientManager.sendRequest(
                         new CreateMessageRequest(currentChat.getId(), currentChat.isCommonChat() ? null : currentChat.getName(), text, attachment, null) // TODO: Add reply feature
                 );
@@ -244,7 +243,7 @@ public class MessagesController {
         scrollToBottom();
     }
 
-    // TODO: Learn the difference between VBox and HBox
+
     private VBox buildMessageNode(Message message) {
         boolean commonChat = isCommonConversation();
         boolean outgoing = !commonChat && isOutgoing(message);
@@ -293,7 +292,7 @@ public class MessagesController {
         return wrapper;
     }
 
-    private VBox buildAttachmentNode(MessageAttachment attachment, boolean outgoing) {
+    private VBox buildAttachmentNode(Attachment attachment, boolean outgoing) {
         VBox attachmentBox = new VBox(8);
         String bubbleStyle = outgoing ? "message-bubble-out" : "message-bubble-in";
 
@@ -331,7 +330,7 @@ public class MessagesController {
         return attachmentBox;
     }
 
-    private void downloadAttachment(MessageAttachment attachment) {
+    private void downloadAttachment(Attachment attachment) {
         try {
             Path downloadsDir = Path.of(System.getProperty("user.home"), "Downloads", "LockIn");
             Files.createDirectories(downloadsDir); // Creates if it doesn't exist
@@ -349,7 +348,7 @@ public class MessagesController {
         }
     }
 
-    private MessageAttachment createAttachmentFromPath(Path filePath) throws IOException {
+    private Attachment createAttachmentFromPath(Path filePath) throws IOException {
         if (filePath == null) {
             return null;
         }
@@ -362,7 +361,7 @@ public class MessagesController {
             throw new IOException("File is too large. Limit is 10 MB.");
         }
 
-        return new MessageAttachment(
+        return new Attachment(
                 filePath.getFileName().toString(),
                 Files.probeContentType(filePath),
                 Files.readAllBytes(filePath)
@@ -404,13 +403,6 @@ public class MessagesController {
         sendButton.setDisable(!enabled);
     }
 
-//    private void setComposerBusy(boolean busy) {
-//        messageInputField.setDisable(busy || currentChat == null);
-//        attachFileBtn.setDisable(busy || currentChat == null);
-//        sendButton.setDisable(busy || currentChat == null);
-//    }
-
-    // TODO: Add icons
     private void updateAttachmentIndicator() {
         attachFileBtn.setText(selectedAttachmentPath == null ? "+" : "1");
     }
@@ -486,7 +478,7 @@ public class MessagesController {
         }
     }
 
-    private Image toImage(PostAttachment profilePicture) {
+    private Image toImage(Attachment profilePicture) {
         if (profilePicture == null || profilePicture.getData().length == 0) {
             return null;
         }

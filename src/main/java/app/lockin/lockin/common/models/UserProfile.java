@@ -5,9 +5,9 @@ import java.io.Serializable;
 public class UserProfile implements Serializable {
     private final String username;
     private final String description;
-    private final PostAttachment profilePicture;
+    private final Attachment profilePicture;
 
-    public UserProfile(String username, String description, PostAttachment profilePicture) {
+    public UserProfile(String username, String description, Attachment profilePicture) {
         this.username = username;
         this.description = description == null ? "" : description;
         this.profilePicture = profilePicture;
@@ -21,7 +21,7 @@ public class UserProfile implements Serializable {
         return description;
     }
 
-    public PostAttachment getProfilePicture() {
+    public Attachment getProfilePicture() {
         return profilePicture;
     }
 }

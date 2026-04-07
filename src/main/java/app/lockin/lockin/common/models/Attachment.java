@@ -2,16 +2,15 @@ package app.lockin.lockin.common.models;
 
 import java.io.Serializable;
 
-// TODO: Merge MessageAttachment with PostAttachment
-public class MessageAttachment implements Serializable {
+public class Attachment implements Serializable {
     private final String originalFileName;
-    private final String mimeType; // Content type and subtype
-    private final byte[] data; // TODO: Learn more about byte array
+    private final String mimeType;
+    private final byte[] data;
 
-    public MessageAttachment(String originalFileName, String mimeType, byte[] data) {
+    public Attachment(String originalFileName, String mimeType, byte[] data) {
         this.originalFileName = originalFileName;
         this.mimeType = mimeType;
-        this.data = data;
+        this.data = data == null ? new byte[0] : data.clone();
     }
 
     public String getOriginalFileName() {
@@ -23,6 +22,6 @@ public class MessageAttachment implements Serializable {
     }
 
     public byte[] getData() {
-        return data;
+        return data.clone();
     }
 }
