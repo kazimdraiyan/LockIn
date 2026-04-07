@@ -66,6 +66,7 @@ public class MessagesController {
     private Chat currentChat;
     private Path selectedAttachmentPath;
     private String pendingIncomingCallId;
+    private boolean outgoingCallRinging;
 
     @FXML
     public void initialize() {
@@ -87,6 +88,7 @@ public class MessagesController {
         currentChat = chat;
         selectedAttachmentPath = null;
         pendingIncomingCallId = null;
+        outgoingCallRinging = false;
         updateAttachmentIndicator();
         messageInputField.clear();
         messageInputField.setPromptText("Write a message...");
@@ -153,6 +155,7 @@ public class MessagesController {
         }
 
         if (signal.getType() == CallSignalType.INCOMING) {
+            outgoingCallRinging = false;
             pendingIncomingCallId = signal.getCallId();
             callStatusLabel.setText("Incoming call...");
             callButton.setText("Answer");
@@ -162,8 +165,9 @@ public class MessagesController {
         }
 
         if (signal.getType() == CallSignalType.RINGING) {
+            outgoingCallRinging = true;
             callStatusLabel.setText("Ringing...");
-            callButton.setText("Call");
+            callButton.setText("Cancel Call");
             rejectCallButton.setVisible(false);
             rejectCallButton.setManaged(false);
             return;
@@ -171,7 +175,8 @@ public class MessagesController {
 
         if (signal.getType() == CallSignalType.ANSWERED) {
             pendingIncomingCallId = null;
-            callStatusLabel.setText(signal.getAccepted() ? "Call accepted" : "Call rejected");
+            outgoingCallRinging = false;
+            callStatusLabel.setText(Boolean.TRUE.equals(signal.getAccepted()) ? "Call accepted" : "Call rejected");
             callButton.setText("Call");
             rejectCallButton.setVisible(false);
             rejectCallButton.setManaged(false);
@@ -181,6 +186,12 @@ public class MessagesController {
     @FXML
     public void onCallAction(ActionEvent actionEvent) {
         if (currentChat == null || currentChat.isCommonChat()) {
+            return;
+        }
+        if (outgoingCallRinging && pendingIncomingCallId == null) {
+            outgoingCallRinging = false;
+            callStatusLabel.setText("Call canceled");
+            callButton.setText("Call");
             return;
         }
         String callId = pendingIncomingCallId;
@@ -196,8 +207,13 @@ public class MessagesController {
                         callStatusLabel.setText(response.getMessage());
                         return;
                     }
+                    if (callId == null) {
+                        outgoingCallRinging = true;
+                        callButton.setText("Cancel Call");
+                    }
                     if (callId != null) {
                         pendingIncomingCallId = null;
+                        outgoingCallRinging = false;
                         callButton.setText("Call");
                         rejectCallButton.setVisible(false);
                         rejectCallButton.setManaged(false);
@@ -221,6 +237,7 @@ public class MessagesController {
                 Response response = MyApplication.clientManager.answerCall(callId, false);
                 Platform.runLater(() -> {
                     pendingIncomingCallId = null;
+                    outgoingCallRinging = false;
                     callButton.setText("Call");
                     rejectCallButton.setVisible(false);
                     rejectCallButton.setManaged(false);
@@ -502,6 +519,7 @@ public class MessagesController {
         chatNameLabel.setText(currentChat.getName());
         callStatusLabel.setText("");
         callButton.setText("Call");
+        outgoingCallRinging = false;
         boolean canCall = !currentChat.isCommonChat();
         callButton.setVisible(canCall);
         callButton.setManaged(canCall);

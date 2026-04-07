@@ -14,4 +14,5 @@ public enum RequestType {
     DELETE_POST,
     START_CALL,
     ANSWER_CALL,
+    END_CALL,
 }

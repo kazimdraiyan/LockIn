@@ -2,6 +2,7 @@
 
 <?import javafx.fxml.FXMLLoader?>
 <?import javafx.geometry.Insets?>
+<?import app.lockin.lockin.client.elements.ProfileAvatar?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -50,6 +51,18 @@
 
             <!-- Spacer -->
             <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox fx:id="incomingCallBar" alignment="CENTER_LEFT" spacing="8" visible="false" managed="false">
+                <ProfileAvatar fx:id="incomingCallAvatar" size="30"/>
+                <Label fx:id="incomingCallLabel" styleClass="body-text" text="Incoming call"/>
+                <Button fx:id="incomingAcceptButton" onAction="#onAcceptIncomingCall"
+                        prefHeight="32" prefWidth="66" styleClass="primary-button" text="Accept"/>
+                <Button fx:id="incomingRejectButton" onAction="#onRejectIncomingCall"
+                        prefHeight="32" prefWidth="66" styleClass="danger-button" text="Reject"/>
+            </HBox>
+
+            <!-- Spacer -->
+            <Region prefWidth="10"/>
 
             <!-- Trailing icons -->
             <HBox alignment="CENTER" spacing="8">

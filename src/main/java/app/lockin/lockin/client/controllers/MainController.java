@@ -1,8 +1,11 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.client.models.Page;
 import app.lockin.lockin.client.utils.ThemeManager;
+import app.lockin.lockin.common.models.CallSignal;
+import app.lockin.lockin.common.models.CallSignalType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,9 +16,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 
 import java.io.IOException;
 import java.util.Stack;
+import java.util.function.Consumer;
 
 // The wrapper of every page. Every page is rendered on top of this view.
 public class MainController {
@@ -46,10 +52,21 @@ public class MainController {
     @FXML
     public ImageView backIcon;
     @FXML
+    public HBox incomingCallBar;
+    @FXML
+    public ProfileAvatar incomingCallAvatar;
+    @FXML
+    public Label incomingCallLabel;
+    @FXML
     private BorderPane rootPane;
+
+    private String activeIncomingCallId;
+    private String activeIncomingCaller;
+    private final Consumer<CallSignal> callSignalListener = signal -> Platform.runLater(() -> handleGlobalCallSignal(signal));
 
     @FXML
     public void initialize() throws IOException {
+        MyApplication.clientManager.addCallSignalListener(callSignalListener);
         if (MyApplication.clientManager.isLoggedIn) {
             navigateReplacingRoot("home-view.fxml");
         } else {
@@ -58,6 +75,7 @@ public class MainController {
         searchBarController.setPromptText("Search");
         searchBar.getStyleClass().add("search-bar-navbar");
         searchBarController.getInputField().setOnAction(event -> submitSearch());
+        hideIncomingCallBar();
         loadNavBarIcons();
     }
 
@@ -134,6 +152,36 @@ public class MainController {
         navigatePush("messenger-view.fxml");
     }
 
+    @FXML
+    public void onAcceptIncomingCall(ActionEvent actionEvent) {
+        if (activeIncomingCallId == null) {
+            return;
+        }
+        String callId = activeIncomingCallId;
+        new Thread(() -> {
+            try {
+                MyApplication.clientManager.answerCall(callId, true);
+            } catch (IOException ignored) {
+            }
+        }).start();
+        hideIncomingCallBar();
+    }
+
+    @FXML
+    public void onRejectIncomingCall(ActionEvent actionEvent) {
+        if (activeIncomingCallId == null) {
+            return;
+        }
+        String callId = activeIncomingCallId;
+        new Thread(() -> {
+            try {
+                MyApplication.clientManager.answerCall(callId, false);
+            } catch (IOException ignored) {
+            }
+        }).start();
+        hideIncomingCallBar();
+    }
+
     private void loadNavBarIcons() {
         themeToggleIcon.setImage(new Image(
                 MyApplication.getIcon(ThemeManager.isDarkMode() ? "light_mode.png" : "dark_mode.png").toExternalForm()
@@ -160,5 +208,33 @@ public class MainController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void handleGlobalCallSignal(CallSignal signal) {
+        if (signal == null) {
+            return;
+        }
+        if (signal.getType() == CallSignalType.INCOMING) {
+            activeIncomingCallId = signal.getCallId();
+            activeIncomingCaller = signal.getCallerUsername();
+            incomingCallAvatar.setText(activeIncomingCaller);
+            incomingCallLabel.setText(activeIncomingCaller + " is calling");
+            incomingCallBar.setVisible(true);
+            incomingCallBar.setManaged(true);
+            return;
+        }
+        if (signal.getType() == CallSignalType.ANSWERED && activeIncomingCallId != null
+                && activeIncomingCallId.equals(signal.getCallId())) {
+            hideIncomingCallBar();
+        }
+    }
+
+    private void hideIncomingCallBar() {
+        activeIncomingCallId = null;
+        activeIncomingCaller = null;
+        incomingCallBar.setVisible(false);
+        incomingCallBar.setManaged(false);
+        incomingCallAvatar.setText("");
+        incomingCallLabel.setText("Incoming call");
     }
 }
