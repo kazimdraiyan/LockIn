@@ -19,7 +19,6 @@ public final class UdpServer {
     private final CallHandler callHandler;
     private final byte[] voicePrefixBytes = UDP_VOICE_FRAME_PREFIX.getBytes(StandardCharsets.UTF_8);
     private volatile DatagramSocket socket; // TODO: Change volatile
-    private int relayedFrameCount;
 
     public UdpServer(CallHandler callHandler) {
         this.callHandler = callHandler;
@@ -73,7 +72,6 @@ public final class UdpServer {
                 return;
             }
             UdpEndpointRegistry.bind(username, remote);
-            System.out.println("UDP BIND username=" + username + " endpoint=" + remote);
             return;
         }
 
@@ -87,35 +85,24 @@ public final class UdpServer {
                 }
             }
             if (callIdEnd <= callIdStart) {
-                System.out.println("UDP DROP invalid voice header from=" + remote);
                 return;
             }
             String callId = new String(data, callIdStart, callIdEnd - callIdStart, StandardCharsets.UTF_8);
             String senderUsername = UdpEndpointRegistry.usernameAt(remote);
             if (senderUsername == null) {
-                System.out.println("UDP DROP unbound sender endpoint=" + remote + " callId=" + callId);
                 return;
             }
             String peerUsername = callHandler.peerInActiveCall(callId, senderUsername);
             if (peerUsername == null) {
-                System.out.println("UDP DROP no active call match callId=" + callId + " sender=" + senderUsername);
                 return;
             }
             InetSocketAddress peerEndpoint = UdpEndpointRegistry.endpointFor(peerUsername);
             if (peerEndpoint == null) {
-                System.out.println("UDP DROP missing peer endpoint peer=" + peerUsername + " callId=" + callId);
                 return;
             }
             forward(peerEndpoint, data, length);
-            relayedFrameCount++;
-            if (relayedFrameCount % 100 == 0) {
-                System.out.println("UDP RELAY frames=" + relayedFrameCount + " callId=" + callId + " from=" + senderUsername + " to=" + peerUsername);
-            }
             return;
         }
-
-        String preview = text.length() > 24 ? text.substring(0, 24) : text;
-        System.out.println("UDP DROP unknown packet prefix from=" + remote + " preview=" + preview.replace('\n', ' '));
     }
 
     private boolean startsWith(byte[] data, int length, byte[] prefix) {

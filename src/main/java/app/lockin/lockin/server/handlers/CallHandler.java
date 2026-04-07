@@ -68,7 +68,6 @@ public final class CallHandler {
         CallSignal answered = new CallSignal(CallSignalType.ANSWERED, callId, pending.getCallerUsername(), pending.getCalleeUsername(), request.isAccept());
         if (request.isAccept()) {
             ACTIVE_CALLS.put(callId, new CallSignal(CallSignalType.PENDING, callId, pending.getCallerUsername(), pending.getCalleeUsername(), null));
-            System.out.println("CALL ACTIVE put callId=" + callId + " caller=" + pending.getCallerUsername() + " callee=" + pending.getCalleeUsername());
         }
         Response callerNotification = new Response(ResponseStatus.SUCCESS, "Call answered", answered);
         for (ClientHandler client : ConnectedClientRegistry.getClients(pending.getCallerUsername())) {

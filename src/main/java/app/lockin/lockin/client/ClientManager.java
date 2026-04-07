@@ -229,7 +229,6 @@ public class ClientManager {
         }
         stopVoiceCall();
         activeVoiceCallId = callId;
-        System.out.println("VOICE CALL start callId=" + callId);
         if (voiceReceiverService != null) {
             voiceReceiverService.setActiveCallId(callId);
         }
@@ -247,7 +246,6 @@ public class ClientManager {
     }
 
     private void stopVoiceCall() {
-        String callId = activeVoiceCallId;
         activeVoiceCallId = null;
         if (voiceSenderService != null) {
             voiceSenderService.stop();
@@ -257,9 +255,6 @@ public class ClientManager {
         }
         if (voiceReceiverService != null) {
             voiceReceiverService.setActiveCallId(null);
-        }
-        if (callId != null) {
-            System.out.println("VOICE CALL stop callId=" + callId);
         }
     }
 }
