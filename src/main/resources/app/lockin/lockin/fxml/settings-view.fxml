@@ -24,17 +24,20 @@
 
         <VBox spacing="8">
             <Label styleClass="label-text" text="Current password"/>
-            <PasswordField fx:id="oldPasswordField" promptText="Enter your current password" styleClass="input-field"/>
+            <PasswordField fx:id="oldPasswordField" promptText="Enter your current password" styleClass="input-field"
+                           prefWidth="220" maxWidth="220"/>
         </VBox>
 
         <VBox spacing="8">
             <Label styleClass="label-text" text="New password"/>
-            <PasswordField fx:id="newPasswordField" promptText="Enter your new password" styleClass="input-field"/>
+            <PasswordField fx:id="newPasswordField" promptText="Enter your new password" styleClass="input-field"
+                           prefWidth="220" maxWidth="220"/>
         </VBox>
 
         <VBox spacing="8">
             <Label styleClass="label-text" text="Confirm new password"/>
-            <PasswordField fx:id="confirmPasswordField" promptText="Confirm your new password" styleClass="input-field"/>
+            <PasswordField fx:id="confirmPasswordField" promptText="Confirm your new password" styleClass="input-field"
+                           prefWidth="220" maxWidth="220"/>
         </VBox>
 
         <HBox alignment="CENTER_LEFT" spacing="10">
