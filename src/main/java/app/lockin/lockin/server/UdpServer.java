@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static app.lockin.lockin.common.UdpConfig.SERVER_PORT;
+import static app.lockin.lockin.common.UdpConfig.UDP_SESSION_BIND_PREFIX;
 
 public final class UdpServer {
     private final AuthService authService = new AuthService();
@@ -48,8 +49,9 @@ public final class UdpServer {
     }
 
     private void handlePacket(InetSocketAddress remote, String text) {
-        if (text.startsWith("HELLO ")) {
-            String token = text.substring(6).trim();
+        // Handle authentication using session token
+        if (text.startsWith(UDP_SESSION_BIND_PREFIX)) {
+            String token = text.substring(UDP_SESSION_BIND_PREFIX.length()).trim();
             if (token.isEmpty()) {
                 return;
             }
@@ -61,12 +63,12 @@ public final class UdpServer {
                 return;
             }
             if (username == null) {
-                System.out.println("UDP HELLO rejected: invalid token from " + remote);
+                System.out.println("UDP session bind rejected: invalid token from " + remote);
                 return;
             }
             UdpEndpointRegistry.bind(username, remote);
             long id = nextClientId.incrementAndGet();
-            System.out.println("UDP HELLO bound " + username + " (" + remote + ") id=" + id);
+            System.out.println("UDP session bound " + username + " (" + remote + ") id=" + id);
             send(remote, "HELLO_ACK " + id);
         } else if ("PING".equals(text)) {
             send(remote, "PONG");

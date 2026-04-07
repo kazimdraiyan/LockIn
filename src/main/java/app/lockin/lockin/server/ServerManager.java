@@ -1,6 +1,7 @@
 package app.lockin.lockin.server;
 
 import app.lockin.lockin.server.handlers.AuthHandler;
+import app.lockin.lockin.server.handlers.CallHandler;
 import app.lockin.lockin.server.handlers.ClientHandler;
 import app.lockin.lockin.server.handlers.MessageHandler;
 import app.lockin.lockin.server.handlers.PostHandler;
@@ -15,6 +16,7 @@ public class ServerManager {
     private AuthHandler authHandler = new AuthHandler();
     private PostHandler postHandler = new PostHandler();
     private MessageHandler messageHandler = new MessageHandler();
+    private CallHandler callHandler = new CallHandler();
 
     public ServerManager(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
@@ -30,7 +32,7 @@ public class ServerManager {
 
                 // TODO: Create thread per client
                 // Each thread should manage one logged-in / trying to login client
-                ClientHandler clientHandler = new ClientHandler(socket, authHandler, postHandler, messageHandler);
+                ClientHandler clientHandler = new ClientHandler(socket, authHandler, postHandler, messageHandler, callHandler);
                 Thread thread = new Thread(clientHandler);
                 thread.start();
             } catch (IOException e) {

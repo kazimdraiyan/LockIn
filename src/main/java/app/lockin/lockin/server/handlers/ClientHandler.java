@@ -26,17 +26,19 @@ public class ClientHandler implements Runnable {
     private AuthHandler authHandler;
     private PostHandler postHandler;
     private MessageHandler messageHandler;
+    private CallHandler callHandler;
 
     private boolean isRunning = true;
 
     private Session authenticatedSession = null;
 
     // Dependency injection is used here by injecting AuthHandler, PostHandler, and MessageHandler into ClientHandler. TODO: Learn more about this
-    public ClientHandler(Socket socket, AuthHandler authHandler, PostHandler postHandler, MessageHandler messageHandler) {
+    public ClientHandler(Socket socket, AuthHandler authHandler, PostHandler postHandler, MessageHandler messageHandler, CallHandler callHandler) {
         this.socket = socket;
         this.authHandler = authHandler;
         this.postHandler = postHandler;
         this.messageHandler = messageHandler;
+        this.callHandler = callHandler;
     }
 
     @Override
@@ -121,6 +123,12 @@ public class ClientHandler implements Runnable {
                 break;
             case DELETE_POST:
                 response = postHandler.handleDeletePost((DeletePostRequest) request);
+                break;
+            case START_CALL:
+                response = callHandler.handleStartCall((StartCallRequest) request);
+                break;
+            case ANSWER_CALL:
+                response = callHandler.handleAnswerCall((AnswerCallRequest) request);
                 break;
         }
         if (response != null) {

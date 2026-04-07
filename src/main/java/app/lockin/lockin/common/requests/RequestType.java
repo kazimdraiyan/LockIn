@@ -12,4 +12,6 @@ public enum RequestType {
     CREATE_MESSAGE,
     UPDATE_PROFILE,
     DELETE_POST,
+    START_CALL,
+    ANSWER_CALL,
 }

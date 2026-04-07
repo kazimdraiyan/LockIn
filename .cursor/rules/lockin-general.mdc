@@ -1,0 +1,17 @@
+---
+description: LockIn project coding preferences from team chat
+alwaysApply: true
+---
+
+# LockIn General Preferences
+
+- Keep code minimal and consistent with existing project patterns.
+- Reuse existing functions and classes when possible; avoid unnecessary wrappers.
+- Avoid overengineering and avoid creating many template classes for future features.
+- Ask before modifying large chunks of code.
+- Keep functions clean and straightforward.
+- Prefer simple datatypes and ADTs.
+- Avoid `CopyOnWrite*` and `Consumer`-style patterns when a simpler option works.
+- Do not use Java `record`.
+- Do not use nested classes.
+- Keep comments minimal; prefer `//` over `/* */` when comments are needed.

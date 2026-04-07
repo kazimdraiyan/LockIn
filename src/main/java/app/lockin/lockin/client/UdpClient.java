@@ -9,11 +9,10 @@ import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 
 import static app.lockin.lockin.common.UdpConfig.SERVER_PORT;
+import static app.lockin.lockin.common.UdpConfig.UDP_SESSION_BIND_PREFIX;
 
-/**
- * Minimal UDP session to the server for future voice. Handshake + ping/pong only.
- * HELLO carries the TCP session token so the server can bind this endpoint to the user.
- */
+// Minimal UDP session to the server for future voice.
+// First datagram carries the TCP session token so the server can bind this endpoint to the user.
 public final class UdpClient {
     private final String serverHost;
     private final Session session;
@@ -50,7 +49,9 @@ public final class UdpClient {
         try {
             socket = new DatagramSocket();
             socket.connect(InetAddress.getByName(serverHost), SERVER_PORT);
-            sendUtf8("HELLO " + session.getToken());
+
+            // Authenticate to UDP server using session token
+            sendUtf8(UDP_SESSION_BIND_PREFIX + session.getToken());
 
             byte[] buffer = new byte[2048];
             while (running && socket != null && !socket.isClosed()) {

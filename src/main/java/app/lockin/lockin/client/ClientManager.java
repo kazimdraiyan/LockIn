@@ -1,5 +1,7 @@
 package app.lockin.lockin.client;
 
+import app.lockin.lockin.common.models.CallSignal;
+import app.lockin.lockin.common.models.CallSignalType;
 import app.lockin.lockin.common.models.MessageDelivery;
 import app.lockin.lockin.common.models.Session;
 import app.lockin.lockin.common.requests.LoginUsingTokenRequest;
@@ -31,6 +33,7 @@ public class ClientManager {
     // TODO: Learn more about BlockingQueue and Consumer. Seems like it's Stream type thing.
     private final BlockingQueue<Response> responseQueue = new LinkedBlockingQueue<>(); // Waits for a response to be added if empty
     private final CopyOnWriteArrayList<Consumer<MessageDelivery>> messageListeners = new CopyOnWriteArrayList<>();
+    private final CopyOnWriteArrayList<Consumer<CallSignal>> callSignalListeners = new CopyOnWriteArrayList<>();
 
     public boolean isLoggedIn = false;
     private Session authenticatedSession;
@@ -82,6 +85,14 @@ public class ClientManager {
 
     public void removeMessageListener(Consumer<MessageDelivery> listener) {
         messageListeners.remove(listener);
+    }
+
+    public void addCallSignalListener(Consumer<CallSignal> listener) {
+        callSignalListeners.add(listener);
+    }
+
+    public void removeCallSignalListener(Consumer<CallSignal> listener) {
+        callSignalListeners.remove(listener);
     }
 
     public String getAuthenticatedUsername() {
@@ -147,6 +158,15 @@ public class ClientManager {
                 && response.getData() instanceof MessageDelivery delivery) {
             for (Consumer<MessageDelivery> listener : messageListeners) {
                 listener.accept(delivery);
+            }
+            return;
+        }
+
+        if (response.getStatus() == ResponseStatus.SUCCESS
+                && response.getData() instanceof CallSignal signal
+                && (signal.getType() == CallSignalType.INCOMING || signal.getType() == CallSignalType.ANSWERED)) {
+            for (Consumer<CallSignal> listener : callSignalListeners) {
+                listener.accept(signal);
             }
             return;
         }
