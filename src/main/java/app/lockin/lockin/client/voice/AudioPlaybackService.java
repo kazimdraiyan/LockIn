@@ -12,6 +12,7 @@ public final class AudioPlaybackService {
 
     private volatile boolean running;
     private volatile SourceDataLine sourceLine;
+    private int playedFrameCount;
 
     public AudioPlaybackService(VoiceReceiverService receiverService, AudioFormat audioFormat, int frameSizeBytes) {
         this.receiverService = receiverService;
@@ -29,6 +30,8 @@ public final class AudioPlaybackService {
         line.start();
         sourceLine = line;
         running = true;
+        playedFrameCount = 0;
+        System.out.println("VOICE PLAY start frameBytes=" + frameSizeBytes);
 
         Thread thread = new Thread(this::playLoop, "lockin-audio-playback");
         thread.setDaemon(true);
@@ -43,6 +46,7 @@ public final class AudioPlaybackService {
             line.close();
             sourceLine = null;
         }
+        System.out.println("VOICE PLAY stop frames=" + playedFrameCount);
     }
 
     private void playLoop() {
@@ -55,6 +59,10 @@ public final class AudioPlaybackService {
                     continue;
                 }
                 sourceLine.write(frame, 0, frame.length);
+                playedFrameCount++;
+                if (playedFrameCount % 100 == 0) {
+                    System.out.println("VOICE PLAY frames=" + playedFrameCount);
+                }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;

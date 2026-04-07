@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 public final class VoiceReceiverService {
     private final ArrayBlockingQueue<byte[]> frameQueue;
     private volatile String activeCallId;
+    private int receivedFrameCount;
 
     public VoiceReceiverService(int queueCapacity) {
         frameQueue = new ArrayBlockingQueue<>(queueCapacity);
@@ -14,6 +15,8 @@ public final class VoiceReceiverService {
     public void setActiveCallId(String activeCallId) {
         this.activeCallId = activeCallId;
         frameQueue.clear();
+        receivedFrameCount = 0;
+        System.out.println("VOICE RECV activeCallId=" + activeCallId);
     }
 
     public void onVoiceFrame(String callId, byte[] frame) {
@@ -23,6 +26,10 @@ public final class VoiceReceiverService {
         String currentCall = activeCallId;
         if (currentCall == null || !currentCall.equals(callId)) {
             return;
+        }
+        receivedFrameCount++;
+        if (receivedFrameCount % 100 == 0) {
+            System.out.println("VOICE RECV frames=" + receivedFrameCount + " callId=" + callId + " queue=" + frameQueue.size());
         }
         if (!frameQueue.offer(frame)) {
             // If adding new frame is not possible due to full-capacity, we pop a frame then add the new frame

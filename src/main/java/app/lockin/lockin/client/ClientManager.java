@@ -1,5 +1,9 @@
 package app.lockin.lockin.client;
 
+import app.lockin.lockin.client.voice.AudioPlaybackService;
+import app.lockin.lockin.client.voice.VoiceAudioDefaults;
+import app.lockin.lockin.client.voice.VoiceReceiverService;
+import app.lockin.lockin.client.voice.VoiceSenderService;
 import app.lockin.lockin.common.models.CallSignal;
 import app.lockin.lockin.common.models.CallSignalType;
 import app.lockin.lockin.common.models.MessageDelivery;
@@ -20,6 +24,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
+import javax.sound.sampled.LineUnavailableException;
 
 // TODO: Proper exception handling in all networking related classes
 // TODO: Should I rename ServerManager and ClientManager differently because one contains main and the other does not?
@@ -33,6 +38,10 @@ public class ClientManager {
 
     private String serverHost;
     private UdpClient udpClient;
+    private VoiceReceiverService voiceReceiverService;
+    private AudioPlaybackService audioPlaybackService;
+    private VoiceSenderService voiceSenderService;
+    private String activeVoiceCallId;
     // TODO: Learn more about BlockingQueue and Consumer. Seems like it's Stream type thing.
     private final BlockingQueue<Response> responseQueue = new LinkedBlockingQueue<>(); // Waits for a response to be added if empty
     private final CopyOnWriteArrayList<Consumer<MessageDelivery>> messageListeners = new CopyOnWriteArrayList<>();
@@ -134,14 +143,30 @@ public class ClientManager {
             return;
         }
         udpClient = new UdpClient(serverHost, session);
+        voiceReceiverService = new VoiceReceiverService(VoiceAudioDefaults.RECEIVE_QUEUE_CAPACITY);
+        audioPlaybackService = new AudioPlaybackService(
+                voiceReceiverService,
+                VoiceAudioDefaults.audioFormat(),
+                VoiceAudioDefaults.FRAME_SIZE_BYTES
+        );
+        voiceSenderService = new VoiceSenderService(
+                udpClient,
+                VoiceAudioDefaults.audioFormat(),
+                VoiceAudioDefaults.FRAME_SIZE_BYTES
+        );
+        udpClient.setVoiceReceiverService(voiceReceiverService);
         udpClient.start();
     }
 
     private void stopUdpTransport() {
+        stopVoiceCall();
         if (udpClient != null) {
             udpClient.stop();
             udpClient = null;
         }
+        voiceSenderService = null;
+        audioPlaybackService = null;
+        voiceReceiverService = null;
     }
 
     private void startResponseListener() {
@@ -179,6 +204,11 @@ public class ClientManager {
 
         if (response.getStatus() == ResponseStatus.SUCCESS
                 && response.getData() instanceof CallSignal signal) {
+            if (signal.getType() == CallSignalType.ANSWERED && Boolean.TRUE.equals(signal.getAccepted())) {
+                startVoiceCall(signal.getCallId());
+            } else if (signal.getType() == CallSignalType.ENDED) {
+                stopVoiceCall();
+            }
             for (Consumer<CallSignal> listener : callSignalListeners) {
                 listener.accept(signal);
             }
@@ -188,5 +218,48 @@ public class ClientManager {
         }
 
         responseQueue.offer(response);
+    }
+
+    private void startVoiceCall(String callId) {
+        if (callId == null || callId.isBlank()) {
+            return;
+        }
+        if (callId.equals(activeVoiceCallId)) {
+            return;
+        }
+        stopVoiceCall();
+        activeVoiceCallId = callId;
+        System.out.println("VOICE CALL start callId=" + callId);
+        if (voiceReceiverService != null) {
+            voiceReceiverService.setActiveCallId(callId);
+        }
+        try {
+            if (audioPlaybackService != null) {
+                audioPlaybackService.start();
+            }
+            if (voiceSenderService != null) {
+                voiceSenderService.start(callId);
+            }
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+            stopVoiceCall();
+        }
+    }
+
+    private void stopVoiceCall() {
+        String callId = activeVoiceCallId;
+        activeVoiceCallId = null;
+        if (voiceSenderService != null) {
+            voiceSenderService.stop();
+        }
+        if (audioPlaybackService != null) {
+            audioPlaybackService.stop();
+        }
+        if (voiceReceiverService != null) {
+            voiceReceiverService.setActiveCallId(null);
+        }
+        if (callId != null) {
+            System.out.println("VOICE CALL stop callId=" + callId);
+        }
     }
 }

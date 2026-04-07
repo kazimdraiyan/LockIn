@@ -16,6 +16,7 @@ public final class VoiceSenderService {
     private volatile boolean running;
     private volatile String activeCallId;
     private volatile TargetDataLine targetLine;
+    private int sentFrameCount;
 
     public VoiceSenderService(UdpClient udpClient, AudioFormat audioFormat, int frameSizeBytes) {
         this.udpClient = udpClient;
@@ -37,6 +38,8 @@ public final class VoiceSenderService {
         targetLine = line;
         activeCallId = callId;
         running = true;
+        sentFrameCount = 0;
+        System.out.println("VOICE SEND start callId=" + callId + " frameBytes=" + frameSizeBytes);
 
         Thread thread = new Thread(this::captureLoop, "lockin-audio-capture");
         thread.setDaemon(true);
@@ -44,6 +47,7 @@ public final class VoiceSenderService {
     }
 
     public void stop() {
+        String callId = activeCallId;
         running = false;
         activeCallId = null;
         TargetDataLine line = targetLine;
@@ -52,6 +56,7 @@ public final class VoiceSenderService {
             line.close();
             targetLine = null;
         }
+        System.out.println("VOICE SEND stop callId=" + callId + " frames=" + sentFrameCount);
     }
 
     private void captureLoop() {
@@ -70,6 +75,10 @@ public final class VoiceSenderService {
             System.arraycopy(frame, 0, payload, 0, read);
             try {
                 udpClient.sendVoiceFrame(callId, payload);
+                sentFrameCount++;
+                if (sentFrameCount % 100 == 0) {
+                    System.out.println("VOICE SEND frames=" + sentFrameCount + " callId=" + callId);
+                }
             } catch (IOException e) {
                 if (running) {
                     e.printStackTrace();
