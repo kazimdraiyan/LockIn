@@ -1,5 +1,6 @@
 package app.lockin.lockin.client;
 
+import app.lockin.lockin.client.voice.VoiceReceiverService;
 import app.lockin.lockin.common.models.Session;
 
 import java.io.IOException;
@@ -17,9 +18,11 @@ import static app.lockin.lockin.common.UdpConfig.UDP_VOICE_FRAME_PREFIX;
 public final class UdpClient {
     private final String serverHost;
     private final Session session;
+    private final byte[] voicePrefixBytes = UDP_VOICE_FRAME_PREFIX.getBytes(StandardCharsets.UTF_8);
 
     private volatile DatagramSocket socket;
     private volatile boolean running;
+    private volatile VoiceReceiverService voiceReceiverService;
 
     public UdpClient(String serverHost, Session session) {
         this.serverHost = serverHost;
@@ -60,6 +63,10 @@ public final class UdpClient {
         socket.send(new DatagramPacket(packetData, packetData.length));
     }
 
+    public void setVoiceReceiverService(VoiceReceiverService voiceReceiverService) {
+        this.voiceReceiverService = voiceReceiverService;
+    }
+
     private void runLoop() {
         if (session.getToken() == null || session.getToken().isBlank()) {
             return;
@@ -75,12 +82,52 @@ public final class UdpClient {
             while (running && socket != null && !socket.isClosed()) {
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 socket.receive(packet);
+                dispatchVoiceFrame(packet.getData(), packet.getLength());
             }
         } catch (IOException e) {
             if (running) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void dispatchVoiceFrame(byte[] data, int length) {
+        if (!startsWith(data, length, voicePrefixBytes)) {
+            return;
+        }
+        int callIdStart = voicePrefixBytes.length;
+        int callIdEnd = -1;
+        for (int i = callIdStart; i < length; i++) {
+            if (data[i] == ' ') {
+                callIdEnd = i;
+                break;
+            }
+        }
+        if (callIdEnd <= callIdStart) {
+            return;
+        }
+        int payloadStart = callIdEnd + 1;
+        if (payloadStart >= length) {
+            return;
+        }
+        String callId = new String(data, callIdStart, callIdEnd - callIdStart, StandardCharsets.UTF_8);
+        byte[] frame = new byte[length - payloadStart];
+        System.arraycopy(data, payloadStart, frame, 0, frame.length);
+        if (voiceReceiverService != null) {
+            voiceReceiverService.onVoiceFrame(callId, frame);
+        }
+    }
+
+    private boolean startsWith(byte[] data, int length, byte[] prefix) {
+        if (length < prefix.length) {
+            return false;
+        }
+        for (int i = 0; i < prefix.length; i++) {
+            if (data[i] != prefix[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void sendUtf8(String text) throws IOException {

@@ -1,5 +1,6 @@
 module app.lockin.lockin {
     requires java.prefs; // Store user settings
+    requires java.desktop; // Java Sound API
     requires com.fasterxml.jackson.databind; // Work with JSON
 
     requires javafx.controls; // UI components
