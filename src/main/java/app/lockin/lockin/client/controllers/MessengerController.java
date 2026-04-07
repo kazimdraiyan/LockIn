@@ -1,6 +1,7 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.common.models.CallSignal;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.MessageDelivery;
 import javafx.application.Platform;
@@ -23,6 +24,11 @@ public class MessengerController implements MainControllerAware {
             messagesViewController.handleRealtimeDelivery(delivery);
         }
     });
+    private final Consumer<CallSignal> callSignalListener = signal -> Platform.runLater(() -> {
+        if (messagesViewController != null) {
+            messagesViewController.handleCallSignal(signal);
+        }
+    });
 
     private boolean listenerRegistered;
     private MainController mainController;
@@ -36,9 +42,11 @@ public class MessengerController implements MainControllerAware {
         root.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null && !listenerRegistered) {
                 MyApplication.clientManager.addMessageListener(messageListener);
+                MyApplication.clientManager.addCallSignalListener(callSignalListener);
                 listenerRegistered = true;
             } else if (newScene == null && listenerRegistered) {
                 MyApplication.clientManager.removeMessageListener(messageListener);
+                MyApplication.clientManager.removeCallSignalListener(callSignalListener);
                 listenerRegistered = false;
             }
         });

@@ -1,7 +1,10 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.common.models.Chat;
+import app.lockin.lockin.common.models.CallSignal;
+import app.lockin.lockin.common.models.CallSignalType;
 import app.lockin.lockin.common.models.ConversationData;
 import app.lockin.lockin.common.models.Message;
 import app.lockin.lockin.common.models.MessageAttachment;
@@ -52,17 +55,24 @@ public class MessagesController {
     @FXML private TextField messageInputField;
     @FXML private Button attachFileBtn;
     @FXML private Button sendButton;
+    @FXML private ProfileAvatar chatAvatar;
+    @FXML private Label chatNameLabel;
+    @FXML private Label callStatusLabel;
+    @FXML private Button callButton;
+    @FXML private Button rejectCallButton;
 
     private final Set<String> renderedMessageIds = new HashSet<>(); // TODO: Check
     private MessengerController messengerController;
     private Chat currentChat;
     private Path selectedAttachmentPath;
+    private String pendingIncomingCallId;
 
     @FXML
     public void initialize() {
         renderPlaceholder("Select a chat to view messages.");
         setComposerEnabled(false);
         updateAttachmentIndicator();
+        updateChatHeader();
     }
 
     public void setMessengerController(MessengerController messengerController) {
@@ -76,10 +86,12 @@ public class MessagesController {
     public void openConversation(Chat chat) {
         currentChat = chat;
         selectedAttachmentPath = null;
+        pendingIncomingCallId = null;
         updateAttachmentIndicator();
         messageInputField.clear();
         messageInputField.setPromptText("Write a message...");
         setComposerEnabled(chat != null);
+        updateChatHeader();
 
         if (chat == null) {
             renderPlaceholder("Select a chat to view messages.");
@@ -130,6 +142,94 @@ public class MessagesController {
 
         currentChat = delivery.getChat(); // TODO: Maybe unnecessary
         appendMessage(delivery.getMessage());
+    }
+
+    public void handleCallSignal(CallSignal signal) {
+        if (signal == null || currentChat == null) {
+            return;
+        }
+        if (!isCurrentCallSignal(signal)) {
+            return;
+        }
+
+        if (signal.getType() == CallSignalType.INCOMING) {
+            pendingIncomingCallId = signal.getCallId();
+            callStatusLabel.setText("Incoming call...");
+            callButton.setText("Answer");
+            rejectCallButton.setVisible(true);
+            rejectCallButton.setManaged(true);
+            return;
+        }
+
+        if (signal.getType() == CallSignalType.RINGING) {
+            callStatusLabel.setText("Ringing...");
+            callButton.setText("Call");
+            rejectCallButton.setVisible(false);
+            rejectCallButton.setManaged(false);
+            return;
+        }
+
+        if (signal.getType() == CallSignalType.ANSWERED) {
+            pendingIncomingCallId = null;
+            callStatusLabel.setText(signal.getAccepted() ? "Call accepted" : "Call rejected");
+            callButton.setText("Call");
+            rejectCallButton.setVisible(false);
+            rejectCallButton.setManaged(false);
+        }
+    }
+
+    @FXML
+    public void onCallAction(ActionEvent actionEvent) {
+        if (currentChat == null || currentChat.isCommonChat()) {
+            return;
+        }
+        String callId = pendingIncomingCallId;
+        String target = currentChat.getName();
+        callStatusLabel.setText(callId == null ? "Calling..." : "Answering...");
+        new Thread(() -> {
+            try {
+                Response response = callId == null
+                        ? MyApplication.clientManager.startCall(target)
+                        : MyApplication.clientManager.answerCall(callId, true);
+                Platform.runLater(() -> {
+                    if (response.getStatus() != ResponseStatus.SUCCESS) {
+                        callStatusLabel.setText(response.getMessage());
+                        return;
+                    }
+                    if (callId != null) {
+                        pendingIncomingCallId = null;
+                        callButton.setText("Call");
+                        rejectCallButton.setVisible(false);
+                        rejectCallButton.setManaged(false);
+                    }
+                });
+            } catch (IOException e) {
+                Platform.runLater(() -> callStatusLabel.setText("Call request failed"));
+            }
+        }).start();
+    }
+
+    @FXML
+    public void onRejectCall(ActionEvent actionEvent) {
+        if (pendingIncomingCallId == null) {
+            return;
+        }
+        String callId = pendingIncomingCallId;
+        callStatusLabel.setText("Rejecting...");
+        new Thread(() -> {
+            try {
+                Response response = MyApplication.clientManager.answerCall(callId, false);
+                Platform.runLater(() -> {
+                    pendingIncomingCallId = null;
+                    callButton.setText("Call");
+                    rejectCallButton.setVisible(false);
+                    rejectCallButton.setManaged(false);
+                    callStatusLabel.setText(response.getStatus() == ResponseStatus.SUCCESS ? "Call rejected" : response.getMessage());
+                });
+            } catch (IOException e) {
+                Platform.runLater(() -> callStatusLabel.setText("Reject failed"));
+            }
+        }).start();
     }
 
     @FXML
@@ -384,6 +484,38 @@ public class MessagesController {
     // TODO: Add icons
     private void updateAttachmentIndicator() {
         attachFileBtn.setText(selectedAttachmentPath == null ? "+" : "1");
+    }
+
+    private void updateChatHeader() {
+        if (currentChat == null) {
+            chatAvatar.setText("");
+            chatNameLabel.setText("No conversation selected");
+            callStatusLabel.setText("");
+            callButton.setVisible(false);
+            callButton.setManaged(false);
+            rejectCallButton.setVisible(false);
+            rejectCallButton.setManaged(false);
+            return;
+        }
+
+        chatAvatar.setText(currentChat.getName());
+        chatNameLabel.setText(currentChat.getName());
+        callStatusLabel.setText("");
+        callButton.setText("Call");
+        boolean canCall = !currentChat.isCommonChat();
+        callButton.setVisible(canCall);
+        callButton.setManaged(canCall);
+        rejectCallButton.setVisible(false);
+        rejectCallButton.setManaged(false);
+    }
+
+    private boolean isCurrentCallSignal(CallSignal signal) {
+        String currentUser = MyApplication.clientManager.getAuthenticatedUsername();
+        if (currentUser == null) {
+            return false;
+        }
+        String peer = currentUser.equals(signal.getCallerUsername()) ? signal.getCalleeUsername() : signal.getCallerUsername();
+        return peer != null && peer.equals(currentChat.getName());
     }
 
     private boolean isCurrentConversation(String username) {

@@ -2,11 +2,14 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import app.lockin.lockin.client.elements.ProfileAvatar?>
 
 <AnchorPane maxHeight="Infinity" maxWidth="Infinity" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS"
             xmlns="http://javafx.com/javafx/21"
@@ -14,6 +17,19 @@
             fx:controller="app.lockin.lockin.client.controllers.MessagesController">
     <VBox maxWidth="Infinity" styleClass="surface-panel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="chat-header">
+            <padding>
+                <Insets bottom="10" left="16" right="16" top="10"/>
+            </padding>
+            <ProfileAvatar fx:id="chatAvatar" size="36"/>
+            <Label fx:id="chatNameLabel" styleClass="message-name" text="No conversation selected"/>
+            <Label fx:id="callStatusLabel" styleClass="muted-text" text=""/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button fx:id="rejectCallButton" onAction="#onRejectCall" prefHeight="34" prefWidth="72"
+                    styleClass="danger-button" text="Reject" visible="false" managed="false"/>
+            <Button fx:id="callButton" onAction="#onCallAction" prefHeight="34" prefWidth="72"
+                    styleClass="action-icon-button" text="Call" visible="false" managed="false"/>
+        </HBox>
         <ScrollPane fx:id="messagesScrollPane" fitToWidth="true" styleClass="message-thread" VBox.vgrow="ALWAYS">
             <VBox fx:id="messagesContainer" spacing="10">
                 <padding>
