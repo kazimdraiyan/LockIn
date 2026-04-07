@@ -1,11 +1,11 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.NavCallState;
 import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.client.models.Page;
 import app.lockin.lockin.client.utils.ThemeManager;
 import app.lockin.lockin.common.models.CallSignal;
-import app.lockin.lockin.common.models.CallSignalType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -52,17 +52,19 @@ public class MainController {
     @FXML
     public ImageView backIcon;
     @FXML
-    public HBox incomingCallBar;
+    public HBox callStatusBar;
     @FXML
-    public ProfileAvatar incomingCallAvatar;
+    public ProfileAvatar callStatusAvatar;
     @FXML
-    public Label incomingCallLabel;
+    public Label callStatusLabel;
+    @FXML
+    public Button callStatusPrimaryButton;
+    @FXML
+    public Button callStatusSecondaryButton;
     @FXML
     private BorderPane rootPane;
 
-    private String activeIncomingCallId;
-    private String activeIncomingCaller;
-    private final Consumer<CallSignal> callSignalListener = signal -> Platform.runLater(() -> handleGlobalCallSignal(signal));
+    private final Consumer<CallSignal> callSignalListener = signal -> Platform.runLater(this::refreshCallStatusBar);
 
     @FXML
     public void initialize() throws IOException {
@@ -75,7 +77,7 @@ public class MainController {
         searchBarController.setPromptText("Search");
         searchBar.getStyleClass().add("search-bar-navbar");
         searchBarController.getInputField().setOnAction(event -> submitSearch());
-        hideIncomingCallBar();
+        refreshCallStatusBar();
         loadNavBarIcons();
     }
 
@@ -153,33 +155,40 @@ public class MainController {
     }
 
     @FXML
-    public void onAcceptIncomingCall(ActionEvent actionEvent) {
-        if (activeIncomingCallId == null) {
+    public void onCallStatusPrimary(ActionEvent actionEvent) {
+        NavCallState state = MyApplication.clientManager.getNavCallState();
+        String callId = MyApplication.clientManager.getNavCallId();
+        if (callId == null || callId.isBlank()) {
             return;
         }
-        String callId = activeIncomingCallId;
         new Thread(() -> {
             try {
-                MyApplication.clientManager.answerCall(callId, true);
+                switch (state) {
+                    case INCOMING_RING -> MyApplication.clientManager.answerCall(callId, true);
+                    case OUTGOING_RING, ACTIVE -> MyApplication.clientManager.endCall(callId);
+                    default -> {
+                    }
+                }
             } catch (IOException ignored) {
             }
-        }).start();
-        hideIncomingCallBar();
+        }, "lockin-nav-call-primary").start();
     }
 
     @FXML
-    public void onRejectIncomingCall(ActionEvent actionEvent) {
-        if (activeIncomingCallId == null) {
+    public void onCallStatusSecondary(ActionEvent actionEvent) {
+        if (MyApplication.clientManager.getNavCallState() != NavCallState.INCOMING_RING) {
             return;
         }
-        String callId = activeIncomingCallId;
+        String callId = MyApplication.clientManager.getNavCallId();
+        if (callId == null || callId.isBlank()) {
+            return;
+        }
         new Thread(() -> {
             try {
                 MyApplication.clientManager.answerCall(callId, false);
             } catch (IOException ignored) {
             }
-        }).start();
-        hideIncomingCallBar();
+        }, "lockin-nav-call-secondary").start();
     }
 
     private void loadNavBarIcons() {
@@ -210,36 +219,54 @@ public class MainController {
         }
     }
 
-    private void handleGlobalCallSignal(CallSignal signal) {
-        if (signal == null) {
+    private void refreshCallStatusBar() {
+        NavCallState state = MyApplication.clientManager.getNavCallState();
+        String peer = MyApplication.clientManager.getNavPeerUsername();
+        String callId = MyApplication.clientManager.getNavCallId();
+
+        if (state == NavCallState.IDLE || peer == null || peer.isBlank() || callId == null || callId.isBlank()) {
+            hideCallStatusBar();
             return;
         }
-        if (signal.getType() == CallSignalType.INCOMING) {
-            activeIncomingCallId = signal.getCallId();
-            activeIncomingCaller = signal.getCallerUsername();
-            incomingCallAvatar.setText(activeIncomingCaller);
-            incomingCallLabel.setText(activeIncomingCaller + " is calling");
-            incomingCallBar.setVisible(true);
-            incomingCallBar.setManaged(true);
-            return;
-        }
-        if (signal.getType() == CallSignalType.ANSWERED && activeIncomingCallId != null
-                && activeIncomingCallId.equals(signal.getCallId())) {
-            hideIncomingCallBar(); // TODO: Show outgoing and ongoing call controls too
-            return;
-        }
-        if (signal.getType() == CallSignalType.ENDED && activeIncomingCallId != null
-                && activeIncomingCallId.equals(signal.getCallId())) {
-            hideIncomingCallBar();
+
+        callStatusBar.setVisible(true);
+        callStatusBar.setManaged(true);
+        callStatusAvatar.setText(peer);
+
+        switch (state) {
+            case INCOMING_RING -> {
+                callStatusLabel.setText("Incoming from " + peer);
+                callStatusPrimaryButton.setText("Accept");
+                callStatusPrimaryButton.setVisible(true);
+                callStatusPrimaryButton.setManaged(true);
+                callStatusSecondaryButton.setText("Reject");
+                callStatusSecondaryButton.setVisible(true);
+                callStatusSecondaryButton.setManaged(true);
+            }
+            case OUTGOING_RING -> {
+                callStatusLabel.setText("Calling " + peer + "…");
+                callStatusPrimaryButton.setText("Cancel");
+                callStatusPrimaryButton.setVisible(true);
+                callStatusPrimaryButton.setManaged(true);
+                callStatusSecondaryButton.setVisible(false);
+                callStatusSecondaryButton.setManaged(false);
+            }
+            case ACTIVE -> {
+                callStatusLabel.setText("In call with " + peer);
+                callStatusPrimaryButton.setText("End call");
+                callStatusPrimaryButton.setVisible(true);
+                callStatusPrimaryButton.setManaged(true);
+                callStatusSecondaryButton.setVisible(false);
+                callStatusSecondaryButton.setManaged(false);
+            }
+            default -> hideCallStatusBar();
         }
     }
 
-    private void hideIncomingCallBar() {
-        activeIncomingCallId = null;
-        activeIncomingCaller = null;
-        incomingCallBar.setVisible(false);
-        incomingCallBar.setManaged(false);
-        incomingCallAvatar.setText("");
-        incomingCallLabel.setText("Incoming call");
+    private void hideCallStatusBar() {
+        callStatusBar.setVisible(false);
+        callStatusBar.setManaged(false);
+        callStatusAvatar.setText("");
+        callStatusLabel.setText("");
     }
 }

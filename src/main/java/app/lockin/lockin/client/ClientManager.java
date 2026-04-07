@@ -42,6 +42,10 @@ public class ClientManager {
     private AudioPlaybackService audioPlaybackService;
     private VoiceSenderService voiceSenderService;
     private String activeVoiceCallId;
+
+    private NavCallState navCallState = NavCallState.IDLE;
+    private String navCallId;
+    private String navPeerUsername;
     // TODO: Learn more about BlockingQueue and Consumer. Seems like it's Stream type thing.
     private final BlockingQueue<Response> responseQueue = new LinkedBlockingQueue<>(); // Waits for a response to be added if empty
     private final CopyOnWriteArrayList<Consumer<MessageDelivery>> messageListeners = new CopyOnWriteArrayList<>();
@@ -82,6 +86,9 @@ public class ClientManager {
     }
 
     public Response startCall(String calleeUsername) throws IOException {
+        if (isInCall()) {
+            return new Response(ResponseStatus.ERROR, "You are already in a call", null);
+        }
         return sendRequest(new StartCallRequest(calleeUsername));
     }
 
@@ -123,14 +130,37 @@ public class ClientManager {
         return authenticatedSession == null ? null : authenticatedSession.getUsername();
     }
 
+    public boolean isInCall() {
+        return navCallState != NavCallState.IDLE;
+    }
+
+    public NavCallState getNavCallState() {
+        return navCallState;
+    }
+
+    public String getNavCallId() {
+        return navCallId;
+    }
+
+    public String getNavPeerUsername() {
+        return navPeerUsername;
+    }
+
     public void setAuthenticatedSession(Session session) {
         authenticatedSession = session;
     }
 
     public void clearAuthenticatedSession() {
         stopUdpTransport();
+        clearNavCallState();
         authenticatedSession = null;
         isLoggedIn = false;
+    }
+
+    private void clearNavCallState() {
+        navCallState = NavCallState.IDLE;
+        navCallId = null;
+        navPeerUsername = null;
     }
 
     private void startUdpTransport(Session session) {
@@ -204,6 +234,9 @@ public class ClientManager {
 
         if (response.getStatus() == ResponseStatus.SUCCESS
                 && response.getData() instanceof CallSignal signal) {
+            if (!processCallSignalNav(signal)) {
+                return;
+            }
             if (signal.getType() == CallSignalType.ANSWERED && Boolean.TRUE.equals(signal.getAccepted())) {
                 startVoiceCall(signal.getCallId());
             } else if (signal.getType() == CallSignalType.ENDED) {
@@ -218,6 +251,57 @@ public class ClientManager {
         }
 
         responseQueue.offer(response);
+    }
+
+    /**
+     * Updates navigation/call UI state from a signal. Returns false if the signal should not be forwarded to UI listeners
+     * (e.g. incoming call auto-rejected while busy).
+     */
+    private boolean processCallSignalNav(CallSignal signal) {
+        if (signal == null || signal.getType() == null) {
+            return true;
+        }
+        switch (signal.getType()) {
+            case INCOMING:
+                if (isInCall()) {
+                    String busyCallId = signal.getCallId();
+                    new Thread(() -> {
+                        try {
+                            if (busyCallId != null && !busyCallId.isBlank()) {
+                                answerCall(busyCallId, false);
+                            }
+                        } catch (IOException ignored) {
+                        }
+                    }, "lockin-auto-reject-call").start();
+                    return false;
+                }
+                navCallState = NavCallState.INCOMING_RING;
+                navCallId = signal.getCallId();
+                navPeerUsername = signal.getCallerUsername();
+                return true;
+            case RINGING:
+                navCallState = NavCallState.OUTGOING_RING;
+                navCallId = signal.getCallId();
+                navPeerUsername = signal.getCalleeUsername();
+                return true;
+            case ANSWERED:
+                if (Boolean.TRUE.equals(signal.getAccepted())) {
+                    navCallState = NavCallState.ACTIVE;
+                    navCallId = signal.getCallId();
+                    String me = getAuthenticatedUsername();
+                    navPeerUsername = (me != null && me.equals(signal.getCallerUsername()))
+                            ? signal.getCalleeUsername()
+                            : signal.getCallerUsername();
+                } else {
+                    clearNavCallState();
+                }
+                return true;
+            case ENDED:
+                clearNavCallState();
+                return true;
+            default:
+                return true;
+        }
     }
 
     private void startVoiceCall(String callId) {
