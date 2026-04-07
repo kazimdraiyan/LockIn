@@ -30,6 +30,10 @@ public final class CallHandler {
             return new Response(ResponseStatus.ERROR, "Cannot call yourself", null);
         }
 
+        if (isUserBusy(caller) || isUserBusy(callee)) {
+            return new Response(ResponseStatus.ERROR, "User is busy", null);
+        }
+
         ArrayList<ClientHandler> calleeClients = ConnectedClientRegistry.getClients(callee);
         if (calleeClients.isEmpty()) {
             return new Response(ResponseStatus.ERROR, request.getCalleeUsername() + " is offline", null);
@@ -121,6 +125,23 @@ public final class CallHandler {
             client.send(endedResponse);
         }
         return new Response(ResponseStatus.SUCCESS, "Call ended", null);
+    }
+
+    private static boolean isUserBusy(String username) {
+        if (username == null || username.isBlank()) {
+            return false;
+        }
+        for (CallSignal pending : PENDING_CALLS.values()) {
+            if (username.equals(pending.getCallerUsername()) || username.equals(pending.getCalleeUsername())) {
+                return true;
+            }
+        }
+        for (CallSignal active : ACTIVE_CALLS.values()) {
+            if (username.equals(active.getCallerUsername()) || username.equals(active.getCalleeUsername())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String peerInActiveCall(String callId, String username) {

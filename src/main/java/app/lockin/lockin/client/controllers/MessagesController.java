@@ -1,10 +1,10 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.NavCallState;
 import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.CallSignal;
-import app.lockin.lockin.common.models.CallSignalType;
 import app.lockin.lockin.common.models.ConversationData;
 import app.lockin.lockin.common.models.Message;
 import app.lockin.lockin.common.models.MessageAttachment;
@@ -65,9 +65,6 @@ public class MessagesController {
     private MessengerController messengerController;
     private Chat currentChat;
     private Path selectedAttachmentPath;
-    private String pendingIncomingCallId;
-    private String outgoingCallId;
-    private boolean outgoingCallRinging;
 
     @FXML
     public void initialize() {
@@ -88,9 +85,6 @@ public class MessagesController {
     public void openConversation(Chat chat) {
         currentChat = chat;
         selectedAttachmentPath = null;
-        pendingIncomingCallId = null;
-        outgoingCallId = null;
-        outgoingCallRinging = false;
         updateAttachmentIndicator();
         messageInputField.clear();
         messageInputField.setPromptText("Write a message...");
@@ -149,52 +143,10 @@ public class MessagesController {
     }
 
     public void handleCallSignal(CallSignal signal) {
-        if (signal == null || currentChat == null) {
+        if (currentChat == null) {
             return;
         }
-        if (!isCurrentCallSignal(signal)) {
-            return;
-        }
-
-        if (signal.getType() == CallSignalType.INCOMING) {
-            outgoingCallRinging = false;
-            pendingIncomingCallId = signal.getCallId();
-            callStatusLabel.setText("Incoming call...");
-            callButton.setText("Answer");
-            rejectCallButton.setVisible(true);
-            rejectCallButton.setManaged(true);
-            return;
-        }
-
-        if (signal.getType() == CallSignalType.RINGING) {
-            outgoingCallId = signal.getCallId();
-            outgoingCallRinging = true;
-            callStatusLabel.setText("Ringing...");
-            callButton.setText("Cancel Call");
-            rejectCallButton.setVisible(false);
-            rejectCallButton.setManaged(false);
-            return;
-        }
-
-        if (signal.getType() == CallSignalType.ANSWERED) {
-            pendingIncomingCallId = null;
-            outgoingCallRinging = false;
-            callStatusLabel.setText(Boolean.TRUE.equals(signal.getAccepted()) ? "Call accepted" : "Call rejected");
-            callButton.setText("Call");
-            rejectCallButton.setVisible(false);
-            rejectCallButton.setManaged(false);
-            return;
-        }
-
-        if (signal.getType() == CallSignalType.ENDED) {
-            pendingIncomingCallId = null;
-            outgoingCallId = null;
-            outgoingCallRinging = false;
-            callStatusLabel.setText("Call ended");
-            callButton.setText("Call");
-            rejectCallButton.setVisible(false);
-            rejectCallButton.setManaged(false);
-        }
+        syncCallUiFromManager();
     }
 
     @FXML
@@ -202,55 +154,61 @@ public class MessagesController {
         if (currentChat == null || currentChat.isCommonChat()) {
             return;
         }
-        if (outgoingCallRinging && pendingIncomingCallId == null) {
-            String cancelCallId = outgoingCallId;
-            if (cancelCallId == null || cancelCallId.isBlank()) {
-                outgoingCallRinging = false;
-                callStatusLabel.setText("Call canceled");
-                callButton.setText("Call");
+        String chatPeer = currentChat.getName();
+        NavCallState state = MyApplication.clientManager.getNavCallState();
+        String navPeer = MyApplication.clientManager.getNavPeerUsername();
+        String navId = MyApplication.clientManager.getNavCallId();
+
+        if (MyApplication.clientManager.isInCall()) {
+            if (navPeer == null || !navPeer.equals(chatPeer) || navId == null || navId.isBlank()) {
                 return;
             }
-            callStatusLabel.setText("Canceling...");
-            new Thread(() -> {
-                try {
-                    Response response = MyApplication.clientManager.endCall(cancelCallId);
-                    Platform.runLater(() -> {
-                        outgoingCallRinging = false;
-                        outgoingCallId = null;
-                        callButton.setText("Call");
-                        callStatusLabel.setText(response.getStatus() == ResponseStatus.SUCCESS ? "Call canceled" : response.getMessage());
-                    });
-                } catch (IOException e) {
-                    Platform.runLater(() -> callStatusLabel.setText("Cancel failed"));
-                }
-            }).start();
+            if (state == NavCallState.INCOMING_RING) {
+                callStatusLabel.setText("Answering...");
+                new Thread(() -> {
+                    try {
+                        Response response = MyApplication.clientManager.answerCall(navId, true);
+                        Platform.runLater(() -> {
+                            if (response.getStatus() != ResponseStatus.SUCCESS) {
+                                callStatusLabel.setText(response.getMessage());
+                            }
+                            syncCallUiFromManager();
+                        });
+                    } catch (IOException e) {
+                        Platform.runLater(() -> callStatusLabel.setText("Call request failed"));
+                    }
+                }).start();
+                return;
+            }
+            if (state == NavCallState.OUTGOING_RING || state == NavCallState.ACTIVE) {
+                boolean endingActive = state == NavCallState.ACTIVE;
+                callStatusLabel.setText(endingActive ? "Ending call…" : "Canceling…");
+                new Thread(() -> {
+                    try {
+                        Response response = MyApplication.clientManager.endCall(navId);
+                        Platform.runLater(() -> {
+                            callStatusLabel.setText(response.getStatus() == ResponseStatus.SUCCESS
+                                    ? (endingActive ? "Call ended" : "Call canceled")
+                                    : response.getMessage());
+                            syncCallUiFromManager();
+                        });
+                    } catch (IOException e) {
+                        Platform.runLater(() -> callStatusLabel.setText("Could not end call"));
+                    }
+                }).start();
+            }
             return;
         }
-        String callId = pendingIncomingCallId;
-        String target = currentChat.getName();
-        callStatusLabel.setText(callId == null ? "Calling..." : "Answering...");
+
+        callStatusLabel.setText("Calling…");
         new Thread(() -> {
             try {
-                Response response = callId == null
-                        ? MyApplication.clientManager.startCall(target)
-                        : MyApplication.clientManager.answerCall(callId, true);
+                Response response = MyApplication.clientManager.startCall(chatPeer);
                 Platform.runLater(() -> {
                     if (response.getStatus() != ResponseStatus.SUCCESS) {
                         callStatusLabel.setText(response.getMessage());
-                        return;
                     }
-                    if (callId == null) {
-                        outgoingCallRinging = true;
-                        callButton.setText("Cancel Call");
-                    }
-                    if (callId != null) {
-                        pendingIncomingCallId = null;
-                        outgoingCallId = null;
-                        outgoingCallRinging = false;
-                        callButton.setText("Call");
-                        rejectCallButton.setVisible(false);
-                        rejectCallButton.setManaged(false);
-                    }
+                    syncCallUiFromManager();
                 });
             } catch (IOException e) {
                 Platform.runLater(() -> callStatusLabel.setText("Call request failed"));
@@ -260,22 +218,27 @@ public class MessagesController {
 
     @FXML
     public void onRejectCall(ActionEvent actionEvent) {
-        if (pendingIncomingCallId == null) {
+        if (currentChat == null || currentChat.isCommonChat()) {
             return;
         }
-        String callId = pendingIncomingCallId;
-        callStatusLabel.setText("Rejecting...");
+        if (MyApplication.clientManager.getNavCallState() != NavCallState.INCOMING_RING) {
+            return;
+        }
+        String navPeer = MyApplication.clientManager.getNavPeerUsername();
+        if (navPeer == null || !navPeer.equals(currentChat.getName())) {
+            return;
+        }
+        String callId = MyApplication.clientManager.getNavCallId();
+        if (callId == null || callId.isBlank()) {
+            return;
+        }
+        callStatusLabel.setText("Rejecting…");
         new Thread(() -> {
             try {
                 Response response = MyApplication.clientManager.answerCall(callId, false);
                 Platform.runLater(() -> {
-                    pendingIncomingCallId = null;
-                    outgoingCallId = null;
-                    outgoingCallRinging = false;
-                    callButton.setText("Call");
-                    rejectCallButton.setVisible(false);
-                    rejectCallButton.setManaged(false);
                     callStatusLabel.setText(response.getStatus() == ResponseStatus.SUCCESS ? "Call rejected" : response.getMessage());
+                    syncCallUiFromManager();
                 });
             } catch (IOException e) {
                 Platform.runLater(() -> callStatusLabel.setText("Reject failed"));
@@ -545,24 +508,71 @@ public class MessagesController {
 
         chatAvatar.setText(currentChat.getName());
         chatNameLabel.setText(currentChat.getName());
-        callStatusLabel.setText("");
-        callButton.setText("Call");
-        outgoingCallId = null;
-        outgoingCallRinging = false;
         boolean canCall = !currentChat.isCommonChat();
         callButton.setVisible(canCall);
         callButton.setManaged(canCall);
-        rejectCallButton.setVisible(false);
-        rejectCallButton.setManaged(false);
+        syncCallUiFromManager();
     }
 
-    private boolean isCurrentCallSignal(CallSignal signal) {
-        String currentUser = MyApplication.clientManager.getAuthenticatedUsername();
-        if (currentUser == null) {
-            return false;
+    private void syncCallUiFromManager() {
+        if (currentChat == null || currentChat.isCommonChat()) {
+            callStatusLabel.setText("");
+            callButton.setVisible(false);
+            callButton.setManaged(false);
+            rejectCallButton.setVisible(false);
+            rejectCallButton.setManaged(false);
+            return;
         }
-        String peer = currentUser.equals(signal.getCallerUsername()) ? signal.getCalleeUsername() : signal.getCallerUsername();
-        return peer != null && peer.equals(currentChat.getName());
+
+        String chatPeer = currentChat.getName();
+        NavCallState state = MyApplication.clientManager.getNavCallState();
+        String navPeer = MyApplication.clientManager.getNavPeerUsername();
+
+        if (!MyApplication.clientManager.isInCall()) {
+            callStatusLabel.setText("");
+            callButton.setText("Call");
+            callButton.setDisable(false);
+            callButton.setVisible(true);
+            callButton.setManaged(true);
+            rejectCallButton.setVisible(false);
+            rejectCallButton.setManaged(false);
+            return;
+        }
+
+        if (navPeer == null || !navPeer.equals(chatPeer)) {
+            callStatusLabel.setText("In another call");
+            callButton.setVisible(false);
+            callButton.setManaged(false);
+            rejectCallButton.setVisible(false);
+            rejectCallButton.setManaged(false);
+            return;
+        }
+
+        switch (state) {
+            case INCOMING_RING -> {
+                callStatusLabel.setText("Incoming call…");
+                callButton.setText("Answer");
+                callButton.setDisable(false);
+                rejectCallButton.setVisible(true);
+                rejectCallButton.setManaged(true);
+            }
+            case OUTGOING_RING -> {
+                callStatusLabel.setText("Ringing…");
+                callButton.setText("Cancel call");
+                rejectCallButton.setVisible(false);
+                rejectCallButton.setManaged(false);
+            }
+            case ACTIVE -> {
+                callStatusLabel.setText("In call");
+                callButton.setText("End call");
+                rejectCallButton.setVisible(false);
+                rejectCallButton.setManaged(false);
+            }
+            default -> {
+                callStatusLabel.setText("");
+                callButton.setText("Call");
+            }
+        }
     }
 
     private boolean isCurrentConversation(String username) {
