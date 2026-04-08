@@ -17,7 +17,15 @@ public class MyApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        clientManager.connect("localhost", 5000); // Waits till response of initial request (login using token)
+        String host = "localhost";
+        int port = 5000;
+        try {
+            String[] parts = Files.readString(getTokenPath().resolveSibling("server.txt")).split("\\R+", 3);
+            host = parts[0].trim();
+            port = Integer.parseInt(parts[1].trim());
+        } catch (Exception ignored) {
+        }
+        clientManager.connect(host, port); // Waits till response of initial request (login using token)
         // TODO: Add loading indicator
 
         FXMLLoader fxmlLoader = new FXMLLoader(getFXML("main-view.fxml"));
