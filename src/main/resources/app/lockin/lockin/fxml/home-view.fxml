@@ -50,7 +50,7 @@
                     <HBox alignment="TOP_LEFT" spacing="10">
                         <ProfileAvatar fx:id="composerAvatar" size="40.0" text="Me"/>
                         <VBox spacing="8" HBox.hgrow="ALWAYS">
-                            <TextArea fx:id="postTextArea" prefRowCount="4" promptText="Share notes, upload a JPG/GIF/PDF/TXT, or post an update..."
+                            <TextArea fx:id="postTextArea" prefRowCount="4" promptText="Share notes, upload a file, or post an update..."
                                       styleClass="input-field" wrapText="true"/>
                             <HBox alignment="CENTER_LEFT" spacing="10">
                                 <Label fx:id="selectedFileLabel" styleClass="muted-text" text="No file selected"/>
@@ -64,7 +64,7 @@
 
                     <HBox alignment="CENTER" spacing="8">
                         <Button maxWidth="Infinity" onAction="#onUploadFileClick" prefHeight="36" styleClass="feed-action-button"
-                                text="Choose JPG/GIF/PDF/TXT" fx:id="uploadFileButton" HBox.hgrow="ALWAYS"/>
+                                text="Choose File" fx:id="uploadFileButton" HBox.hgrow="ALWAYS"/>
                         <Button maxWidth="Infinity" onAction="#onCreatePostClick" prefHeight="36" styleClass="primary-button"
                                 text="Post" fx:id="postButton" HBox.hgrow="ALWAYS"/>
                     </HBox>

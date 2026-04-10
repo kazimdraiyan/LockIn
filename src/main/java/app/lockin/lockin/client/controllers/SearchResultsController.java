@@ -11,7 +11,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
@@ -91,6 +91,8 @@ public class SearchResultsController implements MainControllerAware {
         card.setAlignment(Pos.CENTER_LEFT);
         card.setPadding(new Insets(14, 16, 14, 16));
         card.getStyleClass().addAll("feed-card", "contact-item");
+        card.setCursor(Cursor.HAND);
+        card.setOnMouseClicked(event -> openProfile(user.getUsername()));
 
         ProfileAvatar avatar = new ProfileAvatar();
         avatar.setSize(48);
@@ -109,12 +111,7 @@ public class SearchResultsController implements MainControllerAware {
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        Button openButton = new Button("View profile");
-        openButton.getStyleClass().add("primary-button");
-        openButton.setOnAction(event -> openProfile(user.getUsername()));
-
-        card.getChildren().addAll(avatar, textBox, spacer, openButton);
+        card.getChildren().addAll(avatar, textBox, spacer);
         HBox.setHgrow(textBox, Priority.ALWAYS);
         return card;
     }

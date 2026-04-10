@@ -406,7 +406,7 @@ public class HomeController implements MainControllerAware {
         Label commentStatusLabel = new Label();
         commentStatusLabel.getStyleClass().add("muted-text");
 
-        Button chooseFileButton = new Button("Attach JPG/GIF/PDF/TXT");
+        Button chooseFileButton = new Button("Attach File");
         chooseFileButton.getStyleClass().add("feed-action-button");
 
         Button commentButton = new Button("Comment");
