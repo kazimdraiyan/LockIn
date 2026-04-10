@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import app.lockin.lockin.client.elements.ProfileAvatar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox fx:id="root" alignment="CENTER_LEFT" spacing="10" xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.elements.UserRowController">
+    <ProfileAvatar fx:id="avatar" size="40"/>
+    <VBox alignment="CENTER_LEFT" spacing="2">
+        <Label fx:id="primaryLabel" styleClass="text-strong" text="Username"/>
+        <Label fx:id="secondaryLabel" styleClass="muted-text" text="Secondary"/>
+    </VBox>
+</HBox>

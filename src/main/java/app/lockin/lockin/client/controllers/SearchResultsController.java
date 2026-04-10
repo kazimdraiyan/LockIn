@@ -1,6 +1,7 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.elements.UserRowController;
 import app.lockin.lockin.client.utils.UserIdentityRows;
 import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.FetchRequest;
@@ -9,6 +10,7 @@ import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
@@ -89,7 +91,8 @@ public class SearchResultsController implements MainControllerAware {
         card.setCursor(Cursor.HAND);
         card.setOnMouseClicked(event -> openProfile(user.getUsername()));
 
-        HBox identityRow = UserIdentityRows.build(
+        HBox identityRow = createReusableUserRow(
+                user.getUsername(),
                 user.getUsername(),
                 user.getDescription().isBlank() ? "No description yet." : user.getDescription(),
                 48,
@@ -115,6 +118,25 @@ public class SearchResultsController implements MainControllerAware {
     private Response sendRequest(app.lockin.lockin.common.requests.Request request) throws IOException {
         synchronized (MyApplication.clientManager) {
             return MyApplication.clientManager.sendRequest(request);
+        }
+    }
+
+    private HBox createReusableUserRow(
+            String username,
+            String primaryText,
+            String secondaryText,
+            double avatarSize,
+            app.lockin.lockin.common.models.Attachment picture,
+            Runnable onClick
+    ) {
+        try {
+            FXMLLoader loader = new FXMLLoader(MyApplication.getFXML("user-row.fxml"));
+            HBox root = loader.load();
+            UserRowController controller = loader.getController();
+            controller.configure(username, primaryText, secondaryText, avatarSize, picture, onClick);
+            return root;
+        } catch (IOException ignored) {
+            return UserIdentityRows.build(username, primaryText, secondaryText, avatarSize, picture, onClick);
         }
     }
 

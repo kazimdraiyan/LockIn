@@ -1,6 +1,7 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.elements.UserRowController;
 import app.lockin.lockin.client.utils.AttachmentViews;
 import app.lockin.lockin.client.utils.TextFormatter;
 import app.lockin.lockin.client.utils.PostCardRenderer;
@@ -19,6 +20,7 @@ import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -297,7 +299,8 @@ public class HomeController implements MainControllerAware {
 
     private HBox buildConnectedUserItem(ChatListItem item) {
         String username = item.getUserName();
-        HBox row = UserIdentityRows.build(
+        HBox row = createReusableUserRow(
+                username,
                 username,
                 null,
                 36,
@@ -565,6 +568,25 @@ public class HomeController implements MainControllerAware {
         String fileName = filePath.getFileName().toString();
         byte[] data = Files.readAllBytes(filePath);
         return new Attachment(fileName, mimeType, data);
+    }
+
+    private HBox createReusableUserRow(
+            String username,
+            String primaryText,
+            String secondaryText,
+            double avatarSize,
+            Attachment picture,
+            Runnable onClick
+    ) {
+        try {
+            FXMLLoader loader = new FXMLLoader(MyApplication.getFXML("user-row.fxml"));
+            HBox root = loader.load();
+            UserRowController controller = loader.getController();
+            controller.configure(username, primaryText, secondaryText, avatarSize, picture, onClick);
+            return root;
+        } catch (IOException ignored) {
+            return UserIdentityRows.build(username, primaryText, secondaryText, avatarSize, picture, onClick);
+        }
     }
 
 }
