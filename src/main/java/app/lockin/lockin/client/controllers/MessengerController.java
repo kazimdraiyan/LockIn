@@ -1,6 +1,7 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.models.NavUiConfig;
 import app.lockin.lockin.common.models.CallSignal;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.MessageDelivery;
@@ -55,8 +56,7 @@ public class MessengerController implements MainControllerAware {
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-        mainController.setNavBar(true, "Chats", false);
-        mainController.setRefreshButtonVisible(false);
+        mainController.applyNavUi(new NavUiConfig(true, "Chats", false, false, true));
         if (mainController.selectedChatUsername != null && !mainController.selectedChatUsername.isBlank()) {
             openConversation(new Chat(mainController.selectedChatUsername));
         }

@@ -1,6 +1,7 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.models.NavUiConfig;
 import app.lockin.lockin.common.requests.ChangePasswordRequest;
 import app.lockin.lockin.common.requests.LogoutRequest;
 import app.lockin.lockin.common.response.Response;
@@ -26,8 +27,7 @@ public class SettingsController implements MainControllerAware {
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-        mainController.setNavBar(true, "Settings", true);
-        mainController.setRefreshButtonVisible(false);
+        mainController.applyNavUi(new NavUiConfig(true, "Settings", true, false, false));
     }
 
     @FXML

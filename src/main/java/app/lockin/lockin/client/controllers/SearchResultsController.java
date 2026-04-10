@@ -2,6 +2,7 @@ package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.elements.UserRowController;
+import app.lockin.lockin.client.models.NavUiConfig;
 import app.lockin.lockin.client.utils.UserIdentityRows;
 import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.FetchRequest;
@@ -37,8 +38,7 @@ public class SearchResultsController implements MainControllerAware {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         query = mainController.getSearchQuery();
-        mainController.setNavBar(true, "Search", true);
-        mainController.setRefreshButtonVisible(false);
+        mainController.applyNavUi(new NavUiConfig(true, "Search", true, false, true));
         queryLabel.setText(query == null || query.isBlank() ? "All users" : "Results for \"" + query + "\"");
         loadResults();
     }

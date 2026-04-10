@@ -1,6 +1,7 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.models.NavUiConfig;
 import app.lockin.lockin.common.models.Session;
 import app.lockin.lockin.common.requests.LoginRequest;
 import app.lockin.lockin.common.response.Response;
@@ -21,8 +22,7 @@ public class LoginController implements MainControllerAware {
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-        mainController.setNavBar(true, "Login", false);
-        mainController.setRefreshButtonVisible(false);
+        mainController.applyNavUi(new NavUiConfig(true, "Login", false, false, true));
     }
 
     @FXML

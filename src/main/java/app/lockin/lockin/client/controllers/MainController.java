@@ -3,6 +3,7 @@ package app.lockin.lockin.client.controllers;
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.NavCallState;
 import app.lockin.lockin.client.elements.ProfileAvatar;
+import app.lockin.lockin.client.models.NavUiConfig;
 import app.lockin.lockin.client.models.Page;
 import app.lockin.lockin.client.utils.ThemeManager;
 import app.lockin.lockin.common.models.CallSignal;
@@ -50,6 +51,8 @@ public class MainController {
     @FXML
     public ImageView settingsIcon;
     @FXML
+    public Button settingsButton;
+    @FXML
     public ImageView backIcon;
     @FXML
     public HBox callStatusBar;
@@ -96,6 +99,20 @@ public class MainController {
     public void setRefreshButtonVisible(boolean visible) {
         refreshButton.setVisible(visible);
         refreshButton.setManaged(visible);
+    }
+
+    public void setSettingsButtonVisible(boolean visible) {
+        settingsButton.setVisible(visible);
+        settingsButton.setManaged(visible);
+    }
+
+    public void applyNavUi(NavUiConfig config) {
+        if (config == null) {
+            return;
+        }
+        setNavBar(config.isShowNavBar(), config.getTitle(), config.isShowSearchBar());
+        setRefreshButtonVisible(config.isShowRefreshButton());
+        setSettingsButtonVisible(config.isShowSettingsButton());
     }
 
     public void openProfile(String username) throws IOException {

@@ -2,6 +2,7 @@ package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.elements.UserRowController;
+import app.lockin.lockin.client.models.NavUiConfig;
 import app.lockin.lockin.client.utils.AttachmentViews;
 import app.lockin.lockin.client.utils.TextFormatter;
 import app.lockin.lockin.client.utils.PostCardRenderer;
@@ -88,8 +89,7 @@ public class HomeController implements MainControllerAware {
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-        mainController.setNavBar(true, "LockIn", true);
-        mainController.setRefreshButtonVisible(true);
+        mainController.applyNavUi(new NavUiConfig(true, "LockIn", true, true, true));
         uploadFileButton.setGraphic(UiIcons.icon("attach", 14));
         profileNavLabel.setText(MyApplication.clientManager.getAuthenticatedUsername());
         loadSidebarProfileImage();

@@ -1,6 +1,7 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.models.NavUiConfig;
 import app.lockin.lockin.common.models.Session;
 import app.lockin.lockin.common.requests.SignUpRequest;
 import app.lockin.lockin.common.response.Response;
@@ -26,8 +27,7 @@ public class SignUpController implements MainControllerAware {
     @Override
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
-        mainController.setNavBar(true, "Create an Account", false);
-        mainController.setRefreshButtonVisible(false);
+        mainController.applyNavUi(new NavUiConfig(true, "Create an Account", false, false, true));
     }
 
     @FXML

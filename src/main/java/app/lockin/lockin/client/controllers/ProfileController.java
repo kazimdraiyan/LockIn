@@ -2,6 +2,7 @@ package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.elements.ProfileAvatar;
+import app.lockin.lockin.client.models.NavUiConfig;
 import app.lockin.lockin.client.utils.AttachmentViews;
 import app.lockin.lockin.client.utils.PostCardRenderer;
 import app.lockin.lockin.client.utils.UiIcons;
@@ -93,8 +94,7 @@ public class ProfileController implements MainControllerAware {
         viewedUsername = mainController.viewedProfileUsername;
         ownProfile = viewedUsername == null || viewedUsername.isBlank();
         chooseProfilePictureButton.setGraphic(UiIcons.icon("attach", 14));
-        mainController.setNavBar(true, ownProfile ? "Profile" : viewedUsername, true);
-        mainController.setRefreshButtonVisible(false);
+        mainController.applyNavUi(new NavUiConfig(true, ownProfile ? "Profile" : viewedUsername, true, false, true));
         loadProfile();
     }
 
