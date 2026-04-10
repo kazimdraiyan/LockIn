@@ -40,8 +40,12 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 public class ProfileController implements MainControllerAware {
     private static final DateTimeFormatter ABSOLUTE_TIME_FORMAT =
@@ -64,6 +68,7 @@ public class ProfileController implements MainControllerAware {
     private Attachment currentProfilePicture;
     private String viewedUsername;
     private boolean ownProfile;
+    private final Map<String, Attachment> profilePicturesByUsername = new HashMap<>();
 
     @Override
     public void setMainController(MainController mainController) {
@@ -132,6 +137,7 @@ public class ProfileController implements MainControllerAware {
                 Response response = sendRequest(new FetchRequest(FetchType.PROFILE, viewedUsername));
                 if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
                     UserPosts data = (UserPosts) response.getData();
+                    loadProfilePictures(data == null ? null : data.getPosts());
                     Platform.runLater(() -> renderProfilePage(data));
                 } else {
                     String message = response == null ? "Could not load profile." : response.getMessage();
@@ -194,9 +200,15 @@ public class ProfileController implements MainControllerAware {
         HBox topRow = new HBox(10);
         topRow.setAlignment(Pos.CENTER_LEFT);
 
+        String me = MyApplication.clientManager.getAuthenticatedUsername();
+        topRow.getChildren().add(createAvatar(me == null ? "ME" : me, 42, profilePicturesByUsername.get(me)));
+
         VBox metaBox = new VBox(2);
-        Label titleLabel = new Label("Posted by you");
+        Label titleLabel = new Label(me == null ? "Posted by you" : me);
         titleLabel.getStyleClass().add("text-strong");
+        titleLabel.setCursor(Cursor.HAND);
+        String openUser = me;
+        titleLabel.setOnMouseClicked(event -> openUserProfile(openUser));
         Label timeLabel = new Label(formatTimestamp(post.getCreatedAt()));
         timeLabel.getStyleClass().add("muted-text");
         metaBox.getChildren().addAll(titleLabel, timeLabel);
@@ -247,6 +259,10 @@ public class ProfileController implements MainControllerAware {
         card.getStyleClass().addAll("feed-card", "post-thread-card");
         card.setPadding(new Insets(16));
 
+        HBox header = new HBox(10);
+        header.setAlignment(Pos.CENTER_LEFT);
+        header.getChildren().add(createAvatar(post.getAuthorUsername(), 42, profilePicturesByUsername.get(post.getAuthorUsername())));
+
         VBox metaBox = new VBox(2);
         Label titleLabel = new Label(post.getAuthorUsername());
         titleLabel.getStyleClass().add("text-strong");
@@ -255,7 +271,9 @@ public class ProfileController implements MainControllerAware {
         Label timeLabel = new Label(formatTimestamp(post.getCreatedAt()));
         timeLabel.getStyleClass().add("muted-text");
         metaBox.getChildren().addAll(titleLabel, timeLabel);
-        card.getChildren().add(metaBox);
+        header.getChildren().add(metaBox);
+
+        card.getChildren().add(header);
 
         if (post.getTextContent() != null && !post.getTextContent().isBlank()) {
             Label contentLabel = new Label(post.getTextContent());
@@ -295,6 +313,7 @@ public class ProfileController implements MainControllerAware {
 
         HBox header = new HBox(10);
         header.setAlignment(Pos.CENTER_LEFT);
+        header.getChildren().add(createAvatar(comment.getAuthorUsername(), 32, profilePicturesByUsername.get(comment.getAuthorUsername())));
         Label username = new Label(comment.getAuthorUsername());
         username.getStyleClass().add("text-strong");
         username.setCursor(Cursor.HAND);
@@ -384,6 +403,70 @@ public class ProfileController implements MainControllerAware {
             mainController.openProfile(username);
         } catch (IOException ignored) {
         }
+    }
+
+    private ProfileAvatar createAvatar(String username, double size, Attachment profilePicture) {
+        ProfileAvatar avatar = new ProfileAvatar();
+        avatar.setSize(size);
+        avatar.setText(extractInitials(username));
+        avatar.setCursor(Cursor.HAND);
+        avatar.setOnMouseClicked(event -> openUserProfile(username));
+        if (profilePicture != null && profilePicture.getData() != null && profilePicture.getData().length > 0) {
+            avatar.setImage(new Image(new ByteArrayInputStream(profilePicture.getData())));
+        } else {
+            avatar.setImage(null);
+        }
+        return avatar;
+    }
+
+    private void loadProfilePictures(List<Post> posts) {
+        Set<String> usernames = collectAuthorUsernames(posts);
+        Map<String, Attachment> loadedPictures = new HashMap<>();
+
+        try {
+            Response response = sendRequest(new FetchRequest(FetchType.PROFILE));
+            if (response != null && response.getStatus() == ResponseStatus.SUCCESS && response.getData() instanceof UserPosts pageData) {
+                UserProfile profile = pageData.getProfile();
+                if (profile != null && usernames.contains(profile.getUsername())) {
+                    loadedPictures.put(profile.getUsername(), profile.getProfilePicture());
+                }
+            }
+        } catch (IOException ignored) {
+        }
+
+        try {
+            Response response = sendRequest(new FetchRequest(FetchType.USER_SEARCH, ""));
+            if (response != null && response.getStatus() == ResponseStatus.SUCCESS) {
+                @SuppressWarnings("unchecked")
+                java.util.ArrayList<UserProfile> users = (java.util.ArrayList<UserProfile>) response.getData();
+                for (UserProfile user : users) {
+                    if (user != null && usernames.contains(user.getUsername())) {
+                        loadedPictures.put(user.getUsername(), user.getProfilePicture());
+                    }
+                }
+            }
+        } catch (IOException ignored) {
+        }
+
+        profilePicturesByUsername.clear();
+        profilePicturesByUsername.putAll(loadedPictures);
+    }
+
+    private Set<String> collectAuthorUsernames(List<Post> posts) {
+        Set<String> usernames = new HashSet<>();
+        if (posts == null) {
+            return usernames;
+        }
+        for (Post post : posts) {
+            if (post == null) {
+                continue;
+            }
+            usernames.add(post.getAuthorUsername());
+            for (Comment comment : post.getComments()) {
+                usernames.add(comment.getAuthorUsername());
+            }
+        }
+        return usernames;
     }
 
     private void renderProfileImage(Attachment profilePicture) {
