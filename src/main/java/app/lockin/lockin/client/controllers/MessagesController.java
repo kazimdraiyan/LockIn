@@ -22,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -77,6 +78,10 @@ public class MessagesController {
         renderPlaceholder("Select a chat to view messages.");
         setComposerEnabled(false);
         updateAttachmentIndicator();
+        chatAvatar.setCursor(Cursor.HAND);
+        chatNameLabel.setCursor(Cursor.HAND);
+        chatAvatar.setOnMouseClicked(event -> openProfileFromHeader());
+        chatNameLabel.setOnMouseClicked(event -> openProfileFromHeader());
         updateChatHeader();
     }
 
@@ -393,6 +398,10 @@ public class MessagesController {
             ProfileAvatar senderAvatar = createSenderAvatar(message.getSenderUsername());
             Label senderLabel = new Label(message.getSenderUsername());
             senderLabel.getStyleClass().add("text-strong");
+            senderAvatar.setCursor(Cursor.HAND);
+            senderLabel.setCursor(Cursor.HAND);
+            senderAvatar.setOnMouseClicked(event -> openDirectChat(message.getSenderUsername()));
+            senderLabel.setOnMouseClicked(event -> openDirectChat(message.getSenderUsername()));
 
             VBox contentBox = new VBox(4);
             contentBox.setAlignment(Pos.CENTER_LEFT);
@@ -527,6 +536,8 @@ public class MessagesController {
     private void updateChatHeader() {
         if (currentChat == null) {
             chatAvatar.setText("");
+            chatAvatar.setCursor(Cursor.DEFAULT);
+            chatNameLabel.setCursor(Cursor.DEFAULT);
             chatNameLabel.setText("No conversation selected");
             callStatusLabel.setText("");
             callButton.setVisible(false);
@@ -545,9 +556,30 @@ public class MessagesController {
         }
         chatNameLabel.setText(currentChat.getName());
         boolean canCall = !currentChat.isCommonChat();
+        boolean profileClickable = !currentChat.isCommonChat();
+        chatAvatar.setCursor(profileClickable ? Cursor.HAND : Cursor.DEFAULT);
+        chatNameLabel.setCursor(profileClickable ? Cursor.HAND : Cursor.DEFAULT);
         callButton.setVisible(canCall);
         callButton.setManaged(canCall);
         syncCallUiFromManager();
+    }
+
+    private void openDirectChat(String username) {
+        if (username == null || username.isBlank() || messengerController == null) {
+            return;
+        }
+        String me = MyApplication.clientManager.getAuthenticatedUsername();
+        if (me != null && me.equals(username)) {
+            return;
+        }
+        messengerController.openDirectChat(username);
+    }
+
+    private void openProfileFromHeader() {
+        if (currentChat == null || currentChat.isCommonChat() || messengerController == null) {
+            return;
+        }
+        messengerController.openProfile(currentChat.getName());
     }
 
     private void syncCallUiFromManager() {

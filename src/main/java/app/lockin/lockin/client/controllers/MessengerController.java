@@ -67,6 +67,23 @@ public class MessengerController implements MainControllerAware {
         messagesViewController.openConversation(chat);
     }
 
+    public void openDirectChat(String username) {
+        if (username == null || username.isBlank()) {
+            return;
+        }
+        openConversation(new Chat(username));
+    }
+
+    public void openProfile(String username) {
+        if (mainController == null || username == null || username.isBlank()) {
+            return;
+        }
+        try {
+            mainController.openProfile(username);
+        } catch (Exception ignored) {
+        }
+    }
+
 
     public void onLocalMessage(MessageDelivery delivery) {
         chatsViewController.applyMessageDelivery(delivery, messagesViewController.getCurrentChatUsername());

@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
@@ -131,6 +132,7 @@ public class HomeController implements MainControllerAware {
 
     public void onProfileButtonClick(MouseEvent mouseEvent) {
         try {
+            mainController.viewedProfileUsername = null;
             mainController.navigatePush("profile-view.fxml");
         } catch (IOException e) {
             e.printStackTrace();
@@ -309,6 +311,7 @@ public class HomeController implements MainControllerAware {
         VBox metaBox = new VBox(2);
         Label usernameLabel = new Label(post.getAuthorUsername());
         usernameLabel.getStyleClass().add("text-strong");
+        usernameLabel.setCursor(Cursor.HAND);
         usernameLabel.setOnMouseClicked(event -> openUserProfile(post.getAuthorUsername()));
         Label timeLabel = new Label(TextFormatter.formatTimestamp(post.getCreatedAt()));
         timeLabel.getStyleClass().add("muted-text");
@@ -365,6 +368,7 @@ public class HomeController implements MainControllerAware {
         VBox metaBox = new VBox(2);
         Label usernameLabel = new Label(comment.getAuthorUsername());
         usernameLabel.getStyleClass().add("text-strong");
+        usernameLabel.setCursor(Cursor.HAND);
         usernameLabel.setOnMouseClicked(event -> openUserProfile(comment.getAuthorUsername()));
         Label timeLabel = new Label(TextFormatter.formatTimestamp(comment.getCreatedAt()));
         timeLabel.getStyleClass().add("muted-text");
@@ -496,6 +500,8 @@ public class HomeController implements MainControllerAware {
         ProfileAvatar avatar = new ProfileAvatar();
         avatar.setSize(size);
         avatar.setText(extractInitials(username));
+        avatar.setCursor(Cursor.HAND);
+        avatar.setOnMouseClicked(event -> openUserProfile(username));
         if (profilePicture != null && profilePicture.getData() != null && profilePicture.getData().length > 0) {
             avatar.setImage(new Image(new ByteArrayInputStream(profilePicture.getData())));
         }

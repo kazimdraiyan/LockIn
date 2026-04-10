@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -249,6 +250,8 @@ public class ProfileController implements MainControllerAware {
         VBox metaBox = new VBox(2);
         Label titleLabel = new Label(post.getAuthorUsername());
         titleLabel.getStyleClass().add("text-strong");
+        titleLabel.setCursor(Cursor.HAND);
+        titleLabel.setOnMouseClicked(event -> openUserProfile(post.getAuthorUsername()));
         Label timeLabel = new Label(formatTimestamp(post.getCreatedAt()));
         timeLabel.getStyleClass().add("muted-text");
         metaBox.getChildren().addAll(titleLabel, timeLabel);
@@ -294,6 +297,8 @@ public class ProfileController implements MainControllerAware {
         header.setAlignment(Pos.CENTER_LEFT);
         Label username = new Label(comment.getAuthorUsername());
         username.getStyleClass().add("text-strong");
+        username.setCursor(Cursor.HAND);
+        username.setOnMouseClicked(event -> openUserProfile(comment.getAuthorUsername()));
         Label time = new Label(formatTimestamp(comment.getCreatedAt()));
         time.getStyleClass().add("muted-text");
         header.getChildren().addAll(username, time);
@@ -368,6 +373,16 @@ public class ProfileController implements MainControllerAware {
     private Response sendRequest(app.lockin.lockin.common.requests.Request request) throws IOException {
         synchronized (MyApplication.clientManager) {
             return MyApplication.clientManager.sendRequest(request);
+        }
+    }
+
+    private void openUserProfile(String username) {
+        if (mainController == null || username == null || username.isBlank()) {
+            return;
+        }
+        try {
+            mainController.openProfile(username);
+        } catch (IOException ignored) {
         }
     }
 
