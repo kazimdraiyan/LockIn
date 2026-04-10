@@ -35,6 +35,7 @@ public class ChatsController {
 
     private final ObservableList<ChatListItem> masterData = FXCollections.observableArrayList();
     private MessengerController messengerController;
+    private String pendingConversationUsername;
 
     @FXML
     public void initialize() {
@@ -100,9 +101,11 @@ public class ChatsController {
     public void markConversationOpen(String chatUsername) {
         ChatListItem item = findChatItem(chatUsername);
         if (item == null) {
+            pendingConversationUsername = chatUsername;
             return;
         }
 
+        pendingConversationUsername = null;
         item.setUnreadCount(0);
         chatListView.getSelectionModel().select(item);
         chatListView.refresh();
@@ -123,7 +126,12 @@ public class ChatsController {
                     items.add(buildChatListItem(chat));
                 }
 
-                Platform.runLater(() -> masterData.setAll(items));
+                Platform.runLater(() -> {
+                    masterData.setAll(items);
+                    if (pendingConversationUsername != null && !pendingConversationUsername.isBlank()) {
+                        markConversationOpen(pendingConversationUsername);
+                    }
+                });
             } catch (IOException ignored) {
             }
         }).start();
