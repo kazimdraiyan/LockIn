@@ -2,6 +2,7 @@ package app.lockin.lockin.client.voice;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
@@ -26,6 +27,7 @@ public final class AudioPlaybackService {
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
         SourceDataLine line = (SourceDataLine) javax.sound.sampled.AudioSystem.getLine(info);
         line.open(audioFormat);
+        applyMaxMasterGain(line);
         line.start();
         sourceLine = line;
         running = true;
@@ -43,6 +45,14 @@ public final class AudioPlaybackService {
             line.close();
             sourceLine = null;
         }
+    }
+
+    private static void applyMaxMasterGain(SourceDataLine line) {
+        if (!line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
+            return;
+        }
+        FloatControl gain = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+        gain.setValue(gain.getMaximum());
     }
 
     private void playLoop() {

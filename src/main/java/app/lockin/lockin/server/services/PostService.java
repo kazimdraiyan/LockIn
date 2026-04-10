@@ -20,13 +20,13 @@ import java.util.UUID;
 public class PostService {
     private static final String DATABASE_PATH = "database";
     private static final Path POSTS_PATH = Path.of(DATABASE_PATH, "posts.json");
-    private static final Path UPLOADS_PATH = Path.of(DATABASE_PATH, "uploads");
+    private static final Path POST_UPLOADS_PATH = Path.of(DATABASE_PATH, "post_uploads");
     private static final long MAX_ATTACHMENT_SIZE_BYTES = 10L * 1024 * 1024;
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     private void ensureStorageExists() throws IOException {
-        Files.createDirectories(UPLOADS_PATH);
+        Files.createDirectories(POST_UPLOADS_PATH);
         if (!Files.exists(POSTS_PATH)) {
             Files.writeString(POSTS_PATH, "[]");
         }
@@ -227,7 +227,7 @@ public class PostService {
             return null;
         }
 
-        Path filePath = UPLOADS_PATH.resolve(attachmentNode.get("storedFileName").asText());
+        Path filePath = POST_UPLOADS_PATH.resolve(attachmentNode.get("storedFileName").asText());
         byte[] data = Files.exists(filePath) ? Files.readAllBytes(filePath) : new byte[0];
         return new Attachment(
                 attachmentNode.get("originalFileName").asText(),
@@ -240,13 +240,13 @@ public class PostService {
         if (attachmentNode == null || attachmentNode.isNull()) {
             return;
         }
-        Path filePath = UPLOADS_PATH.resolve(attachmentNode.path("storedFileName").asText());
+        Path filePath = POST_UPLOADS_PATH.resolve(attachmentNode.path("storedFileName").asText());
         Files.deleteIfExists(filePath);
     }
 
     private ObjectNode storeAttachment(String postId, Attachment attachment) throws IOException {
         String storedFileName = postId + "_" + sanitizeFileName(attachment.getOriginalFileName());
-        Path storedPath = UPLOADS_PATH.resolve(storedFileName);
+        Path storedPath = POST_UPLOADS_PATH.resolve(storedFileName);
         Files.write(storedPath, attachment.getData());
 
         ObjectNode attachmentNode = mapper.createObjectNode();

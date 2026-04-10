@@ -16,7 +16,7 @@ public class MessageService {
     private static final String DATABASE_PATH = "database";
     private static final Path USERS_PATH = Path.of(DATABASE_PATH, "users.json");
     private static final Path MESSAGES_PATH = Path.of(DATABASE_PATH, "messages.json");
-    private static final Path UPLOADS_PATH = Path.of(DATABASE_PATH, "message_uploads");
+    private static final Path MESSAGE_UPLOADS_PATH = Path.of(DATABASE_PATH, "message_uploads");
     private static final long MAX_ATTACHMENT_SIZE_BYTES = 10L * 1024 * 1024;
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -190,7 +190,7 @@ public class MessageService {
     }
 
     private void ensureStorageExists() throws IOException {
-        Files.createDirectories(UPLOADS_PATH);
+        Files.createDirectories(MESSAGE_UPLOADS_PATH);
         if (!Files.exists(MESSAGES_PATH)) {
             Files.writeString(MESSAGES_PATH, "[]");
         }
@@ -323,7 +323,7 @@ public class MessageService {
             return null;
         }
 
-        Path filePath = UPLOADS_PATH.resolve(attachmentNode.path("storedFileName").asText());
+        Path filePath = MESSAGE_UPLOADS_PATH.resolve(attachmentNode.path("storedFileName").asText());
         byte[] data = Files.exists(filePath) ? Files.readAllBytes(filePath) : new byte[0];
         return new Attachment(
                 attachmentNode.path("originalFileName").asText(),
@@ -334,7 +334,7 @@ public class MessageService {
 
     private ObjectNode storeAttachment(String ownerId, Attachment attachment) throws IOException {
         String storedFileName = ownerId + "_" + sanitizeFileName(attachment.getOriginalFileName());
-        Path storedPath = UPLOADS_PATH.resolve(storedFileName);
+        Path storedPath = MESSAGE_UPLOADS_PATH.resolve(storedFileName);
         Files.write(storedPath, attachment.getData());
 
         ObjectNode attachmentNode = mapper.createObjectNode();
