@@ -1,5 +1,7 @@
 package app.lockin.lockin.client.elements;
 
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -29,7 +31,8 @@ public class ProfileAvatar extends StackPane {
         getStyleClass().add("profile-avatar");
         setAlignment(Pos.CENTER);
 
-        imageView.setPreserveRatio(false);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
         imageView.setManaged(false);
         imageView.setVisible(false);
 
@@ -96,10 +99,8 @@ public class ProfileAvatar extends StackPane {
         setMinSize(avatarSize, avatarSize);
         setPrefSize(avatarSize, avatarSize);
         setMaxSize(avatarSize, avatarSize);
-        imageView.setFitWidth(avatarSize);
-        imageView.setFitHeight(avatarSize);
-        imageView.setClip(new Circle(avatarSize / 2, avatarSize / 2, avatarSize / 2));
         textLabel.setFont(Font.font(Math.max(MIN_FONT_SIZE, avatarSize * FONT_RATIO)));
+        applyCoverCrop();
     }
 
     private void updateImage() {
@@ -110,5 +111,47 @@ public class ProfileAvatar extends StackPane {
         imageView.setVisible(hasImage);
         textLabel.setManaged(!hasImage);
         textLabel.setVisible(!hasImage);
+        if (hasImage) {
+            requestCoverCropWhenReady(currentImage);
+        }
+    }
+
+    private void requestCoverCropWhenReady(Image img) {
+        if (img == null || img.isError()) {
+            return;
+        }
+        if (img.getWidth() > 0 && img.getHeight() > 0) {
+            applyCoverCrop();
+            return;
+        }
+        final InvalidationListener[] holder = new InvalidationListener[1];
+        holder[0] = observable -> {
+            if (img.getWidth() > 0 && img.getHeight() > 0) {
+                img.progressProperty().removeListener(holder[0]);
+                if (image.get() == img) {
+                    Platform.runLater(this::applyCoverCrop);
+                }
+            }
+        };
+        img.progressProperty().addListener(holder[0]);
+    }
+
+    private void applyCoverCrop() {
+        Image img = image.get();
+        if (img == null || img.isError()) {
+            return;
+        }
+        double iw = img.getWidth();
+        double ih = img.getHeight();
+        if (iw <= 0 || ih <= 0) {
+            return;
+        }
+        double avatarSize = size.get();
+        double scale = Math.max(avatarSize / iw, avatarSize / ih);
+        double fw = iw * scale;
+        double fh = ih * scale;
+        imageView.setFitWidth(fw);
+        imageView.setFitHeight(fh);
+        imageView.setClip(new Circle(fw / 2, fh / 2, avatarSize / 2));
     }
 }
