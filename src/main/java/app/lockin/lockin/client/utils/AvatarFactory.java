@@ -1,6 +1,8 @@
 package app.lockin.lockin.client.utils;
 
+import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.elements.ProfileAvatar;
+import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.Attachment;
 import javafx.scene.image.Image;
 
@@ -20,6 +22,14 @@ public final class AvatarFactory {
         } else {
             avatar.setImage(null);
         }
+        return avatar;
+    }
+
+    public static ProfileAvatar createCommonChat(double size) {
+        ProfileAvatar avatar = new ProfileAvatar();
+        avatar.setSize(size);
+        avatar.setText(Chat.COMMON_CHAT_NAME);
+        avatar.setImage(new Image(MyApplication.getIcon("group_white.png").toExternalForm()));
         return avatar;
     }
 

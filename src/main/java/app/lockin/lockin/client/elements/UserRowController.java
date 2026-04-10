@@ -2,6 +2,7 @@ package app.lockin.lockin.client.elements;
 
 import app.lockin.lockin.client.utils.AvatarFactory;
 import app.lockin.lockin.common.models.Attachment;
+import app.lockin.lockin.common.models.Chat;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
@@ -21,7 +22,9 @@ public class UserRowController {
             Attachment profilePicture,
             Runnable onClick
     ) {
-        ProfileAvatar built = AvatarFactory.create(username, avatarSize, profilePicture);
+        ProfileAvatar built = Chat.COMMON_CHAT_NAME.equals(username)
+                ? AvatarFactory.createCommonChat(avatarSize)
+                : AvatarFactory.create(username, avatarSize, profilePicture);
         avatar.setSize(avatarSize);
         avatar.setText(built.getText());
         avatar.setImage(built.getImage());

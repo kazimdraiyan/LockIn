@@ -2,6 +2,7 @@ package app.lockin.lockin.client.utils;
 
 import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.common.models.Attachment;
+import app.lockin.lockin.common.models.Chat;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
@@ -34,7 +35,9 @@ public final class UserIdentityRows {
         row.setAlignment(Pos.CENTER_LEFT);
         row.setFillHeight(true);
 
-        ProfileAvatar avatar = AvatarFactory.create(avatarUsername, avatarSize, profilePicture);
+        ProfileAvatar avatar = Chat.COMMON_CHAT_NAME.equals(avatarUsername)
+                ? AvatarFactory.createCommonChat(avatarSize)
+                : AvatarFactory.create(avatarUsername, avatarSize, profilePicture);
         Label primaryLabel = new Label(primaryText == null ? "" : primaryText);
         primaryLabel.getStyleClass().add("text-primary-strong");
 

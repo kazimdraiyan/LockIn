@@ -452,7 +452,7 @@ public class MessagesController {
         Button saveButton = new Button("DL");
         saveButton.setPrefSize(30, 30);
         saveButton.getStyleClass().add("action-icon-button");
-        saveButton.setGraphic(UiIcons.icon("download", 14));
+        UiIcons.setButtonIcon(saveButton, "download", 14);
         saveButton.setText("");
         saveButton.setOnAction(event -> downloadAttachment(attachment));
 
@@ -541,7 +541,7 @@ public class MessagesController {
     }
 
     private void applyAttachIcon() {
-        attachFileBtn.setGraphic(UiIcons.icon("attach", 16));
+        UiIcons.setButtonIcon(attachFileBtn, "attach", 16);
     }
 
     private void updateChatHeader() {
@@ -559,11 +559,15 @@ public class MessagesController {
         }
 
         chatAvatar.setText(currentChat.getName());
-        Attachment pic = currentChat.getProfilePicture();
-        if (pic != null && pic.getData().length > 0) {
-            chatAvatar.setImage(new Image(new ByteArrayInputStream(pic.getData())));
+        if (currentChat.isCommonChat()) {
+            chatAvatar.setImage(AvatarFactory.createCommonChat(24).getImage());
         } else {
-            chatAvatar.setImage(null);
+            Attachment pic = currentChat.getProfilePicture();
+            if (pic != null && pic.getData().length > 0) {
+                chatAvatar.setImage(new Image(new ByteArrayInputStream(pic.getData())));
+            } else {
+                chatAvatar.setImage(null);
+            }
         }
         chatNameLabel.setText(currentChat.getName());
         boolean canCall = !currentChat.isCommonChat();

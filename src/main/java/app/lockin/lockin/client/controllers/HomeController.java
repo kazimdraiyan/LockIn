@@ -90,7 +90,7 @@ public class HomeController implements MainControllerAware {
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
         mainController.applyNavUi(new NavUiConfig(true, "LockIn", true, true, true));
-        uploadFileButton.setGraphic(UiIcons.icon("attach", 14));
+        UiIcons.setButtonIcon(uploadFileButton, "attach", 14);
         profileNavLabel.setText(MyApplication.clientManager.getAuthenticatedUsername());
         loadSidebarProfileImage();
         loadPosts();
@@ -299,14 +299,26 @@ public class HomeController implements MainControllerAware {
 
     private HBox buildConnectedUserItem(ChatListItem item) {
         String username = item.getUserName();
-        HBox row = createReusableUserRow(
-                username,
-                username,
-                null,
-                36,
-                profilePicturesByUsername.get(username),
-                () -> openUserProfile(username)
-        );
+        HBox row;
+        if (item.getChat() != null && item.getChat().isCommonChat()) {
+            row = createReusableUserRow(
+                    Chat.COMMON_CHAT_NAME,
+                    Chat.COMMON_CHAT_NAME,
+                    null,
+                    36,
+                    null,
+                    null
+            );
+        } else {
+            row = createReusableUserRow(
+                    username,
+                    username,
+                    null,
+                    36,
+                    profilePicturesByUsername.get(username),
+                    () -> openUserProfile(username)
+            );
+        }
         row.setPrefHeight(48);
         row.getStyleClass().add("contact-item");
         row.setOnMouseClicked(event -> openChat(username));
@@ -352,7 +364,7 @@ public class HomeController implements MainControllerAware {
 
         Button chooseFileButton = new Button("Attach File");
         chooseFileButton.getStyleClass().add("feed-action-button");
-        chooseFileButton.setGraphic(UiIcons.icon("attach", 14));
+        UiIcons.setButtonIcon(chooseFileButton, "attach", 14);
 
         Button commentButton = new Button("Comment");
         commentButton.getStyleClass().add("primary-button");

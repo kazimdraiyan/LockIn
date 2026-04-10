@@ -78,7 +78,7 @@ public final class AttachmentViews {
         if (showDownload) {
             Button downloadButton = new Button("Download");
             downloadButton.getStyleClass().add("primary-button");
-            downloadButton.setGraphic(UiIcons.icon("download", 14));
+            UiIcons.setButtonIconWhite(downloadButton, "download", 14);
             if (onDownload != null) {
                 downloadButton.setOnAction(onDownload);
             }

@@ -12,6 +12,7 @@ import app.lockin.lockin.common.requests.FetchType;
 import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -33,7 +34,13 @@ public class ChatsController {
     @FXML
     private SearchBarController searchBarController;
 
-    private final ObservableList<ChatListItem> masterData = FXCollections.observableArrayList();
+    private final ObservableList<ChatListItem> masterData = FXCollections.observableArrayList(item -> new Observable[]{
+            item.sortTimestampProperty(),
+            item.userNameProperty(),
+            item.lastMessageProperty(),
+            item.unreadCountProperty(),
+            item.timeAgoProperty()
+    });
     private MessengerController messengerController;
     private String pendingConversationUsername;
 

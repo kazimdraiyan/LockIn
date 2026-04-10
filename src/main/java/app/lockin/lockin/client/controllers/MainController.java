@@ -6,6 +6,7 @@ import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.client.models.NavUiConfig;
 import app.lockin.lockin.client.models.Page;
 import app.lockin.lockin.client.utils.ThemeManager;
+import app.lockin.lockin.client.utils.UiIcons;
 import app.lockin.lockin.common.models.CallSignal;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -169,6 +170,7 @@ public class MainController {
     public void toggleTheme() {
         ThemeManager.toggle();
         loadNavBarIcons();
+        UiIcons.refreshIcons(rootPane);
     }
 
     public void openSettings() {

@@ -1,6 +1,8 @@
 package app.lockin.lockin.client.elements;
 
 import app.lockin.lockin.client.models.ChatListItem;
+import app.lockin.lockin.client.utils.AvatarFactory;
+import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.Attachment;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -56,9 +58,9 @@ public class ChatCell extends ListCell<ChatListItem> {
         if (empty || item == null) {
             setGraphic(null);
             setText(null);
-            setMinHeight(0);
-            setPrefHeight(0);
-            setMaxHeight(0);
+            setMinHeight(USE_COMPUTED_SIZE);
+            setPrefHeight(USE_COMPUTED_SIZE);
+            setMaxHeight(USE_COMPUTED_SIZE);
             getStyleClass().remove("transparent-list");
             return;
         }
@@ -70,12 +72,18 @@ public class ChatCell extends ListCell<ChatListItem> {
             getStyleClass().add("transparent-list");
         }
 
-        avatar.setText(item.getUserName());
-        Attachment pic = item.getChat() == null ? null : item.getChat().getProfilePicture();
-        if (pic != null && pic.getData().length > 0) {
-            avatar.setImage(new Image(new ByteArrayInputStream(pic.getData())));
+        boolean commonChat = item.getChat() != null && item.getChat().isCommonChat();
+        if (commonChat) {
+            avatar.setText(Chat.COMMON_CHAT_NAME);
+            avatar.setImage(AvatarFactory.createCommonChat(44).getImage());
         } else {
-            avatar.setImage(null);
+            avatar.setText(item.getUserName());
+            Attachment pic = item.getChat() == null ? null : item.getChat().getProfilePicture();
+            if (pic != null && pic.getData().length > 0) {
+                avatar.setImage(new Image(new ByteArrayInputStream(pic.getData())));
+            } else {
+                avatar.setImage(null);
+            }
         }
         nameLabel.setText(item.getUserName());
         msgLabel.setText(item.getLastMessage());

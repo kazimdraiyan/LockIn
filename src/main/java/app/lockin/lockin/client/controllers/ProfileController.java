@@ -93,7 +93,7 @@ public class ProfileController implements MainControllerAware {
         this.mainController = mainController;
         viewedUsername = mainController.viewedProfileUsername;
         ownProfile = viewedUsername == null || viewedUsername.isBlank();
-        chooseProfilePictureButton.setGraphic(UiIcons.icon("attach", 14));
+        UiIcons.setButtonIcon(chooseProfilePictureButton, "attach", 14);
         mainController.applyNavUi(new NavUiConfig(true, ownProfile ? "Profile" : viewedUsername, true, false, true));
         loadProfile();
     }
