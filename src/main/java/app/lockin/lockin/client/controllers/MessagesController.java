@@ -367,16 +367,17 @@ public class MessagesController {
 
     private VBox buildMessageNode(Message message) {
         boolean commonChat = isCommonConversation();
-        boolean outgoing = !commonChat && isOutgoing(message);
+        boolean outgoing = isOutgoing(message);
+        boolean showSenderInfo = commonChat && !outgoing;
 
         VBox wrapper = new VBox(4);
         wrapper.setFillWidth(true);
 
         HBox row = new HBox();
-        row.setAlignment(commonChat ? Pos.TOP_LEFT : (outgoing ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT));
+        row.setAlignment(outgoing ? Pos.CENTER_RIGHT : Pos.TOP_LEFT);
 
         VBox bubbleBox = new VBox(6);
-        bubbleBox.setAlignment(commonChat ? Pos.CENTER_LEFT : (outgoing ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT));
+        bubbleBox.setAlignment(outgoing ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
         bubbleBox.setMaxWidth(420);
 
         if (message.getText() != null && !message.getText().isBlank()) {
@@ -394,7 +395,7 @@ public class MessagesController {
         timeLabel.getStyleClass().add("message-meta");
         bubbleBox.getChildren().add(timeLabel);
 
-        if (commonChat) {
+        if (showSenderInfo) {
             ProfileAvatar senderAvatar = createSenderAvatar(message.getSenderUsername());
             Label senderLabel = new Label(message.getSenderUsername());
             senderLabel.getStyleClass().add("text-strong");

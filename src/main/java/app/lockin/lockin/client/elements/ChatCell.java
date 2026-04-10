@@ -56,9 +56,15 @@ public class ChatCell extends ListCell<ChatListItem> {
         if (empty || item == null) {
             setGraphic(null);
             setText(null);
+            setMinHeight(0);
+            setPrefHeight(0);
+            setMaxHeight(0);
             getStyleClass().remove("transparent-list");
             return;
         }
+        setMinHeight(USE_COMPUTED_SIZE);
+        setPrefHeight(USE_COMPUTED_SIZE);
+        setMaxHeight(USE_COMPUTED_SIZE);
 
         if (!getStyleClass().contains("transparent-list")) {
             getStyleClass().add("transparent-list");
