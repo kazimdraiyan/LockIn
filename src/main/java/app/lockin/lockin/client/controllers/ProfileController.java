@@ -3,8 +3,8 @@ package app.lockin.lockin.client.controllers;
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.client.utils.AttachmentViews;
-import app.lockin.lockin.client.utils.AvatarFactory;
 import app.lockin.lockin.client.utils.UiIcons;
+import app.lockin.lockin.client.utils.UserIdentityRows;
 import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
 import app.lockin.lockin.common.models.Attachment;
@@ -19,8 +19,6 @@ import app.lockin.lockin.common.response.ResponseStatus;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -200,21 +198,15 @@ public class ProfileController implements MainControllerAware {
         card.getStyleClass().addAll("feed-card", "post-thread-card");
         card.setPadding(new Insets(16));
 
-        HBox topRow = new HBox(10);
-        topRow.setAlignment(Pos.CENTER_LEFT);
-
         String me = MyApplication.clientManager.getAuthenticatedUsername();
-        topRow.getChildren().add(createAvatar(me == null ? "ME" : me, 42, profilePicturesByUsername.get(me)));
-
-        VBox metaBox = new VBox(2);
-        Label titleLabel = new Label(me == null ? "Posted by you" : me);
-        titleLabel.getStyleClass().add("text-strong");
-        titleLabel.setCursor(Cursor.HAND);
-        String openUser = me;
-        titleLabel.setOnMouseClicked(event -> openUserProfile(openUser));
-        Label timeLabel = new Label(formatTimestamp(post.getCreatedAt()));
-        timeLabel.getStyleClass().add("muted-text");
-        metaBox.getChildren().addAll(titleLabel, timeLabel);
+        HBox topRow = UserIdentityRows.build(
+                me == null ? "ME" : me,
+                me == null ? "Posted by you" : me,
+                formatTimestamp(post.getCreatedAt()),
+                42,
+                profilePicturesByUsername.get(me),
+                () -> openUserProfile(me)
+        );
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -223,7 +215,7 @@ public class ProfileController implements MainControllerAware {
         deleteButton.getStyleClass().add("danger-button");
         deleteButton.setOnAction(event -> deletePost(post.getId(), deleteButton));
 
-        topRow.getChildren().addAll(metaBox, spacer, deleteButton);
+        topRow.getChildren().addAll(spacer, deleteButton);
         card.getChildren().add(topRow);
 
         if (post.getTextContent() != null && !post.getTextContent().isBlank()) {
@@ -262,20 +254,13 @@ public class ProfileController implements MainControllerAware {
         card.getStyleClass().addAll("feed-card", "post-thread-card");
         card.setPadding(new Insets(16));
 
-        HBox header = new HBox(10);
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.getChildren().add(createAvatar(post.getAuthorUsername(), 42, profilePicturesByUsername.get(post.getAuthorUsername())));
-
-        VBox metaBox = new VBox(2);
-        Label titleLabel = new Label(post.getAuthorUsername());
-        titleLabel.getStyleClass().add("text-strong");
-        titleLabel.setCursor(Cursor.HAND);
-        titleLabel.setOnMouseClicked(event -> openUserProfile(post.getAuthorUsername()));
-        Label timeLabel = new Label(formatTimestamp(post.getCreatedAt()));
-        timeLabel.getStyleClass().add("muted-text");
-        metaBox.getChildren().addAll(titleLabel, timeLabel);
-        header.getChildren().add(metaBox);
-
+        HBox header = UserIdentityRows.build(
+                post.getAuthorUsername(),
+                formatTimestamp(post.getCreatedAt()),
+                42,
+                profilePicturesByUsername.get(post.getAuthorUsername()),
+                () -> openUserProfile(post.getAuthorUsername())
+        );
         card.getChildren().add(header);
 
         if (post.getTextContent() != null && !post.getTextContent().isBlank()) {
@@ -314,16 +299,13 @@ public class ProfileController implements MainControllerAware {
         card.setPadding(new Insets(12));
         card.getStyleClass().add("comment-card");
 
-        HBox header = new HBox(10);
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.getChildren().add(createAvatar(comment.getAuthorUsername(), 32, profilePicturesByUsername.get(comment.getAuthorUsername())));
-        Label username = new Label(comment.getAuthorUsername());
-        username.getStyleClass().add("text-strong");
-        username.setCursor(Cursor.HAND);
-        username.setOnMouseClicked(event -> openUserProfile(comment.getAuthorUsername()));
-        Label time = new Label(formatTimestamp(comment.getCreatedAt()));
-        time.getStyleClass().add("muted-text");
-        header.getChildren().addAll(username, time);
+        HBox header = UserIdentityRows.build(
+                comment.getAuthorUsername(),
+                formatTimestamp(comment.getCreatedAt()),
+                32,
+                profilePicturesByUsername.get(comment.getAuthorUsername()),
+                () -> openUserProfile(comment.getAuthorUsername())
+        );
         card.getChildren().add(header);
 
         if (comment.getTextContent() != null && !comment.getTextContent().isBlank()) {
@@ -384,13 +366,6 @@ public class ProfileController implements MainControllerAware {
             mainController.openProfile(username);
         } catch (IOException ignored) {
         }
-    }
-
-    private ProfileAvatar createAvatar(String username, double size, Attachment profilePicture) {
-        ProfileAvatar avatar = AvatarFactory.create(username, size, profilePicture);
-        avatar.setCursor(Cursor.HAND);
-        avatar.setOnMouseClicked(event -> openUserProfile(username));
-        return avatar;
     }
 
     private void loadProfilePictures(List<Post> posts) {

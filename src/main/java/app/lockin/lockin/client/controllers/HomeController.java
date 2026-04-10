@@ -2,9 +2,9 @@ package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.utils.AttachmentViews;
-import app.lockin.lockin.client.utils.AvatarFactory;
 import app.lockin.lockin.client.utils.TextFormatter;
 import app.lockin.lockin.client.utils.UiIcons;
+import app.lockin.lockin.client.utils.UserIdentityRows;
 import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.client.models.ChatListItem;
 import app.lockin.lockin.common.models.Comment;
@@ -19,8 +19,6 @@ import app.lockin.lockin.common.response.ResponseStatus;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
@@ -279,12 +277,15 @@ public class HomeController implements MainControllerAware {
 
     private HBox buildConnectedUserItem(ChatListItem item) {
         String username = item.getUserName();
-        HBox row = new HBox(10);
-        row.setAlignment(Pos.CENTER_LEFT);
+        HBox row = UserIdentityRows.build(
+                username,
+                null,
+                36,
+                profilePicturesByUsername.get(username),
+                () -> openUserProfile(username)
+        );
         row.setPrefHeight(48);
         row.getStyleClass().add("contact-item");
-        row.getChildren().addAll(createAvatar(username, 36, profilePicturesByUsername.get(username)), new Label(username));
-        ((Label) row.getChildren().get(1)).getStyleClass().add("body-text");
         row.setOnMouseClicked(event -> openChat(username));
         return row;
     }
@@ -305,20 +306,13 @@ public class HomeController implements MainControllerAware {
         card.getStyleClass().addAll("feed-card", "post-thread-card");
         card.setPadding(new Insets(14, 16, 14, 16));
 
-        HBox header = new HBox(10);
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.getChildren().add(createAvatar(post.getAuthorUsername(), 42, profilePicturesByUsername.get(post.getAuthorUsername())));
-
-        VBox metaBox = new VBox(2);
-        Label usernameLabel = new Label(post.getAuthorUsername());
-        usernameLabel.getStyleClass().add("text-strong");
-        usernameLabel.setCursor(Cursor.HAND);
-        usernameLabel.setOnMouseClicked(event -> openUserProfile(post.getAuthorUsername()));
-        Label timeLabel = new Label(TextFormatter.formatTimestamp(post.getCreatedAt()));
-        timeLabel.getStyleClass().add("muted-text");
-        metaBox.getChildren().addAll(usernameLabel, timeLabel);
-
-        header.getChildren().add(metaBox);
+        HBox header = UserIdentityRows.build(
+                post.getAuthorUsername(),
+                TextFormatter.formatTimestamp(post.getCreatedAt()),
+                42,
+                profilePicturesByUsername.get(post.getAuthorUsername()),
+                () -> openUserProfile(post.getAuthorUsername())
+        );
         card.getChildren().add(header);
 
         if (post.getTextContent() != null && !post.getTextContent().isBlank()) {
@@ -362,20 +356,13 @@ public class HomeController implements MainControllerAware {
         card.setPadding(new Insets(12));
         card.getStyleClass().add("comment-card");
 
-        HBox header = new HBox(10);
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.getChildren().add(createAvatar(comment.getAuthorUsername(), 32, profilePicturesByUsername.get(comment.getAuthorUsername())));
-
-        VBox metaBox = new VBox(2);
-        Label usernameLabel = new Label(comment.getAuthorUsername());
-        usernameLabel.getStyleClass().add("text-strong");
-        usernameLabel.setCursor(Cursor.HAND);
-        usernameLabel.setOnMouseClicked(event -> openUserProfile(comment.getAuthorUsername()));
-        Label timeLabel = new Label(TextFormatter.formatTimestamp(comment.getCreatedAt()));
-        timeLabel.getStyleClass().add("muted-text");
-        metaBox.getChildren().addAll(usernameLabel, timeLabel);
-        header.getChildren().add(metaBox);
-
+        HBox header = UserIdentityRows.build(
+                comment.getAuthorUsername(),
+                TextFormatter.formatTimestamp(comment.getCreatedAt()),
+                32,
+                profilePicturesByUsername.get(comment.getAuthorUsername()),
+                () -> openUserProfile(comment.getAuthorUsername())
+        );
         card.getChildren().add(header);
 
         if (comment.getTextContent() != null && !comment.getTextContent().isBlank()) {
@@ -457,13 +444,6 @@ public class HomeController implements MainControllerAware {
                 true,
                 event -> downloadAttachment(attachment)
         );
-    }
-
-    private ProfileAvatar createAvatar(String username, double size, Attachment profilePicture) {
-        ProfileAvatar avatar = AvatarFactory.create(username, size, profilePicture);
-        avatar.setCursor(Cursor.HAND);
-        avatar.setOnMouseClicked(event -> openUserProfile(username));
-        return avatar;
     }
 
     private void renderSidebarProfileImage(Attachment profilePicture) {

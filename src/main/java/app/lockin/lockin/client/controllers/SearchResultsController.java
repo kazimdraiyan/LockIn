@@ -1,8 +1,7 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
-import app.lockin.lockin.client.elements.ProfileAvatar;
-import app.lockin.lockin.client.utils.AvatarFactory;
+import app.lockin.lockin.client.utils.UserIdentityRows;
 import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.FetchRequest;
 import app.lockin.lockin.common.requests.FetchType;
@@ -11,7 +10,6 @@ import app.lockin.lockin.common.response.ResponseStatus;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -86,26 +84,23 @@ public class SearchResultsController implements MainControllerAware {
 
     private HBox buildUserCard(UserProfile user) {
         HBox card = new HBox(14);
-        card.setAlignment(Pos.CENTER_LEFT);
         card.setPadding(new Insets(14, 16, 14, 16));
         card.getStyleClass().addAll("feed-card", "contact-item");
         card.setCursor(Cursor.HAND);
         card.setOnMouseClicked(event -> openProfile(user.getUsername()));
 
-        ProfileAvatar avatar = AvatarFactory.create(user.getUsername(), 48, user.getProfilePicture());
-
-        VBox textBox = new VBox(4);
-        Label usernameLabel = new Label(user.getUsername());
-        usernameLabel.getStyleClass().add("text-strong");
-        Label descriptionLabel = new Label(user.getDescription().isBlank() ? "No description yet." : user.getDescription());
-        descriptionLabel.setWrapText(true);
-        descriptionLabel.getStyleClass().add("muted-text");
-        textBox.getChildren().addAll(usernameLabel, descriptionLabel);
+        HBox identityRow = UserIdentityRows.build(
+                user.getUsername(),
+                user.getDescription().isBlank() ? "No description yet." : user.getDescription(),
+                48,
+                user.getProfilePicture(),
+                () -> openProfile(user.getUsername())
+        );
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        card.getChildren().addAll(avatar, textBox, spacer);
-        HBox.setHgrow(textBox, Priority.ALWAYS);
+        card.getChildren().addAll(identityRow, spacer);
+        HBox.setHgrow(identityRow, Priority.ALWAYS);
         return card;
     }
 
