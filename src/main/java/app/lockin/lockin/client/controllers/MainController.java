@@ -112,7 +112,7 @@ public class MainController {
         }
         setNavBar(config.isShowNavBar(), config.getTitle(), config.isShowSearchBar());
         setRefreshButtonVisible(config.isShowRefreshButton());
-        setSettingsButtonVisible(config.isShowSettingsButton());
+        setSettingsButtonVisible(config.isShowSettingsButton() && MyApplication.clientManager.isLoggedIn);
     }
 
     public void openProfile(String username) throws IOException {
