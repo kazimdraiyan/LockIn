@@ -20,4 +20,5 @@ module app.lockin.lockin {
     exports app.lockin.lockin.common.models;
     exports app.lockin.lockin.common.requests;
     exports app.lockin.lockin.common.response;
+    exports app.lockin.lockin.server;
 }

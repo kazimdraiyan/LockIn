@@ -1,10 +1,6 @@
 package app.lockin.lockin.server;
 
-import app.lockin.lockin.server.handlers.AuthHandler;
-import app.lockin.lockin.server.handlers.CallHandler;
-import app.lockin.lockin.server.handlers.ClientHandler;
-import app.lockin.lockin.server.handlers.MessageHandler;
-import app.lockin.lockin.server.handlers.PostHandler;
+import app.lockin.lockin.server.handlers.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;

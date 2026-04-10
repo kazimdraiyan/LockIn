@@ -10,9 +10,7 @@ import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 
-import static app.lockin.lockin.common.UdpConfig.SERVER_PORT;
-import static app.lockin.lockin.common.UdpConfig.UDP_SESSION_BIND_PREFIX;
-import static app.lockin.lockin.common.UdpConfig.UDP_VOICE_FRAME_PREFIX;
+import static app.lockin.lockin.common.UdpConfig.*;
 
 public final class UdpServer {
     private final AuthService authService = new AuthService();
@@ -33,7 +31,7 @@ public final class UdpServer {
         Thread thread = new Thread(this::receiveLoop, "lockin-udp-relay");
         thread.setDaemon(true);
         thread.start();
-        System.out.println("UDP relay listening on port " + SERVER_PORT);
+        System.out.println("UDP server listening on port " + SERVER_PORT);
     }
 
     private void receiveLoop() {

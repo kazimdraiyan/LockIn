@@ -31,7 +31,13 @@
   "authorUsername" : "ikra",
   "textContent" : "Check out my new artwork",
   "createdAt" : 1775791193309,
-  "comments" : [ ],
+  "comments" : [ {
+    "id" : "10a166a9-0863-4922-b555-e75c1332549e",
+    "postId" : "732552da-053c-4779-bd40-44ab468d5bab",
+    "authorUsername" : "raiyankazi",
+    "textContent" : "nice work",
+    "createdAt" : 1775830686201
+  } ],
   "attachment" : {
     "originalFileName" : "ea1be16d-9ffe-405f-adfa-7120f88c6f4f.jpg",
     "mimeType" : "image/jpeg",
