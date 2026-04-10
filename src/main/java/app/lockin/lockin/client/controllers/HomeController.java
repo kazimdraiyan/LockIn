@@ -3,6 +3,7 @@ package app.lockin.lockin.client.controllers;
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.utils.AttachmentViews;
 import app.lockin.lockin.client.utils.TextFormatter;
+import app.lockin.lockin.client.utils.PostCardRenderer;
 import app.lockin.lockin.client.utils.UiIcons;
 import app.lockin.lockin.client.utils.UserIdentityRows;
 import app.lockin.lockin.client.elements.ProfileAvatar;
@@ -21,7 +22,6 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -62,6 +62,26 @@ public class HomeController implements MainControllerAware {
     private MainController mainController;
     private Path selectedFilePath;
     private final Map<String, Attachment> profilePicturesByUsername = new HashMap<>();
+    private final PostCardRenderer.Actions postCardActions = new PostCardRenderer.Actions() {
+        @Override
+        public void openUserProfile(String username) {
+            HomeController.this.openUserProfile(username);
+        }
+
+        @Override
+        public void deletePost(String postId, Button deleteButton) {
+        }
+
+        @Override
+        public VBox buildAttachmentNode(Attachment attachment) {
+            return HomeController.this.buildAttachmentNode(attachment);
+        }
+
+        @Override
+        public String formatTimestamp(long createdAt) {
+            return TextFormatter.formatTimestamp(createdAt);
+        }
+    };
 
     @Override
     public void setMainController(MainController mainController) {
@@ -302,81 +322,14 @@ public class HomeController implements MainControllerAware {
     }
 
     private VBox buildPostCard(Post post) {
-        VBox card = new VBox(10);
-        card.getStyleClass().addAll("feed-card", "post-thread-card");
-        card.setPadding(new Insets(14, 16, 14, 16));
-
-        HBox header = UserIdentityRows.build(
-                post.getAuthorUsername(),
-                TextFormatter.formatTimestamp(post.getCreatedAt()),
-                42,
-                profilePicturesByUsername.get(post.getAuthorUsername()),
-                () -> openUserProfile(post.getAuthorUsername())
+        return PostCardRenderer.buildPostCard(
+                post,
+                false,
+                MyApplication.clientManager.getAuthenticatedUsername(),
+                profilePicturesByUsername,
+                buildCommentComposer(post),
+                postCardActions
         );
-        card.getChildren().add(header);
-
-        if (post.getTextContent() != null && !post.getTextContent().isBlank()) {
-            Label contentLabel = new Label(post.getTextContent());
-            contentLabel.setWrapText(true);
-            contentLabel.getStyleClass().add("body-text");
-            card.getChildren().add(contentLabel);
-        }
-
-        if (post.getAttachment() != null) {
-            card.getChildren().add(buildAttachmentNode(post.getAttachment()));
-        }
-
-        card.getChildren().add(new Separator());
-        card.getChildren().add(buildCommentsSection(post));
-
-        return card;
-    }
-
-    private VBox buildCommentsSection(Post post) {
-        VBox section = new VBox(10);
-        section.getStyleClass().add("comments-section");
-
-        List<Comment> comments = post.getComments();
-        if (comments.isEmpty()) {
-            Label emptyLabel = new Label("No comments yet.");
-            emptyLabel.getStyleClass().add("muted-text");
-            section.getChildren().add(emptyLabel);
-        } else {
-            for (Comment comment : comments) {
-                section.getChildren().add(buildCommentCard(comment));
-            }
-        }
-
-        section.getChildren().add(buildCommentComposer(post));
-        return section;
-    }
-
-    private VBox buildCommentCard(Comment comment) {
-        VBox card = new VBox(8);
-        card.setPadding(new Insets(12));
-        card.getStyleClass().add("comment-card");
-
-        HBox header = UserIdentityRows.build(
-                comment.getAuthorUsername(),
-                TextFormatter.formatTimestamp(comment.getCreatedAt()),
-                32,
-                profilePicturesByUsername.get(comment.getAuthorUsername()),
-                () -> openUserProfile(comment.getAuthorUsername())
-        );
-        card.getChildren().add(header);
-
-        if (comment.getTextContent() != null && !comment.getTextContent().isBlank()) {
-            Label contentLabel = new Label(comment.getTextContent());
-            contentLabel.setWrapText(true);
-            contentLabel.getStyleClass().add("body-text");
-            card.getChildren().add(contentLabel);
-        }
-
-        if (comment.getAttachment() != null) {
-            card.getChildren().add(buildAttachmentNode(comment.getAttachment()));
-        }
-
-        return card;
     }
 
     private VBox buildCommentComposer(Post post) {

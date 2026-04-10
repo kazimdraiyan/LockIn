@@ -3,8 +3,8 @@ package app.lockin.lockin.client.controllers;
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.client.utils.AttachmentViews;
+import app.lockin.lockin.client.utils.PostCardRenderer;
 import app.lockin.lockin.client.utils.UiIcons;
-import app.lockin.lockin.client.utils.UserIdentityRows;
 import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
 import app.lockin.lockin.common.models.Attachment;
@@ -22,12 +22,8 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
@@ -69,6 +65,27 @@ public class ProfileController implements MainControllerAware {
     private String viewedUsername;
     private boolean ownProfile;
     private final Map<String, Attachment> profilePicturesByUsername = new HashMap<>();
+    private final PostCardRenderer.Actions postCardActions = new PostCardRenderer.Actions() {
+        @Override
+        public void openUserProfile(String username) {
+            ProfileController.this.openUserProfile(username);
+        }
+
+        @Override
+        public void deletePost(String postId, Button deleteButton) {
+            ProfileController.this.deletePost(postId, deleteButton);
+        }
+
+        @Override
+        public VBox buildAttachmentNode(Attachment attachment) {
+            return ProfileController.this.buildAttachmentNode(attachment);
+        }
+
+        @Override
+        public String formatTimestamp(long createdAt) {
+            return ProfileController.this.formatTimestamp(createdAt);
+        }
+    };
 
     @Override
     public void setMainController(MainController mainController) {
@@ -181,7 +198,7 @@ public class ProfileController implements MainControllerAware {
         }
 
         for (Post post : posts) {
-            postsContainer.getChildren().add(ownProfile ? buildOwnPostCard(post) : buildReadOnlyPostCard(post));
+            postsContainer.getChildren().add(buildPostCard(post));
         }
         postsScrollPane.setVvalue(0);
     }
@@ -193,132 +210,15 @@ public class ProfileController implements MainControllerAware {
         postsContainer.getChildren().add(errorLabel);
     }
 
-    private VBox buildOwnPostCard(Post post) {
-        VBox card = new VBox(10);
-        card.getStyleClass().addAll("feed-card", "post-thread-card");
-        card.setPadding(new Insets(16));
-
-        String me = MyApplication.clientManager.getAuthenticatedUsername();
-        HBox topRow = UserIdentityRows.build(
-                me == null ? "ME" : me,
-                me == null ? "Posted by you" : me,
-                formatTimestamp(post.getCreatedAt()),
-                42,
-                profilePicturesByUsername.get(me),
-                () -> openUserProfile(me)
+    private VBox buildPostCard(Post post) {
+        return PostCardRenderer.buildPostCard(
+                post,
+                ownProfile,
+                MyApplication.clientManager.getAuthenticatedUsername(),
+                profilePicturesByUsername,
+                null,
+                postCardActions
         );
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        Button deleteButton = new Button("Delete post");
-        deleteButton.getStyleClass().add("danger-button");
-        deleteButton.setOnAction(event -> deletePost(post.getId(), deleteButton));
-
-        topRow.getChildren().addAll(spacer, deleteButton);
-        card.getChildren().add(topRow);
-
-        if (post.getTextContent() != null && !post.getTextContent().isBlank()) {
-            Label contentLabel = new Label(post.getTextContent());
-            contentLabel.setWrapText(true);
-            contentLabel.getStyleClass().add("body-text");
-            card.getChildren().add(contentLabel);
-        }
-
-        if (post.getAttachment() != null) {
-            card.getChildren().add(buildAttachmentNode(post.getAttachment()));
-        }
-
-        VBox commentsSection = new VBox(8);
-        commentsSection.getStyleClass().add("comments-section");
-        Label commentsTitle = new Label("Comments");
-        commentsTitle.getStyleClass().add("text-strong");
-        commentsSection.getChildren().add(commentsTitle);
-
-        if (post.getComments().isEmpty()) {
-            Label emptyLabel = new Label("No comments yet.");
-            emptyLabel.getStyleClass().add("muted-text");
-            commentsSection.getChildren().add(emptyLabel);
-        } else {
-            for (Comment comment : post.getComments()) {
-                commentsSection.getChildren().add(buildCommentCard(comment));
-            }
-        }
-
-        card.getChildren().addAll(new Separator(), commentsSection);
-        return card;
-    }
-
-    private VBox buildReadOnlyPostCard(Post post) {
-        VBox card = new VBox(10);
-        card.getStyleClass().addAll("feed-card", "post-thread-card");
-        card.setPadding(new Insets(16));
-
-        HBox header = UserIdentityRows.build(
-                post.getAuthorUsername(),
-                formatTimestamp(post.getCreatedAt()),
-                42,
-                profilePicturesByUsername.get(post.getAuthorUsername()),
-                () -> openUserProfile(post.getAuthorUsername())
-        );
-        card.getChildren().add(header);
-
-        if (post.getTextContent() != null && !post.getTextContent().isBlank()) {
-            Label contentLabel = new Label(post.getTextContent());
-            contentLabel.setWrapText(true);
-            contentLabel.getStyleClass().add("body-text");
-            card.getChildren().add(contentLabel);
-        }
-
-        if (post.getAttachment() != null) {
-            card.getChildren().add(buildAttachmentNode(post.getAttachment()));
-        }
-
-        VBox commentsSection = new VBox(8);
-        commentsSection.getStyleClass().add("comments-section");
-        Label commentsTitle = new Label("Comments");
-        commentsTitle.getStyleClass().add("text-strong");
-        commentsSection.getChildren().add(commentsTitle);
-
-        if (post.getComments().isEmpty()) {
-            Label emptyLabel = new Label("No comments yet.");
-            emptyLabel.getStyleClass().add("muted-text");
-            commentsSection.getChildren().add(emptyLabel);
-        } else {
-            for (Comment comment : post.getComments()) {
-                commentsSection.getChildren().add(buildCommentCard(comment));
-            }
-        }
-
-        card.getChildren().addAll(new Separator(), commentsSection);
-        return card;
-    }
-
-    private VBox buildCommentCard(Comment comment) {
-        VBox card = new VBox(6);
-        card.setPadding(new Insets(12));
-        card.getStyleClass().add("comment-card");
-
-        HBox header = UserIdentityRows.build(
-                comment.getAuthorUsername(),
-                formatTimestamp(comment.getCreatedAt()),
-                32,
-                profilePicturesByUsername.get(comment.getAuthorUsername()),
-                () -> openUserProfile(comment.getAuthorUsername())
-        );
-        card.getChildren().add(header);
-
-        if (comment.getTextContent() != null && !comment.getTextContent().isBlank()) {
-            Label contentLabel = new Label(comment.getTextContent());
-            contentLabel.setWrapText(true);
-            contentLabel.getStyleClass().add("body-text");
-            card.getChildren().add(contentLabel);
-        }
-
-        if (comment.getAttachment() != null) {
-            card.getChildren().add(buildAttachmentNode(comment.getAttachment()));
-        }
-        return card;
     }
 
     private VBox buildAttachmentNode(Attachment attachment) {
