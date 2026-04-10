@@ -91,6 +91,31 @@
     -fx-text-fill: -color-text-muted;
 }
 
+.text-secondary {
+    -fx-text-fill: -color-text-muted;
+}
+
+.text-primary-strong {
+    -fx-text-fill: -color-text-strong;
+    -fx-font-weight: bold;
+}
+
+.clickable {
+    -fx-cursor: hand;
+}
+
+.readable-narrow {
+    -fx-max-width: 760;
+}
+
+.readable-medium {
+    -fx-max-width: 920;
+}
+
+.readable-wide {
+    -fx-max-width: 980;
+}
+
 .status-text {
     -fx-text-fill: -color-success;
 }

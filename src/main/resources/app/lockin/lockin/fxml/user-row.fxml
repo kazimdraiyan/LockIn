@@ -9,7 +9,7 @@
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.lockin.lockin.client.elements.UserRowController">
     <ProfileAvatar fx:id="avatar" size="40"/>
     <VBox alignment="CENTER_LEFT" spacing="2">
-        <Label fx:id="primaryLabel" styleClass="text-strong" text="Username"/>
-        <Label fx:id="secondaryLabel" styleClass="muted-text" text="Secondary"/>
+        <Label fx:id="primaryLabel" styleClass="text-primary-strong" text="Username"/>
+        <Label fx:id="secondaryLabel" styleClass="text-secondary" text="Secondary"/>
     </VBox>
 </HBox>

@@ -48,12 +48,12 @@
                 </VBox>
             </HBox>
 
-            <VBox maxWidth="980" spacing="8">
+            <VBox maxWidth="980" spacing="8" styleClass="readable-wide">
                 <Label fx:id="postsTitleLabel" styleClass="section-title" text="Your posts"/>
                 <Separator/>
             </VBox>
 
-            <VBox fx:id="postsContainer" maxWidth="980" spacing="18"/>
+            <VBox fx:id="postsContainer" maxWidth="980" spacing="18" styleClass="readable-wide"/>
         </VBox>
     </ScrollPane>
 </VBox>

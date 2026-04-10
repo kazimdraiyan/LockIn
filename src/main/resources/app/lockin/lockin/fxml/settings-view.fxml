@@ -15,7 +15,7 @@
         <Insets bottom="12" left="16" right="16" top="12"/>
     </padding>
 
-    <VBox maxWidth="760" spacing="12" styleClass="feed-card">
+    <VBox maxWidth="760" spacing="12" styleClass="feed-card readable-narrow">
         <padding>
             <Insets bottom="12" left="16" right="16" top="12"/>
         </padding>
@@ -49,7 +49,7 @@
         <Label fx:id="statusLabel" styleClass="muted-text" text=""/>
     </VBox>
 
-    <VBox maxWidth="760" spacing="12" styleClass="feed-card">
+    <VBox maxWidth="760" spacing="12" styleClass="feed-card readable-narrow">
         <padding>
             <Insets bottom="12" left="16" right="16" top="12"/>
         </padding>

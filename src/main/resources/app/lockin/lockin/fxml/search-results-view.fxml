@@ -11,13 +11,13 @@
         <Insets bottom="16" left="16" right="16" top="16"/>
     </padding>
 
-    <VBox maxWidth="920" spacing="6">
+    <VBox maxWidth="920" spacing="6" styleClass="readable-medium">
         <Label styleClass="section-title" text="User search"/>
         <Label fx:id="queryLabel" styleClass="muted-text" text="Results"/>
         <Label fx:id="statusLabel" styleClass="muted-text"/>
     </VBox>
 
-    <ScrollPane fitToWidth="true" maxWidth="920" VBox.vgrow="ALWAYS">
+    <ScrollPane fitToWidth="true" maxWidth="920" styleClass="readable-medium" VBox.vgrow="ALWAYS">
         <VBox fx:id="resultsContainer" spacing="12">
             <padding>
                 <Insets bottom="18" top="4"/>

@@ -36,8 +36,13 @@
       "mimeType" : "image/png",
       "storedFileName" : "f581abb8-24bb-4889-acc7-b2a9178c7f8b_Screenshot__1_.png"
     }
+  }, {
+    "id" : "82dd8cd2-f331-456d-8d35-e078b04d2843",
+    "senderUsername" : "raiyankazi",
+    "text" : "see my wallpaper dawg",
+    "createdAt" : 1775813858691
   } ],
-  "updatedAt" : 1775621391189
+  "updatedAt" : 1775813858691
 }, {
   "id" : "06cd93ff-3c74-4e73-9d57-04a04404a583",
   "participants" : [ "ahon", "ikra" ],
@@ -116,6 +121,11 @@
       "mimeType" : "application/pdf",
       "storedFileName" : "0444eb89-7be0-4779-add6-92a23f19e80a_CSE_102_Outline.pdf"
     }
+  }, {
+    "id" : "64d22122-cd7c-49be-be5f-afe1d9628cbd",
+    "senderUsername" : "raiyankazi",
+    "text" : "hello",
+    "createdAt" : 1775813846372
   } ],
-  "updatedAt" : 1775811770631
+  "updatedAt" : 1775813846372
 } ]

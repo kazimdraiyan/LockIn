@@ -36,11 +36,12 @@ public final class UserIdentityRows {
 
         ProfileAvatar avatar = AvatarFactory.create(avatarUsername, avatarSize, profilePicture);
         Label primaryLabel = new Label(primaryText == null ? "" : primaryText);
-        primaryLabel.getStyleClass().add("text-strong");
+        primaryLabel.getStyleClass().add("text-primary-strong");
 
         if (onUserClick != null) {
             avatar.setCursor(Cursor.HAND);
             primaryLabel.setCursor(Cursor.HAND);
+            primaryLabel.getStyleClass().add("clickable");
             avatar.setOnMouseClicked(event -> onUserClick.run());
             primaryLabel.setOnMouseClicked(event -> onUserClick.run());
         }
@@ -50,7 +51,7 @@ public final class UserIdentityRows {
         metaBox.getChildren().add(primaryLabel);
         if (secondaryText != null && !secondaryText.isBlank()) {
             Label secondaryLabel = new Label(secondaryText);
-            secondaryLabel.getStyleClass().add("muted-text");
+            secondaryLabel.getStyleClass().add("text-secondary");
             metaBox.getChildren().add(secondaryLabel);
         }
 

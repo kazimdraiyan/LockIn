@@ -40,6 +40,7 @@ public class UserRowController {
         if (onClick == null) {
             avatar.setCursor(Cursor.DEFAULT);
             primaryLabel.setCursor(Cursor.DEFAULT);
+            primaryLabel.getStyleClass().remove("clickable");
             avatar.setOnMouseClicked(null);
             primaryLabel.setOnMouseClicked(null);
             root.setOnMouseClicked(null);
@@ -48,6 +49,9 @@ public class UserRowController {
 
         avatar.setCursor(Cursor.HAND);
         primaryLabel.setCursor(Cursor.HAND);
+        if (!primaryLabel.getStyleClass().contains("clickable")) {
+            primaryLabel.getStyleClass().add("clickable");
+        }
         avatar.setOnMouseClicked(event -> onClick.run());
         primaryLabel.setOnMouseClicked(event -> onClick.run());
         root.setOnMouseClicked(event -> onClick.run());
