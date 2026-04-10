@@ -18,7 +18,7 @@
     </padding>
 
     <ScrollPane fx:id="postsScrollPane" fitToWidth="true" VBox.vgrow="ALWAYS">
-        <VBox spacing="12">
+        <VBox alignment="TOP_CENTER" spacing="12">
             <padding>
                 <Insets bottom="18" top="4"/>
             </padding>
@@ -48,12 +48,12 @@
                 </VBox>
             </HBox>
 
-            <VBox spacing="8">
+            <VBox maxWidth="980" spacing="8">
                 <Label fx:id="postsTitleLabel" styleClass="section-title" text="Your posts"/>
                 <Separator/>
             </VBox>
 
-            <VBox fx:id="postsContainer" spacing="18"/>
+            <VBox fx:id="postsContainer" maxWidth="980" spacing="18"/>
         </VBox>
     </ScrollPane>
 </VBox>

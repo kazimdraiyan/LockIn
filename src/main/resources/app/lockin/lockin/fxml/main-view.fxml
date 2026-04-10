@@ -47,7 +47,11 @@
             <Region HBox.hgrow="ALWAYS"/>
 
 
-            <fx:include fx:id="searchBar" source="search-bar.fxml" />
+            <fx:include fx:id="searchBar" source="search-bar.fxml">
+                <HBox.margin>
+                    <Insets top="8" bottom="8"/>
+                </HBox.margin>
+            </fx:include>
 
 
             <Region HBox.hgrow="ALWAYS"/>
