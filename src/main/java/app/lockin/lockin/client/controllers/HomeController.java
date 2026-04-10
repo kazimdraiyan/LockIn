@@ -514,9 +514,10 @@ public class HomeController implements MainControllerAware {
     }
 
     private void applyOwnProfileImage(ProfileAvatar avatar, Attachment profilePicture) {
-        avatar.setText("ME");
+        String username = MyApplication.clientManager.getAuthenticatedUsername();
+        avatar.setText(username == null ? "ME" : username);
         if (profilePicture == null || profilePicture.getData().length == 0) {
-            avatar.setImage(new Image(MyApplication.getIcon("account.png").toExternalForm()));
+            avatar.setImage(null);
             return;
         }
         avatar.setImage(new Image(new ByteArrayInputStream(profilePicture.getData())));

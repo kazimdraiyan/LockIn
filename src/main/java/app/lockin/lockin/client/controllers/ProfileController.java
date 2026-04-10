@@ -471,7 +471,7 @@ public class ProfileController implements MainControllerAware {
 
     private void renderProfileImage(Attachment profilePicture) {
         if (profilePicture == null || profilePicture.getData().length == 0) {
-            profileAvatar.setImage(new Image(MyApplication.getIcon("account.png").toExternalForm()));
+            profileAvatar.setImage(null);
             return;
         }
         profileAvatar.setImage(new Image(new ByteArrayInputStream(profilePicture.getData())));
