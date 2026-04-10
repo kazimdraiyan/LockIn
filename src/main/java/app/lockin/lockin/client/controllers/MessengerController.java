@@ -84,6 +84,10 @@ public class MessengerController implements MainControllerAware {
         }
     }
 
+    public String getActiveConversationUsername() {
+        return messagesViewController == null ? null : messagesViewController.getCurrentChatUsername();
+    }
+
 
     public void onLocalMessage(MessageDelivery delivery) {
         chatsViewController.applyMessageDelivery(delivery, messagesViewController.getCurrentChatUsername());

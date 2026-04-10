@@ -71,7 +71,10 @@ public class ChatsController {
         chatListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 newVal.setUnreadCount(0);
-                loadConversation(newVal);
+                String activeConversation = messengerController == null ? null : messengerController.getActiveConversationUsername();
+                if (activeConversation == null || !activeConversation.equals(newVal.getUserName())) {
+                    loadConversation(newVal);
+                }
                 chatListView.refresh();
             }
         });
