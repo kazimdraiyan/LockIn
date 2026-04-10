@@ -3,6 +3,7 @@ package app.lockin.lockin.client.controllers;
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.NavCallState;
 import app.lockin.lockin.client.elements.ProfileAvatar;
+import app.lockin.lockin.client.utils.ThemeManager;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.CallSignal;
 import app.lockin.lockin.common.models.ConversationData;
@@ -77,6 +78,7 @@ public class MessagesController {
     public void initialize() {
         renderPlaceholder("Select a chat to view messages.");
         setComposerEnabled(false);
+        applyAttachIcon();
         updateAttachmentIndicator();
         chatAvatar.setCursor(Cursor.HAND);
         chatNameLabel.setCursor(Cursor.HAND);
@@ -449,6 +451,8 @@ public class MessagesController {
         Button saveButton = new Button("DL");
         saveButton.setPrefSize(30, 30);
         saveButton.getStyleClass().add("action-icon-button");
+        saveButton.setGraphic(createIconView("download", 14));
+        saveButton.setText("");
         saveButton.setOnAction(event -> downloadAttachment(attachment));
 
         fileRow.getChildren().addAll(iconLabel, metaBox, spacer, saveButton);
@@ -531,7 +535,21 @@ public class MessagesController {
 
     // TODO: Add icons
     private void updateAttachmentIndicator() {
-        attachFileBtn.setText(selectedAttachmentPath == null ? "+" : "1");
+        attachFileBtn.setText(selectedAttachmentPath == null ? "" : "1");
+        applyAttachIcon();
+    }
+
+    private void applyAttachIcon() {
+        attachFileBtn.setGraphic(createIconView("attach", 16));
+    }
+
+    private ImageView createIconView(String baseName, double size) {
+        String fileName = ThemeManager.isDarkMode() ? baseName + "_white.png" : baseName + ".png";
+        ImageView icon = new ImageView(new Image(MyApplication.getIcon(fileName).toExternalForm()));
+        icon.setFitWidth(size);
+        icon.setFitHeight(size);
+        icon.setPreserveRatio(true);
+        return icon;
     }
 
     private void updateChatHeader() {

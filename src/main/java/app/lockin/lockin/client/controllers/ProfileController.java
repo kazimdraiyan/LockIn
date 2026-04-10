@@ -2,6 +2,7 @@ package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.elements.ProfileAvatar;
+import app.lockin.lockin.client.utils.ThemeManager;
 import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
 import app.lockin.lockin.common.models.Attachment;
@@ -75,6 +76,7 @@ public class ProfileController implements MainControllerAware {
         this.mainController = mainController;
         viewedUsername = mainController.viewedProfileUsername;
         ownProfile = viewedUsername == null || viewedUsername.isBlank();
+        chooseProfilePictureButton.setGraphic(createIconView("attach", 14));
         mainController.setNavBar(true, ownProfile ? "Profile" : viewedUsername, true);
         mainController.setRefreshButtonVisible(false);
         loadProfile();
@@ -539,5 +541,14 @@ public class ProfileController implements MainControllerAware {
         }
         String trimmed = username.trim();
         return trimmed.substring(0, Math.min(2, trimmed.length())).toUpperCase(Locale.ENGLISH);
+    }
+
+    private ImageView createIconView(String baseName, double size) {
+        String fileName = ThemeManager.isDarkMode() ? baseName + "_white.png" : baseName + ".png";
+        ImageView icon = new ImageView(new Image(MyApplication.getIcon(fileName).toExternalForm()));
+        icon.setFitWidth(size);
+        icon.setFitHeight(size);
+        icon.setPreserveRatio(true);
+        return icon;
     }
 }

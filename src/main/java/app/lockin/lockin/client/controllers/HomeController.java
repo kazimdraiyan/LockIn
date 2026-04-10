@@ -2,6 +2,7 @@ package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.utils.TextFormatter;
+import app.lockin.lockin.client.utils.ThemeManager;
 import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.client.models.ChatListItem;
 import app.lockin.lockin.common.models.Comment;
@@ -70,6 +71,7 @@ public class HomeController implements MainControllerAware {
         this.mainController = mainController;
         mainController.setNavBar(true, "LockIn", true);
         mainController.setRefreshButtonVisible(true);
+        uploadFileButton.setGraphic(createIconView("attach", 14));
         profileNavLabel.setText(MyApplication.clientManager.getAuthenticatedUsername());
         loadSidebarProfileImage();
         loadPosts();
@@ -408,6 +410,7 @@ public class HomeController implements MainControllerAware {
 
         Button chooseFileButton = new Button("Attach File");
         chooseFileButton.getStyleClass().add("feed-action-button");
+        chooseFileButton.setGraphic(createIconView("attach", 14));
 
         Button commentButton = new Button("Comment");
         commentButton.getStyleClass().add("primary-button");
@@ -490,6 +493,7 @@ public class HomeController implements MainControllerAware {
 
         Button downloadButton = new Button("Download");
         downloadButton.getStyleClass().add("primary-button");
+        downloadButton.setGraphic(createIconView("download", 14));
         downloadButton.setOnAction(event -> downloadAttachment(attachment));
 
         preview.getChildren().addAll(iconLabel, textBox, spacer, downloadButton);
@@ -720,5 +724,14 @@ public class HomeController implements MainControllerAware {
         String fileName = filePath.getFileName().toString();
         byte[] data = Files.readAllBytes(filePath);
         return new Attachment(fileName, mimeType, data);
+    }
+
+    private ImageView createIconView(String baseName, double size) {
+        String fileName = ThemeManager.isDarkMode() ? baseName + "_white.png" : baseName + ".png";
+        ImageView icon = new ImageView(new Image(MyApplication.getIcon(fileName).toExternalForm()));
+        icon.setFitWidth(size);
+        icon.setFitHeight(size);
+        icon.setPreserveRatio(true);
+        return icon;
     }
 }
