@@ -106,6 +106,16 @@
       "mimeType" : "image/png",
       "storedFileName" : "39473012-eff3-4f0c-96f4-3730c047d9ab_Screenshot__54_.png"
     }
+  }, {
+    "id" : "0444eb89-7be0-4779-add6-92a23f19e80a",
+    "senderUsername" : "ahonsazzad",
+    "text" : "Juniors, see this",
+    "createdAt" : 1775811770631,
+    "attachment" : {
+      "originalFileName" : "CSE 102 Outline.pdf",
+      "mimeType" : "application/pdf",
+      "storedFileName" : "0444eb89-7be0-4779-add6-92a23f19e80a_CSE_102_Outline.pdf"
+    }
   } ],
-  "updatedAt" : 1775809415264
+  "updatedAt" : 1775811770631
 } ]

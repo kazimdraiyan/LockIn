@@ -3,7 +3,7 @@ package app.lockin.lockin.client.controllers;
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.NavCallState;
 import app.lockin.lockin.client.elements.ProfileAvatar;
-import app.lockin.lockin.client.utils.ThemeManager;
+import app.lockin.lockin.client.utils.AvatarFactory;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.CallSignal;
 import app.lockin.lockin.common.models.ConversationData;
@@ -18,6 +18,7 @@ import app.lockin.lockin.common.requests.FetchType;
 import app.lockin.lockin.common.requests.FetchMessagesRequest;
 import app.lockin.lockin.common.response.Response;
 import app.lockin.lockin.common.response.ResponseStatus;
+import app.lockin.lockin.client.utils.UiIcons;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -451,7 +452,7 @@ public class MessagesController {
         Button saveButton = new Button("DL");
         saveButton.setPrefSize(30, 30);
         saveButton.getStyleClass().add("action-icon-button");
-        saveButton.setGraphic(createIconView("download", 14));
+        saveButton.setGraphic(UiIcons.icon("download", 14));
         saveButton.setText("");
         saveButton.setOnAction(event -> downloadAttachment(attachment));
 
@@ -540,16 +541,7 @@ public class MessagesController {
     }
 
     private void applyAttachIcon() {
-        attachFileBtn.setGraphic(createIconView("attach", 16));
-    }
-
-    private ImageView createIconView(String baseName, double size) {
-        String fileName = ThemeManager.isDarkMode() ? baseName + "_white.png" : baseName + ".png";
-        ImageView icon = new ImageView(new Image(MyApplication.getIcon(fileName).toExternalForm()));
-        icon.setFitWidth(size);
-        icon.setFitHeight(size);
-        icon.setPreserveRatio(true);
-        return icon;
+        attachFileBtn.setGraphic(UiIcons.icon("attach", 16));
     }
 
     private void updateChatHeader() {
@@ -671,22 +663,13 @@ public class MessagesController {
     }
 
     private ProfileAvatar createSenderAvatar(String username) {
-        ProfileAvatar avatar = new ProfileAvatar();
-        avatar.setSize(30);
-        avatar.setText(extractInitial(username));
+        ProfileAvatar avatar = AvatarFactory.create(username, 30, null);
 
         Image image = senderProfileImages.get(username);
         if (image != null) {
             avatar.setImage(image);
         }
         return avatar;
-    }
-
-    private String extractInitial(String username) {
-        if (username == null || username.isBlank()) {
-            return "?";
-        }
-        return String.valueOf(username.trim().charAt(0)).toUpperCase(Locale.ENGLISH);
     }
 
     private void loadCommonChatProfileImages() {

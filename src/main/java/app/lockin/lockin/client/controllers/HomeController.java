@@ -1,8 +1,10 @@
 package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
+import app.lockin.lockin.client.utils.AttachmentViews;
+import app.lockin.lockin.client.utils.AvatarFactory;
 import app.lockin.lockin.client.utils.TextFormatter;
-import app.lockin.lockin.client.utils.ThemeManager;
+import app.lockin.lockin.client.utils.UiIcons;
 import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.client.models.ChatListItem;
 import app.lockin.lockin.common.models.Comment;
@@ -25,7 +27,6 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -36,7 +37,6 @@ import javafx.stage.Window;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -71,7 +70,7 @@ public class HomeController implements MainControllerAware {
         this.mainController = mainController;
         mainController.setNavBar(true, "LockIn", true);
         mainController.setRefreshButtonVisible(true);
-        uploadFileButton.setGraphic(createIconView("attach", 14));
+        uploadFileButton.setGraphic(UiIcons.icon("attach", 14));
         profileNavLabel.setText(MyApplication.clientManager.getAuthenticatedUsername());
         loadSidebarProfileImage();
         loadPosts();
@@ -410,7 +409,7 @@ public class HomeController implements MainControllerAware {
 
         Button chooseFileButton = new Button("Attach File");
         chooseFileButton.getStyleClass().add("feed-action-button");
-        chooseFileButton.setGraphic(createIconView("attach", 14));
+        chooseFileButton.setGraphic(UiIcons.icon("attach", 14));
 
         Button commentButton = new Button("Comment");
         commentButton.getStyleClass().add("primary-button");
@@ -452,63 +451,18 @@ public class HomeController implements MainControllerAware {
     }
 
     private VBox buildAttachmentNode(Attachment attachment) {
-        VBox attachmentBox = new VBox(10);
-
-        if (attachment.getMimeType() != null && attachment.getMimeType().startsWith("image/")) {
-            ImageView imageView = new ImageView(new Image(new ByteArrayInputStream(attachment.getData())));
-            imageView.setPreserveRatio(true);
-            imageView.setFitWidth(420);
-            attachmentBox.getChildren().add(imageView);
-        }
-
-        if ("text/plain".equals(attachment.getMimeType())) {
-            Label previewLabel = new Label(extractTextPreview(attachment));
-            previewLabel.setWrapText(true);
-            previewLabel.getStyleClass().add("body-text");
-            attachmentBox.getChildren().add(previewLabel);
-        }
-
-        attachmentBox.getChildren().add(buildFilePreview(attachment));
-        return attachmentBox;
-    }
-
-    private HBox buildFilePreview(Attachment attachment) {
-        HBox preview = new HBox(14);
-        preview.setAlignment(Pos.CENTER_LEFT);
-        preview.setPadding(new Insets(14));
-        preview.getStyleClass().add("file-preview");
-
-        Label iconLabel = new Label(TextFormatter.fileBadgeText(attachment.getMimeType()));
-        iconLabel.getStyleClass().add("file-icon");
-
-        VBox textBox = new VBox(3);
-        Label fileNameLabel = new Label(attachment.getOriginalFileName());
-        fileNameLabel.getStyleClass().add("text-strong");
-        Label metaLabel = new Label(TextFormatter.readableFileSize(attachment.getData().length) + "  |  " + TextFormatter.readableFileType(attachment.getMimeType()));
-        metaLabel.getStyleClass().add("file-meta");
-        textBox.getChildren().addAll(fileNameLabel, metaLabel);
-
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        Button downloadButton = new Button("Download");
-        downloadButton.getStyleClass().add("primary-button");
-        downloadButton.setGraphic(createIconView("download", 14));
-        downloadButton.setOnAction(event -> downloadAttachment(attachment));
-
-        preview.getChildren().addAll(iconLabel, textBox, spacer, downloadButton);
-        return preview;
+        return AttachmentViews.buildFeedAttachment(
+                attachment,
+                true,
+                true,
+                event -> downloadAttachment(attachment)
+        );
     }
 
     private ProfileAvatar createAvatar(String username, double size, Attachment profilePicture) {
-        ProfileAvatar avatar = new ProfileAvatar();
-        avatar.setSize(size);
-        avatar.setText(extractInitials(username));
+        ProfileAvatar avatar = AvatarFactory.create(username, size, profilePicture);
         avatar.setCursor(Cursor.HAND);
         avatar.setOnMouseClicked(event -> openUserProfile(username));
-        if (profilePicture != null && profilePicture.getData() != null && profilePicture.getData().length > 0) {
-            avatar.setImage(new Image(new ByteArrayInputStream(profilePicture.getData())));
-        }
         return avatar;
     }
 
@@ -660,52 +614,6 @@ public class HomeController implements MainControllerAware {
         commentStatusLabel.setText(message == null ? "" : message);
     }
 
-    private String extractInitials(String username) {
-        if (username == null || username.isBlank()) {
-            return "?";
-        }
-        String trimmed = username.trim();
-        return trimmed.substring(0, Math.min(2, trimmed.length())).toUpperCase(Locale.ENGLISH);
-    }
-
-    private String readableFileType(Attachment attachment) {
-        return switch (attachment.getMimeType()) {
-            case "image/jpeg" -> "JPEG Image";
-            case "image/gif" -> "GIF Image";
-            case "application/pdf" -> "PDF Document";
-            case "text/plain" -> "Text File";
-            default -> "File";
-        };
-    }
-
-    private String fileBadgeText(Attachment attachment) {
-        return switch (attachment.getMimeType()) {
-            case "image/jpeg" -> "JPG";
-            case "image/gif" -> "GIF";
-            case "application/pdf" -> "PDF";
-            case "text/plain" -> "TXT";
-            default -> "FILE";
-        };
-    }
-
-    private String readableFileSize(long sizeBytes) {
-        if (sizeBytes < 1024) {
-            return sizeBytes + " B";
-        }
-        if (sizeBytes < 1024 * 1024) {
-            return String.format(Locale.ENGLISH, "%.1f KB", sizeBytes / 1024.0);
-        }
-        return String.format(Locale.ENGLISH, "%.1f MB", sizeBytes / (1024.0 * 1024.0));
-    }
-
-    private String extractTextPreview(Attachment attachment) {
-        String text = new String(attachment.getData(), StandardCharsets.UTF_8).trim();
-        if (text.length() > 240) {
-            return text.substring(0, 240) + "...";
-        }
-        return text.isBlank() ? "(Empty text file)" : text;
-    }
-
     private Attachment createAttachmentFromPath(Path filePath) throws IOException {
         if (filePath == null) {
             return null;
@@ -726,12 +634,4 @@ public class HomeController implements MainControllerAware {
         return new Attachment(fileName, mimeType, data);
     }
 
-    private ImageView createIconView(String baseName, double size) {
-        String fileName = ThemeManager.isDarkMode() ? baseName + "_white.png" : baseName + ".png";
-        ImageView icon = new ImageView(new Image(MyApplication.getIcon(fileName).toExternalForm()));
-        icon.setFitWidth(size);
-        icon.setFitHeight(size);
-        icon.setPreserveRatio(true);
-        return icon;
-    }
 }

@@ -2,7 +2,9 @@ package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.elements.ProfileAvatar;
-import app.lockin.lockin.client.utils.ThemeManager;
+import app.lockin.lockin.client.utils.AttachmentViews;
+import app.lockin.lockin.client.utils.AvatarFactory;
+import app.lockin.lockin.client.utils.UiIcons;
 import app.lockin.lockin.common.models.Comment;
 import app.lockin.lockin.common.models.Post;
 import app.lockin.lockin.common.models.Attachment;
@@ -25,7 +27,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -76,7 +77,7 @@ public class ProfileController implements MainControllerAware {
         this.mainController = mainController;
         viewedUsername = mainController.viewedProfileUsername;
         ownProfile = viewedUsername == null || viewedUsername.isBlank();
-        chooseProfilePictureButton.setGraphic(createIconView("attach", 14));
+        chooseProfilePictureButton.setGraphic(UiIcons.icon("attach", 14));
         mainController.setNavBar(true, ownProfile ? "Profile" : viewedUsername, true);
         mainController.setRefreshButtonVisible(false);
         loadProfile();
@@ -157,7 +158,7 @@ public class ProfileController implements MainControllerAware {
                 && MyApplication.clientManager.getAuthenticatedUsername() != null
                 && MyApplication.clientManager.getAuthenticatedUsername().equals(profile.getUsername());
         usernameLabel.setText(profile.getUsername());
-        profileAvatar.setText(extractInitials(profile.getUsername()));
+        profileAvatar.setText(profile.getUsername());
         descriptionTextArea.setText(profile.getDescription());
         descriptionTextArea.setEditable(ownProfile);
         descriptionTextArea.setDisable(!ownProfile);
@@ -339,29 +340,7 @@ public class ProfileController implements MainControllerAware {
     }
 
     private VBox buildAttachmentNode(Attachment attachment) {
-        VBox attachmentBox = new VBox(10);
-
-        if (attachment.getMimeType() != null && attachment.getMimeType().startsWith("image/")) {
-            ImageView imageView = new ImageView(new Image(new ByteArrayInputStream(attachment.getData())));
-            imageView.setPreserveRatio(true);
-            imageView.setFitWidth(420);
-            attachmentBox.getChildren().add(imageView);
-        }
-
-        HBox preview = new HBox(12);
-        preview.setAlignment(Pos.CENTER_LEFT);
-        preview.setPadding(new Insets(12));
-        preview.getStyleClass().add("file-preview");
-
-        Label fileNameLabel = new Label(attachment.getOriginalFileName());
-        fileNameLabel.getStyleClass().add("text-strong");
-        Label fileTypeLabel = new Label(attachment.getMimeType());
-        fileTypeLabel.getStyleClass().add("file-meta");
-
-        VBox fileMeta = new VBox(2, fileNameLabel, fileTypeLabel);
-        preview.getChildren().add(fileMeta);
-        attachmentBox.getChildren().add(preview);
-        return attachmentBox;
+        return AttachmentViews.buildFeedAttachment(attachment, false, false, null);
     }
 
     private void deletePost(String postId, Button deleteButton) {
@@ -408,16 +387,9 @@ public class ProfileController implements MainControllerAware {
     }
 
     private ProfileAvatar createAvatar(String username, double size, Attachment profilePicture) {
-        ProfileAvatar avatar = new ProfileAvatar();
-        avatar.setSize(size);
-        avatar.setText(extractInitials(username));
+        ProfileAvatar avatar = AvatarFactory.create(username, size, profilePicture);
         avatar.setCursor(Cursor.HAND);
         avatar.setOnMouseClicked(event -> openUserProfile(username));
-        if (profilePicture != null && profilePicture.getData() != null && profilePicture.getData().length > 0) {
-            avatar.setImage(new Image(new ByteArrayInputStream(profilePicture.getData())));
-        } else {
-            avatar.setImage(null);
-        }
         return avatar;
     }
 
@@ -535,20 +507,4 @@ public class ProfileController implements MainControllerAware {
         return ABSOLUTE_TIME_FORMAT.format(Instant.ofEpochMilli(createdAt));
     }
 
-    private String extractInitials(String username) {
-        if (username == null || username.isBlank()) {
-            return "?";
-        }
-        String trimmed = username.trim();
-        return trimmed.substring(0, Math.min(2, trimmed.length())).toUpperCase(Locale.ENGLISH);
-    }
-
-    private ImageView createIconView(String baseName, double size) {
-        String fileName = ThemeManager.isDarkMode() ? baseName + "_white.png" : baseName + ".png";
-        ImageView icon = new ImageView(new Image(MyApplication.getIcon(fileName).toExternalForm()));
-        icon.setFitWidth(size);
-        icon.setFitHeight(size);
-        icon.setPreserveRatio(true);
-        return icon;
-    }
 }

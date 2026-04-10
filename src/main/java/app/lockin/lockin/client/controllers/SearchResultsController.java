@@ -2,6 +2,7 @@ package app.lockin.lockin.client.controllers;
 
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.elements.ProfileAvatar;
+import app.lockin.lockin.client.utils.AvatarFactory;
 import app.lockin.lockin.common.models.UserProfile;
 import app.lockin.lockin.common.requests.FetchRequest;
 import app.lockin.lockin.common.requests.FetchType;
@@ -13,16 +14,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class SearchResultsController implements MainControllerAware {
     @FXML
@@ -94,12 +92,7 @@ public class SearchResultsController implements MainControllerAware {
         card.setCursor(Cursor.HAND);
         card.setOnMouseClicked(event -> openProfile(user.getUsername()));
 
-        ProfileAvatar avatar = new ProfileAvatar();
-        avatar.setSize(48);
-        avatar.setText(extractInitials(user.getUsername()));
-        if (user.getProfilePicture() != null && user.getProfilePicture().getData().length > 0) {
-            avatar.setImage(new Image(new ByteArrayInputStream(user.getProfilePicture().getData())));
-        }
+        ProfileAvatar avatar = AvatarFactory.create(user.getUsername(), 48, user.getProfilePicture());
 
         VBox textBox = new VBox(4);
         Label usernameLabel = new Label(user.getUsername());
@@ -130,10 +123,4 @@ public class SearchResultsController implements MainControllerAware {
         }
     }
 
-    private String extractInitials(String username) {
-        if (username == null || username.isBlank()) {
-            return "?";
-        }
-        return username.trim().substring(0, Math.min(2, username.trim().length())).toUpperCase(Locale.ENGLISH);
-    }
 }
