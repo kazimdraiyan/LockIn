@@ -24,11 +24,8 @@
 
 ## Table of Contents
 
-- [How to Run Server](#how-to-run-server)
-- [Real IP vs Shared IP](#real-ip-vs-shared-ip)
-- [How to Run Client](#how-to-run-client)
-- [How to Run Code](#how-to-run-code)
-- [Folder Structure](#folder-structure)
+- [Quick Usage](#quick-usage)
+- [Installation](#installation)
 - [Tech Stack](#tech-stack)
 - [Known Issues](#known-issues)
 - [Future Plans](#future-plans)
@@ -41,7 +38,7 @@
 
 [//]: # (TODO: Add links to the zip file after GitHub release)
 ### Server
-- Download `lockin_server_v1.0.0.zip` and extract it.
+- Download [`lockin_server_v1.0.0.zip`](https://github.com/kazimdraiyan/LockIn/releases/download/v1.0.0/lockin_server_v1.0.0.zip) and extract it.
 - Run `lockin_server_v1.0.0.exe`.
 - Enter port number for TCP and UDP server.
 - Press enter without entering any values to use the default ports.
@@ -49,7 +46,7 @@
 
 [//]: # (TODO: Add check this out link)
 ### Client
-- Download `lockin_client_v1.0.0.zip` and extract it.
+- Download [`lockin_client_v1.0.0.zip`](https://github.com/kazimdraiyan/LockIn/releases/download/v1.0.0/lockin_client_v1.0.0.zip) and extract it.
 - Make sure the server is running on the _same device_. For running server and client on different devices, [see this](#running-server-and-clients-on-different-devices-advanced). 
 - Run `lockin_client_v1.0.0.exe`.
 - The app will try to connect server on localhost:5000 by default. To use a different address, see this.
