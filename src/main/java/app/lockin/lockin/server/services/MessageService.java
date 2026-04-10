@@ -20,6 +20,7 @@ public class MessageService {
     private static final long MAX_ATTACHMENT_SIZE_BYTES = 10L * 1024 * 1024;
 
     private final ObjectMapper mapper = new ObjectMapper();
+    private final AuthService authService = new AuthService();
 
     public ArrayList<Chat> loadChats(String username) throws IOException {
         if (username == null || username.isBlank()) {
@@ -39,8 +40,9 @@ public class MessageService {
             }
 
             JsonNode conversationNode = findConversationNode(conversationsNode, username, otherUsername);
+            Attachment peerPicture = authService.loadProfilePictureAttachment(otherUsername);
             if (conversationNode == null) {
-                chats.add(new Chat(null, otherUsername, null, 0));
+                chats.add(new Chat(null, otherUsername, null, 0, peerPicture));
                 continue;
             }
 
@@ -49,7 +51,8 @@ public class MessageService {
                     conversationNode.path("id").asText(null),
                     otherUsername,
                     lastMessage,
-                    0
+                    0,
+                    peerPicture
             ));
         }
 
@@ -100,15 +103,16 @@ public class MessageService {
             throw new IOException("User not found");
         }
         JsonNode conversationNode = findConversationNode(conversationsNode, username, otherUsername);
+        Attachment peerPicture = authService.loadProfilePictureAttachment(otherUsername);
 
         if (conversationNode == null) {
             // TODO: Return null instead?
-            return new ConversationData(new Chat(null, otherUsername, null, 0), new ArrayList<>());
+            return new ConversationData(new Chat(null, otherUsername, null, 0, peerPicture), new ArrayList<>());
         }
 
         ArrayList<Message> messages = loadMessages(conversationNode);
         Message lastMessage = messages.isEmpty() ? null : messages.getLast();
-        Chat chat = new Chat(conversationNode.path("id").asText(null), otherUsername, lastMessage, 0);
+        Chat chat = new Chat(conversationNode.path("id").asText(null), otherUsername, lastMessage, 0, peerPicture);
         return new ConversationData(chat, messages);
     }
 

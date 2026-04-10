@@ -1,13 +1,17 @@
 package app.lockin.lockin.client.elements;
 
 import app.lockin.lockin.client.models.ChatListItem;
+import app.lockin.lockin.common.models.Attachment;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+
+import java.io.ByteArrayInputStream;
 
 public class ChatCell extends ListCell<ChatListItem> {
     private final ProfileAvatar avatar = new ProfileAvatar();
@@ -61,6 +65,12 @@ public class ChatCell extends ListCell<ChatListItem> {
         }
 
         avatar.setText(item.getUserName());
+        Attachment pic = item.getChat() == null ? null : item.getChat().getProfilePicture();
+        if (pic != null && pic.getData().length > 0) {
+            avatar.setImage(new Image(new ByteArrayInputStream(pic.getData())));
+        } else {
+            avatar.setImage(null);
+        }
         nameLabel.setText(item.getUserName());
         msgLabel.setText(item.getLastMessage());
         timeLabel.setText(item.getTimeAgo());

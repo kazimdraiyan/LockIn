@@ -1,5 +1,6 @@
 package app.lockin.lockin.server.handlers;
 
+import app.lockin.lockin.common.models.Attachment;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.Message;
 import app.lockin.lockin.common.models.MessageDelivery;
@@ -173,7 +174,7 @@ public class ClientHandler implements Runnable {
 
             if (Chat.COMMON_CHAT_ID.equals(chatId)) {
                 MessageDelivery delivery = new MessageDelivery(
-                        new Chat(Chat.COMMON_CHAT_ID, Chat.COMMON_CHAT_NAME, message, 0),
+                        new Chat(Chat.COMMON_CHAT_ID, Chat.COMMON_CHAT_NAME, message, 0, null),
                         message
                 );
                 send(new Response(ResponseStatus.SUCCESS, "Message sent successfully", delivery));
@@ -181,12 +182,15 @@ public class ClientHandler implements Runnable {
                 return;
             }
 
+            Attachment recipientPicture = authHandler.getProfilePictureAttachment(recipientUsername);
+            Attachment senderPicture = authHandler.getProfilePictureAttachment(senderUsername);
+
             MessageDelivery senderDelivery = new MessageDelivery(
-                    new Chat(chatId, recipientUsername, message, 0),
+                    new Chat(chatId, recipientUsername, message, 0, recipientPicture),
                     message
             );
             MessageDelivery recipientDelivery = new MessageDelivery(
-                    new Chat(chatId, senderUsername, message, 0),
+                    new Chat(chatId, senderUsername, message, 0, senderPicture),
                     message
             );
 

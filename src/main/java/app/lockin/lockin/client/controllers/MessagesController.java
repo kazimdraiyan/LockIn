@@ -3,7 +3,6 @@ package app.lockin.lockin.client.controllers;
 import app.lockin.lockin.client.MyApplication;
 import app.lockin.lockin.client.NavCallState;
 import app.lockin.lockin.client.elements.ProfileAvatar;
-import app.lockin.lockin.client.elements.ProfileAvatar;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.CallSignal;
 import app.lockin.lockin.common.models.ConversationData;
@@ -131,6 +130,7 @@ public class MessagesController {
                         return;
                     }
                     currentChat = conversationData.getChat();
+                    updateChatHeader();
                     renderConversation(conversationData);
                 });
             } catch (IOException e) {
@@ -152,6 +152,7 @@ public class MessagesController {
         }
 
         currentChat = delivery.getChat(); // TODO: Maybe unnecessary
+        updateChatHeader();
         appendMessage(delivery.getMessage());
     }
 
@@ -305,6 +306,7 @@ public class MessagesController {
                     MessageDelivery delivery = (MessageDelivery) response.getData();
                     Platform.runLater(() -> {
                         currentChat = delivery.getChat();
+                        updateChatHeader();
                         appendMessage(delivery.getMessage());
                         if (messengerController != null) {
                             messengerController.onLocalMessage(delivery);
@@ -535,6 +537,12 @@ public class MessagesController {
         }
 
         chatAvatar.setText(currentChat.getName());
+        Attachment pic = currentChat.getProfilePicture();
+        if (pic != null && pic.getData().length > 0) {
+            chatAvatar.setImage(new Image(new ByteArrayInputStream(pic.getData())));
+        } else {
+            chatAvatar.setImage(null);
+        }
         chatNameLabel.setText(currentChat.getName());
         boolean canCall = !currentChat.isCommonChat();
         callButton.setVisible(canCall);

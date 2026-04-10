@@ -10,16 +10,22 @@ public class Chat implements Serializable {
     private final String name;
     private final Message lastMessage;
     private final int unreadCount;
+    private final Attachment profilePicture;
 
-    public Chat(String id, String name, Message lastMessage, int unreadCount) {
+    public Chat(String id, String name, Message lastMessage, int unreadCount, Attachment profilePicture) {
         this.id = id;
         this.name = name;
         this.lastMessage = lastMessage;
         this.unreadCount = unreadCount;
+        this.profilePicture = profilePicture;
+    }
+
+    public Chat(String id, String name, Message lastMessage, int unreadCount) {
+        this(id, name, lastMessage, unreadCount, null);
     }
 
     public Chat(String name) {
-        this(null, name, null, 0);
+        this(null, name, null, 0, null);
     }
 
     public boolean isCommonChat() {
@@ -40,5 +46,9 @@ public class Chat implements Serializable {
 
     public int getUnreadCount() {
         return unreadCount;
+    }
+
+    public Attachment getProfilePicture() {
+        return profilePicture;
     }
 }

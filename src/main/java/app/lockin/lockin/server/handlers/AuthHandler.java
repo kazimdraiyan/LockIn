@@ -1,5 +1,6 @@
 package app.lockin.lockin.server.handlers;
 
+import app.lockin.lockin.common.models.Attachment;
 import app.lockin.lockin.common.models.Chat;
 import app.lockin.lockin.common.models.UserPosts;
 import app.lockin.lockin.common.models.Session;
@@ -75,6 +76,14 @@ public class AuthHandler {
         } catch (IOException e) {
             System.out.println("An error occurred while trying to create the user");
             return new Response(ResponseStatus.ERROR, "An unknown error occurred. Please try again later.", null);
+        }
+    }
+
+    public Attachment getProfilePictureAttachment(String username) {
+        try {
+            return authService.loadProfilePictureAttachment(username);
+        } catch (IOException e) {
+            return null;
         }
     }
 

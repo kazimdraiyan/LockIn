@@ -53,4 +53,19 @@
     "createdAt" : 1775628057771
   } ],
   "updatedAt" : 1775628057771
+}, {
+  "id" : "common_chat",
+  "participants" : null,
+  "messages" : [ {
+    "id" : "d8613698-5bba-4f3d-8ca4-0086470d2a0d",
+    "senderUsername" : "ikra",
+    "text" : "meovnl",
+    "createdAt" : 1775799800810
+  }, {
+    "id" : "7fa1d8e7-9e26-4fdd-9a31-4e83968e5a05",
+    "senderUsername" : "raiyankazi",
+    "text" : "mewl",
+    "createdAt" : 1775799836944
+  } ],
+  "updatedAt" : 1775799836944
 } ]

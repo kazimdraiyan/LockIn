@@ -165,6 +165,17 @@ public class AuthService {
         );
     }
 
+    public Attachment loadProfilePictureAttachment(String username) throws IOException {
+        if (username == null || username.isBlank()) {
+            return null;
+        }
+        ObjectNode usersDatabase = loadDatabase("users.json");
+        if (!usersDatabase.has(username)) {
+            return null;
+        }
+        return loadAttachment(usersDatabase.get(username).get("profilePicture"));
+    }
+
     public ArrayList<UserProfile> searchUsers(String query, String authenticatedUsername) throws IOException {
         ArrayList<UserProfile> matches = new ArrayList<>();
         ObjectNode usersDatabase = loadDatabase("users.json");
