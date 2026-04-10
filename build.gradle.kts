@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "app.lockin"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -48,6 +48,12 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.jar {
+    manifest {
+        attributes["Main-Class"] = "app.lockin.lockin.client.Launcher"
+    }
 }
 
 jlink {

@@ -3,6 +3,8 @@ package app.lockin.lockin.client;
 import app.lockin.lockin.client.utils.ThemeManager;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -25,9 +27,13 @@ public class MyApplication extends Application {
             port = Integer.parseInt(parts[1].trim());
         } catch (Exception ignored) {
         }
-        clientManager.connect(host, port); // Waits till response of initial request (login using token)
+        try {
+            clientManager.connect(host, port); // Waits till response of initial request (login using token)
+        } catch (Exception e) {
+            showConnectionErrorAndExit(e.getMessage());
+            return;
+        }
         // TODO: Add loading indicator
-
         FXMLLoader fxmlLoader = new FXMLLoader(getFXML("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
@@ -46,6 +52,15 @@ public class MyApplication extends Application {
 
     public static URL getIcon(String fileName) {
         return MyApplication.class.getResource("/app/lockin/lockin/icon/" + fileName);
+    }
+
+    private static void showConnectionErrorAndExit(String connectionError) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Connection Error");
+        alert.setHeaderText("Could not connect to server");
+        alert.setContentText("Start the server first. Then run the application again.");
+        alert.showAndWait();
+        Platform.exit();
     }
 
     private static Path getTokenPath() {
