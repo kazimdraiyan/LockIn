@@ -1,366 +1,56 @@
 [ {
-  "id" : "3472ced9-57ed-4433-a1fa-a7daa06c61bd",
-  "participants" : [ "ahonsazzad", "raiyankazi" ],
-  "messages" : [ {
-    "id" : "aa30c977-f296-4a9d-95b5-1f012ed3eceb",
-    "senderUsername" : "ahonsazzad",
-    "text" : "hello",
-    "createdAt" : 1775612540228
-  }, {
-    "id" : "9fe64845-fee3-492f-9320-658b6933c9e5",
-    "senderUsername" : "raiyankazi",
-    "text" : "hi Ahon",
-    "createdAt" : 1775612556635
-  }, {
-    "id" : "257c3891-8b45-4142-b97c-70fc4b8e415e",
-    "senderUsername" : "raiyankazi",
-    "text" : "hello",
-    "createdAt" : 1775819660285
-  }, {
-    "id" : "dec9e730-b5b9-4521-aaa7-1aa5bc3c7c8d",
-    "senderUsername" : "ahonsazzad",
-    "text" : "hi",
-    "createdAt" : 1775822131193
-  }, {
-    "id" : "c76e4c57-98b5-409c-9b4a-4a497a4e2ea8",
-    "senderUsername" : "ahonsazzad",
-    "text" : "hillo",
-    "createdAt" : 1775822313471
-  } ],
-  "updatedAt" : 1775822313471
-}, {
-  "id" : "06123e7f-809d-4625-857b-f091c0a105a8",
-  "participants" : [ "raiyankazi", "snehashis" ],
-  "messages" : [ {
-    "id" : "49c73d6c-7f83-426a-b49c-c83a5d5d3e2c",
-    "senderUsername" : "raiyankazi",
-    "text" : "hello my dear friend",
-    "createdAt" : 1775621351404
-  }, {
-    "id" : "2f021fd3-6696-482c-b9cb-5d3df8c4b02c",
-    "senderUsername" : "snehashis",
-    "text" : "hello my goat",
-    "createdAt" : 1775621359793
-  }, {
-    "id" : "f581abb8-24bb-4889-acc7-b2a9178c7f8b",
-    "senderUsername" : "raiyankazi",
-    "text" : "",
-    "createdAt" : 1775621391189,
-    "attachment" : {
-      "originalFileName" : "Screenshot (1).png",
-      "mimeType" : "image/png",
-      "storedFileName" : "f581abb8-24bb-4889-acc7-b2a9178c7f8b_Screenshot__1_.png"
-    }
-  }, {
-    "id" : "82dd8cd2-f331-456d-8d35-e078b04d2843",
-    "senderUsername" : "raiyankazi",
-    "text" : "see my wallpaper dawg",
-    "createdAt" : 1775813858691
-  }, {
-    "id" : "68972c15-4a27-4647-9891-2d90d8bc5322",
-    "senderUsername" : "raiyankazi",
-    "text" : "heyy",
-    "createdAt" : 1775820827023
-  }, {
-    "id" : "ee30c2cf-14c6-4695-9b35-968822228ce8",
-    "senderUsername" : "raiyankazi",
-    "text" : "a",
-    "createdAt" : 1775820835395
-  }, {
-    "id" : "75bba911-1a11-4e81-9c9a-e9606de86ec7",
-    "senderUsername" : "raiyankazi",
-    "text" : "heyy",
-    "createdAt" : 1775820960448
-  } ],
-  "updatedAt" : 1775820960448
-}, {
-  "id" : "06cd93ff-3c74-4e73-9d57-04a04404a583",
-  "participants" : [ "ahon", "ikra" ],
-  "messages" : [ {
-    "id" : "0fd00587-4e19-466f-b86c-a8725826ae77",
-    "senderUsername" : "ahon",
-    "text" : "hello",
-    "createdAt" : 1775628053836
-  }, {
-    "id" : "803ac2bf-81d8-42e7-b79b-31927a34244b",
-    "senderUsername" : "ikra",
-    "text" : "hi",
-    "createdAt" : 1775628057771
-  } ],
-  "updatedAt" : 1775628057771
-}, {
   "id" : "common_chat",
   "participants" : null,
   "messages" : [ {
-    "id" : "d8613698-5bba-4f3d-8ca4-0086470d2a0d",
-    "senderUsername" : "ikra",
-    "text" : "meovnl",
-    "createdAt" : 1775799800810
+    "id" : "ef7abceb-c498-4f82-802c-ec71977bcdbd",
+    "senderUsername" : "ahonsazzad",
+    "text" : "Hello guys",
+    "createdAt" : 1775880438226
   }, {
-    "id" : "7fa1d8e7-9e26-4fdd-9a31-4e83968e5a05",
+    "id" : "c02bae42-ec54-4926-b3bb-36af56476046",
     "senderUsername" : "raiyankazi",
-    "text" : "mewl",
-    "createdAt" : 1775799836944
+    "text" : "hey bro what's up",
+    "createdAt" : 1775880455232
   }, {
-    "id" : "0cd989a9-0521-45b5-955d-72f8b272d93a",
+    "id" : "bee5ef7b-affd-4e4b-b3de-0e32c75dc152",
+    "senderUsername" : "abdullahikra",
+    "text" : "you're up for hangout after the last exam?",
+    "createdAt" : 1775880493706
+  }, {
+    "id" : "e7194dd6-c99e-46a5-8e0a-cb29dedd11bd",
+    "senderUsername" : "snehashisbalo",
+    "text" : "i'm in",
+    "createdAt" : 1775880499760
+  }, {
+    "id" : "9a1613ac-1449-4ca7-89dd-290c5218a101",
     "senderUsername" : "raiyankazi",
-    "text" : "hi",
-    "createdAt" : 1775801192863
+    "text" : "me too",
+    "createdAt" : 1775880506035
   }, {
-    "id" : "ce8c5aa9-7470-4be0-b371-adb4d2ebfe00",
-    "senderUsername" : "ikra",
-    "text" : "hello",
-    "createdAt" : 1775804295784
-  }, {
-    "id" : "f7611ca3-3573-491c-8631-ef125219366f",
-    "senderUsername" : "ikra",
-    "text" : "hattrzz",
-    "createdAt" : 1775804446456
-  }, {
-    "id" : "886c60ed-a923-4db9-b9dc-6b2116b051b9",
+    "id" : "a4ddea3b-6c57-4f3d-a17d-5408ba191fa8",
     "senderUsername" : "ahonsazzad",
-    "text" : "hello guys what poppin",
-    "createdAt" : 1775804478526
+    "text" : "yeah count me in too",
+    "createdAt" : 1775880512717
   }, {
-    "id" : "37180ad7-cb4a-4a45-bac9-289658bb4a92",
-    "senderUsername" : "ahonsazzad",
-    "text" : "you guys are so skibidi",
-    "createdAt" : 1775804488960
-  }, {
-    "id" : "ee966902-0d01-4ab2-bcc1-db7e3331e528",
-    "senderUsername" : "ahonsazzad",
-    "text" : "one right here",
-    "createdAt" : 1775809061860
-  }, {
-    "id" : "39473012-eff3-4f0c-96f4-3730c047d9ab",
-    "senderUsername" : "ahonsazzad",
-    "text" : "",
-    "createdAt" : 1775809415264,
+    "id" : "d4221045-80d5-4b49-ad19-7b3d396b3d6e",
+    "senderUsername" : "raiyankazi",
+    "text" : "How does this place look?",
+    "createdAt" : 1775880833958,
     "attachment" : {
-      "originalFileName" : "Screenshot (54).png",
+      "originalFileName" : "Screenshot 2026-04-11 101145.png",
       "mimeType" : "image/png",
-      "storedFileName" : "39473012-eff3-4f0c-96f4-3730c047d9ab_Screenshot__54_.png"
-    }
-  }, {
-    "id" : "0444eb89-7be0-4779-add6-92a23f19e80a",
-    "senderUsername" : "ahonsazzad",
-    "text" : "Juniors, see this",
-    "createdAt" : 1775811770631,
-    "attachment" : {
-      "originalFileName" : "CSE 102 Outline.pdf",
-      "mimeType" : "application/pdf",
-      "storedFileName" : "0444eb89-7be0-4779-add6-92a23f19e80a_CSE_102_Outline.pdf"
-    }
-  }, {
-    "id" : "64d22122-cd7c-49be-be5f-afe1d9628cbd",
-    "senderUsername" : "raiyankazi",
-    "text" : "hello",
-    "createdAt" : 1775813846372
-  }, {
-    "id" : "3047cedf-f78b-4133-9f18-5cb70ee13e10",
-    "senderUsername" : "raiyankazi",
-    "text" : "meow",
-    "createdAt" : 1775820832093
-  }, {
-    "id" : "1e0bda35-fea6-40f4-a910-a15d69eb04de",
-    "senderUsername" : "raiyankazi",
-    "text" : "m",
-    "createdAt" : 1775821475184
-  }, {
-    "id" : "3b02dbba-07e6-4230-b7cb-ed71e7c98762",
-    "senderUsername" : "ahonsazzad",
-    "text" : "hi",
-    "createdAt" : 1775822120667
-  }, {
-    "id" : "05684e5f-6222-40d6-b53e-1aae3194411a",
-    "senderUsername" : "ahonsazzad",
-    "text" : "hello",
-    "createdAt" : 1775822125651
-  }, {
-    "id" : "8e2b6241-add3-4f97-99af-92b82ac7f96f",
-    "senderUsername" : "ahonsazzad",
-    "text" : "ok",
-    "createdAt" : 1775822145881
-  }, {
-    "id" : "a3076c71-fb2e-42a8-8709-a0d247afd846",
-    "senderUsername" : "ahonsazzad",
-    "text" : "hii",
-    "createdAt" : 1775822300112
-  }, {
-    "id" : "eecee523-4600-49be-8ca4-5a70c8a9b749",
-    "senderUsername" : "ikra",
-    "text" : "hello",
-    "createdAt" : 1775822332637
-  } ],
-  "updatedAt" : 1775822332637
-}, {
-  "id" : "99605a2e-9d7d-4c8b-b40c-b04288c68adc",
-  "participants" : [ "ahon", "raiyankazi" ],
-  "messages" : [ {
-    "id" : "6eed27b1-09d2-4ff2-a48e-5f995bb5ec4f",
-    "senderUsername" : "raiyankazi",
-    "text" : "hi",
-    "createdAt" : 1775819419557
-  }, {
-    "id" : "a0f5d9a5-d4ff-4e5f-82ee-49c1d7b7c881",
-    "senderUsername" : "raiyankazi",
-    "text" : "hii",
-    "createdAt" : 1775820963783
-  } ],
-  "updatedAt" : 1775820963783
-}, {
-  "id" : "b4807052-7472-4f7d-8f39-c472a98d56d3",
-  "participants" : [ "ikra", "raiyankazi" ],
-  "messages" : [ {
-    "id" : "aae0bc2b-f445-48d6-84e6-8453884fa5eb",
-    "senderUsername" : "raiyankazi",
-    "text" : "hi",
-    "createdAt" : 1775820820457
-  }, {
-    "id" : "2ebf2657-c9dd-4fec-97ff-ddc9ab42d756",
-    "senderUsername" : "raiyankazi",
-    "text" : "hii",
-    "createdAt" : 1775822087699
-  } ],
-  "updatedAt" : 1775822087699
-}, {
-  "id" : "62fb922c-c7b4-4b15-8e1a-aaac6a882656",
-  "participants" : [ "ahon", "ahonsazzad" ],
-  "messages" : [ {
-    "id" : "8317dcb7-6165-4e34-a5a6-5e882ea36c23",
-    "senderUsername" : "ahonsazzad",
-    "text" : "hi",
-    "createdAt" : 1775822138938
-  }, {
-    "id" : "c2980075-4210-42f0-bc8f-a7bece15c501",
-    "senderUsername" : "ahonsazzad",
-    "text" : "hullo",
-    "createdAt" : 1775822141745
-  } ],
-  "updatedAt" : 1775822141745
-}, {
-  "id" : "6613b128-8f4a-43e8-9459-45b3d6e9d027",
-  "participants" : [ "dota2player", "raiyankazi" ],
-  "messages" : [ {
-    "id" : "8e2de184-e8ce-4a4f-a5f9-d0eeec5f12a8",
-    "senderUsername" : "dota2player",
-    "text" : "bhalo hoya ja",
-    "createdAt" : 1775836427939
-  }, {
-    "id" : "1d496c3a-e205-46bc-af8f-88812c194646",
-    "senderUsername" : "raiyankazi",
-    "text" : "haterzz",
-    "createdAt" : 1775836436808
-  }, {
-    "id" : "32742dd0-5749-4df9-9814-630f59118621",
-    "senderUsername" : "raiyankazi",
-    "text" : "kotha shuna jay?",
-    "createdAt" : 1775836464170
-  }, {
-    "id" : "0e96ed9b-97ff-4644-9ae4-5aa2200cef6d",
-    "senderUsername" : "dota2player",
-    "text" : "nope",
-    "createdAt" : 1775836470968
-  }, {
-    "id" : "560271fd-7bcf-41bd-9eb6-c4ddb8bbb1ad",
-    "senderUsername" : "raiyankazi",
-    "text" : "accha dara",
-    "createdAt" : 1775836475033
-  }, {
-    "id" : "6a1f561d-a883-4b9b-940b-8da69eed6688",
-    "senderUsername" : "dota2player",
-    "text" : "amar ta?",
-    "createdAt" : 1775836480053
-  }, {
-    "id" : "90ab36ab-01dc-4f29-8487-86dcedf27928",
-    "senderUsername" : "raiyankazi",
-    "text" : "chillaitasi",
-    "createdAt" : 1775836532309
-  }, {
-    "id" : "e16f3812-5c3e-44d1-815b-231a9f4397eb",
-    "senderUsername" : "dota2player",
-    "text" : "no sound",
-    "createdAt" : 1775836541050
-  }, {
-    "id" : "0556dbaa-0bc3-42a0-bd05-4b802c9aab8f",
-    "senderUsername" : "raiyankazi",
-    "text" : "okay",
-    "createdAt" : 1775836544211
-  }, {
-    "id" : "ede010de-af82-4bf2-9f58-2cc5fdfdcb5d",
-    "senderUsername" : "dota2player",
-    "text" : "amar sound paas?",
-    "createdAt" : 1775836549145
-  }, {
-    "id" : "7a188994-c1f4-4443-8f42-2e90a8997992",
-    "senderUsername" : "raiyankazi",
-    "text" : "meowl",
-    "createdAt" : 1775837220131
-  }, {
-    "id" : "a5657b2b-879c-4ad3-9977-bca9263c9261",
-    "senderUsername" : "raiyankazi",
-    "text" : "natohuaoteunhaoues",
-    "createdAt" : 1775837289474
-  }, {
-    "id" : "3211a2ff-6421-40a9-905e-f73a8ff4ab5a",
-    "senderUsername" : "raiyankazi",
-    "text" : "tor sound ashe",
-    "createdAt" : 1775837320966
-  }, {
-    "id" : "30307b9e-11bf-465a-9b3b-c6923c57833a",
-    "senderUsername" : "dota2player",
-    "text" : "tor sound ashe na",
-    "createdAt" : 1775837323733
-  }, {
-    "id" : "f79fcb67-9d68-4383-9d14-f6ad0c17773f",
-    "senderUsername" : "dota2player",
-    "text" : "just bomb er awaj ashe",
-    "createdAt" : 1775837329602
-  }, {
-    "id" : "d57d398a-0062-461a-a181-3030a8cc3abd",
-    "senderUsername" : "raiyankazi",
-    "text" : "amar sound ki ektu hoileo ashe?",
-    "createdAt" : 1775837335244
-  }, {
-    "id" : "758a69f7-d8ee-4c21-a4bc-01daa20fcb43",
-    "senderUsername" : "dota2player",
-    "text" : "noo",
-    "createdAt" : 1775837339074
-  }, {
-    "id" : "e8be312b-3024-4bd9-ae41-d74fd824e2f0",
-    "senderUsername" : "dota2player",
-    "text" : "magnet matite falaile jemon sound ashe omun",
-    "createdAt" : 1775837350182
-  }, {
-    "id" : "ca61fa9f-78c8-4305-a504-4e6799cddea3",
-    "senderUsername" : "raiyankazi",
-    "text" : "tor sound ashe",
-    "createdAt" : 1775837367878
-  }, {
-    "id" : "e6dc867d-f3a7-48c3-be22-e519057f83a6",
-    "senderUsername" : "raiyankazi",
-    "text" : "dara",
-    "createdAt" : 1775837382056
-  }, {
-    "id" : "79d29145-ba07-430c-95b3-82346293879f",
-    "senderUsername" : "raiyankazi",
-    "text" : "sigma",
-    "createdAt" : 1775837409022
-  }, {
-    "id" : "6552b13a-2b8e-427d-b8f5-158306eb2d9e",
-    "senderUsername" : "raiyankazi",
-    "text" : "call de",
-    "createdAt" : 1775837419682
-  }, {
-    "id" : "c007e970-973a-4899-9d3f-b35bd8b680e1",
-    "senderUsername" : "raiyankazi",
-    "text" : "",
-    "createdAt" : 1775837465548,
-    "attachment" : {
-      "originalFileName" : "Template.dwg",
-      "mimeType" : "application/octet-stream",
-      "storedFileName" : "c007e970-973a-4899-9d3f-b35bd8b680e1_Template.dwg"
+      "storedFileName" : "d4221045-80d5-4b49-ad19-7b3d396b3d6e_Screenshot_2026-04-11_101145.png"
     }
   } ],
-  "updatedAt" : 1775837465548
+  "updatedAt" : 1775880833958
+}, {
+  "id" : "3bf16915-3c2e-46d2-ad9a-f267baa6c759",
+  "participants" : [ "ahonsazzad", "raiyankazi" ],
+  "messages" : [ {
+    "id" : "270e85c7-fcb1-4aaf-bcc8-63fc9ef245f7",
+    "senderUsername" : "raiyankazi",
+    "text" : "brooo project deadline approaching real quick, we finna finish ts, else we gon get cooked :\"((((",
+    "createdAt" : 1775880623935
+  } ],
+  "updatedAt" : 1775880623935
 } ]

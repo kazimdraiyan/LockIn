@@ -16,7 +16,28 @@
 
 ## Screenshots
 
-[Placeholder]
+<table>
+  <tr>
+    <td align="center">
+      <img src="screenshots/welcome_page.png" alt="Menu Screenshot" width="350"/><br/>
+      <b>Landing Page</b>
+    </td>
+    <td align="center">
+      <img src="screenshots/home_page.png" alt="Gameplay Screenshot 1" width="350"/><br/>
+      <b>Home Feed</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/chat_page.png" alt="Gameplay Screenshot 2" width="350"/><br/>
+      <b>Group Chat</b>
+    </td>
+    <td align="center">
+      <img src="screenshots/profile_page.png" alt="High Scores Screenshot" width="350"/><br/>
+      <b>My Profile</b>
+    </td>
+  </tr>
+</table>
 
 ## Demo Video
 
@@ -47,7 +68,7 @@
 - Download [`lockin_client_v1.0.0.zip`](https://github.com/kazimdraiyan/LockIn/releases/download/v1.0.0/lockin_client_v1.0.0.zip) and extract it.
 - Make sure the server is running on the _same device_. For running server and client on different devices, [see this](#running-server-and-clients-on-different-devices-advanced). 
 - Run `lockin_client_v1.0.0.exe`.
-- The app will try to connect server on localhost:5000 by default. To use a different address, see this.
+- The app will try to connect server on localhost:5000 by default. To use a different address, [see this](#how-to-change-custom-server-address-in-servertxt).
 - Create an account and use the app.
 
 ### Running server and clients on different devices (Advanced)
@@ -59,7 +80,7 @@
 - No need to add or modify this file if you run the server and client on the same device.
 
 #### Distant network (using ZeroTier)
-TBD
+
 
 ### How to change custom server address in `server.txt`
 

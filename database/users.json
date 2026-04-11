@@ -1,7 +1,7 @@
 {
   "raiyankazi" : {
     "password" : "1234",
-    "description" : "hello there",
+    "description" : "CSE enthusiast",
     "profilePicture" : {
       "originalFileName" : "raiyan.jpg",
       "mimeType" : "image/jpeg",
@@ -10,35 +10,29 @@
   },
   "ahonsazzad" : {
     "password" : "1234",
-    "description" : "my nickname is shonye west",
+    "description" : "I am Shonye West",
     "profilePicture" : {
       "originalFileName" : "ahon.jpg",
       "mimeType" : "image/jpeg",
       "storedFileName" : "ahonsazzad.jpg"
     }
   },
-  "snehashis" : {
+  "abdullahikra" : {
     "password" : "1234",
-    "description" : "cse enthusiast",
+    "description" : "moggless",
+    "profilePicture" : {
+      "originalFileName" : "ikra.jpg",
+      "mimeType" : "image/jpeg",
+      "storedFileName" : "abdullahikra.jpg"
+    }
+  },
+  "snehashisbalo" : {
+    "password" : "1234",
+    "description" : "i use linux btw",
     "profilePicture" : {
       "originalFileName" : "snehashis.jpg",
       "mimeType" : "image/jpeg",
-      "storedFileName" : "snehashis.jpg"
+      "storedFileName" : "snehashisbalo.jpg"
     }
-  },
-  "ikra" : {
-    "password" : "1234",
-    "description" : "",
-    "profilePicture" : null
-  },
-  "ahon" : {
-    "password" : "1234",
-    "description" : "",
-    "profilePicture" : null
-  },
-  "dota2player" : {
-    "password" : "botplayerdota2",
-    "description" : "",
-    "profilePicture" : null
   }
 }
